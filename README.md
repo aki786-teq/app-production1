@@ -89,3 +89,6 @@ LINE Messaging API SDK for Ruby
 
 ## ■ 画面遷移図
 [画面遷移図はこちら](https://www.figma.com/design/Jg9DoTwcuFs81g2lGf5JZG/MainichiZenkutsu?t=XiZe1nUTuCa2LMLC-1)
+
+## ■ ER図
+[ER図はこちら](https://dbdiagram.io/d/mainichi_zenkutsu-683fa84f61dc3bf08d763b72)
