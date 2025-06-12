@@ -90,7 +90,7 @@ LINE Messaging API SDK for Ruby
 ## ■ 技術選定
 ■ 開発環境: Docker
 ■ サーバサイド: Ruby on Rails 7系
-　　Ruby 3.2.1 Rails 7.0.8
+　　Ruby 3.3.2 Rails 7.2.2.1
 ■ フロントエンド: Hotwire
 ■ CSSフレームワーク: Tailwind CSS
 ■ CSSライブラリ: DaisyUI
