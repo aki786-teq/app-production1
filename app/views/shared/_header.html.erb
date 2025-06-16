@@ -1,0 +1,18 @@
+<header class="bg-yellow-50 shadow-sm">
+  <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
+
+    <!-- ロゴ -->
+    <div class="flex h-13 items-center">
+      <%= link_to '/', class: "block max-w-[200px]" do %>
+      <%= image_tag 'logo.png', alt: "まいにち前屈", class: "block w-full" %>
+      <% end %>
+    </div>
+
+    <!-- 認証リンク -->
+    <div class="space-x-4">
+      <%= link_to 'ログイン', '#', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600' %>
+      <%= link_to '新規登録', '#', class: 'px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600' %>
+    </div>
+
+  </nav>
+</header>
