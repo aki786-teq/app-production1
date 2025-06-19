@@ -88,15 +88,15 @@ Push API + Service Worker ＋ Rails（webpush gem）
 LINE Messaging API SDK for Ruby
 
 ## ■ 技術選定
-■ 開発環境: Docker
-■ サーバサイド: Ruby on Rails 7系
-　　Ruby 3.3.2 Rails 7.2.2.1
-■ フロントエンド: Hotwire
-■ CSSフレームワーク: Tailwind CSS
-■ CSSライブラリ: DaisyUI
-■ インフラ:
-・ Webアプリケーションサーバ: Render
-・ データベースサーバ: PostgreSQL
+■ 開発環境: Docker  
+■ サーバサイド: Ruby on Rails 7系  
+　　Ruby 3.3.2 Rails 7.2.2.1  
+■ フロントエンド: Hotwire  
+■ CSSフレームワーク: Tailwind CSS  
+■ CSSライブラリ: DaisyUI  
+■ インフラ:  
+・ Webアプリケーションサーバ: Render  
+・ データベースサーバ: PostgreSQL  
 
 ## ■ 画面遷移図
 [画面遷移図はこちら](https://www.figma.com/design/Jg9DoTwcuFs81g2lGf5JZG/MainichiZenkutsu?t=XiZe1nUTuCa2LMLC-1)
