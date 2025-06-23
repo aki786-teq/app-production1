@@ -1,5 +1,4 @@
 module.exports = {
-  mode: 'jit',
   content: [
     './app/views/**/*.html.erb',
     './app/helpers/**/*.rb',
@@ -8,9 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
-        colors: {
-          mainOrange: '#F98438',
-        },
-    },
-  },
+      fontFamily: {
+        sans: ['Lato', '"Zen Maru Gothic"', 'sans-serif']
+      }
+    }
+  }
 }

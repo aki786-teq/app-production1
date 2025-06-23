@@ -3,4 +3,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_one :goal, dependent: :destroy
+  has_many :boards, dependent: :destroy
 end
