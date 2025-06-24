@@ -23,7 +23,7 @@ ENV RAILS_ENV="production" \
     BUNDLE_WITHOUT="development"
 
 # Throw-away build stage to reduce size of final image
-FROM base AS build
+FROM base AS buildp
 
 # Install packages needed to build gems and node modules
 RUN apt-get update -qq && \
@@ -81,3 +81,10 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 CMD ["./bin/rails", "server"]
+
+# MiniMagickの設定
+RUN apt-get update -qq && apt-get install -y \
+  imagemagick \
+  libvips \
+  libjpeg-dev \
+  libpng-dev

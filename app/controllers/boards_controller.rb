@@ -19,6 +19,6 @@ class BoardsController < ApplicationController
   private
 
   def board_params
-    params.require(:board).permit(:did_stretch, :content, :flexibility_level, :goal_id)
+    params.require(:board).permit(:did_stretch, :content, :flexibility_level, :goal_id, :image)
   end
 end
