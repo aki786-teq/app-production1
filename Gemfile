@@ -66,3 +66,4 @@ gem "devise-i18n-views"
 gem "rails-i18n", "~> 7.0.0"
 
 gem 'image_processing', '~> 1.12'
+gem "ruby-vips"

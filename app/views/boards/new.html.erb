@@ -5,7 +5,7 @@
     <div>
       <label class="block text-lg font-medium text-gray-700 mb-2">ストレッチは？（必須）</label>
       <div class="flex space-x-6">
-        <%= f.radio_button :did_stretch, true, id: "did_stretch_yes", class: "hidden", data: { role: "stretch-option" } %>
+        <%= f.radio_button :did_stretch, true, id: "did_stretch_yes", class: "hidden", data: { role: "stretch-option" }, include_hidden: false %>
         <label for="did_stretch_yes" class="stretch-label flex flex-col items-center cursor-pointer text-2xl hover:scale-110 transition-transform">
           <div class="icon-circle w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-full">
             ◯
@@ -13,7 +13,7 @@
           <span class="text-sm mt-1">やった</span>
         </label>
 
-        <%= f.radio_button :did_stretch, false, id: "did_stretch_no", class: "hidden", data: { role: "stretch-option" } %>
+        <%= f.radio_button :did_stretch, false, id: "did_stretch_no", class: "hidden", data: { role: "stretch-option" }, include_hidden: false %>
         <label for="did_stretch_no" class="stretch-label flex flex-col items-center cursor-pointer text-2xl hover:scale-110 transition-transform">
           <div class="icon-circle w-12 h-12 flex items-center justify-center border-2 border-gray-300 rounded-full">
             ✕
