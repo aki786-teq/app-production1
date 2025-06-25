@@ -4,7 +4,7 @@ class Board < ApplicationRecord
 
   has_one_attached :image
 
-  validates :did_stretch, inclusion: { in: [true, false] }, presence: true
+  validates :did_stretch, inclusion: { in: [true, false] }
   validates :content, length: { maximum: 1000 }, allow_blank: true
   validates :flexibility_level, numericality: { only_integer: true }, allow_nil: true
 
@@ -13,11 +13,8 @@ class Board < ApplicationRecord
     return unless image.attached?
 
     image.variant(
-      combine_options: {
-        auto_orient: true,
-        strip: true,
-        resize: "800x800>"
-      }
+    resize_to_limit: [800, 800],
+    saver: { strip: true } # Exif情報を削除
     ).processed
   end
 end

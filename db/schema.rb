@@ -48,6 +48,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_24_055913) do
     t.integer "flexibility_level"
     t.bigint "user_id", null: false
     t.bigint "goal_id", null: false
+    t.text "goal_title"
+    t.text "goal_content"
+    t.text "goal_reward"
+    t.text "goal_punishment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["goal_id"], name: "index_boards_on_goal_id"

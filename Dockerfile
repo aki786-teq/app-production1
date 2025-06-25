@@ -11,10 +11,10 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 # Rails app lives here
 WORKDIR /rails
 
-# Install base packages
+# Install base packages including libvips here (rootユーザー権限)
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips libvips-dev postgresql-client && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Set production environment
 ENV RAILS_ENV="production" \
@@ -28,7 +28,7 @@ FROM base AS buildp
 # Install packages needed to build gems and node modules
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential git libpq-dev node-gyp pkg-config python-is-python3 && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Install JavaScript dependencies
 ARG NODE_VERSION=20.19.2
@@ -58,21 +58,21 @@ RUN bundle exec bootsnap precompile app/ lib/
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-
 RUN rm -rf node_modules
-
 
 # Final stage for app image
 FROM base
 
 # Copy built artifacts: gems, application
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
+COPY --from=buildp "${BUNDLE_PATH}" "${BUNDLE_PATH}"
+COPY --from=buildp /rails /rails
 
-# Run and own only the runtime files as a non-root user for security
+# Create rails user and fix ownership (rootユーザー権限)
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
+
+# Switch to non-root user for runtime
 USER 1000:1000
 
 # Entrypoint prepares the database.
@@ -81,10 +81,3 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 CMD ["./bin/rails", "server"]
-
-# MiniMagickの設定
-RUN apt-get update -qq && apt-get install -y \
-  imagemagick \
-  libvips \
-  libjpeg-dev \
-  libpng-dev
