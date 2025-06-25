@@ -14,6 +14,6 @@ Rails.application.routes.draw do
 
   root "home#index"
 
-  resource :goal, only: [:new, :create, :edit, :update]
-  resources :boards, only: %i[index new create]
+  resource :goal, only: %i[new create edit update]
+  resources :boards, only: %i[index new create show]
 end
