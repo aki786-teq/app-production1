@@ -4,10 +4,19 @@ class BoardsController < ApplicationController
   end
 
   def new
-    @board = Board.new
+    if current_user.boards.where(created_at: Time.zone.today.all_day).exists?
+      redirect_to boards_path, alert: "1日に投稿できるのは1件までです。"
+    else
+      @board = Board.new
+    end
   end
 
   def create
+    if current_user.boards.where(created_at: Time.zone.today.all_day).exists?
+      flash[:alert] = "1日に投稿できるのは1件までです。"
+      redirect_to boards_path and return
+    end
+
     @board = current_user.boards.build(board_params)
 
     if current_user.goal.present?
