@@ -53,6 +53,17 @@
   <p class="text-xs text-gray-400 mt-2">
     投稿日: <%= l(@board.created_at, format: :long) %>
   </p>
+
+  <!-- 編集・削除ボタン（投稿者のみ表示） -->
+  <% if current_user == @board.user %>
+    <div class="mt-4 space-x-4">
+      <%= link_to "編集する", edit_board_path(@board), class: "inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" %>
+
+      <%= link_to "削除する", board_path(@board),
+            data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" },
+            class: "inline-block px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" %>
+    </div>
+  <% end %>
 </div>
 
 <!-- 戻るボタン -->
