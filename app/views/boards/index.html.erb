@@ -2,58 +2,60 @@
 
 <div class="grid gap-6">
   <% @boards.each do |board| %>
-    <div class="p-6 border border-gray-200 rounded-lg shadow-sm bg-white space-y-4">
-      <!-- ユーザー名 -->
-      <p class="text-sm text-gray-500">投稿者: <%= board.user.name %></p>
+    <%= link_to board_path(board), class: "block hover:bg-gray-50 transition rounded-lg" do %>
+      <div class="p-6 border border-gray-200 rounded-lg shadow-sm bg-white space-y-4">
+        <!-- ユーザー名 -->
+        <p class="text-sm text-gray-500">投稿者: <%= board.user.name %></p>
 
-      <% if board.goal_title.present? %>
-  <div class="bg-gray-50 border-t pt-4 mt-4 text-sm text-gray-600">
-    <p><span class="font-semibold text-gray-700">目標:</span> <%= board.goal_title %></p>
-    <p><span class="font-semibold text-gray-700">内容:</span> <%= board.goal_content %></p>
-    <% if board.goal_reward.present? %>
-      <p><span class="font-semibold text-gray-700">達成報酬:</span> <%= board.goal_reward %></p>
-    <% end %>
-    <% if board.goal_punishment.present? %>
-      <p><span class="font-semibold text-gray-700">ペナルティ:</span> <%= board.goal_punishment %></p>
-    <% end %>
-  </div>
-<% end %>
-
-      <!-- ストレッチやった？ -->
-      <p class="text-lg font-semibold">
-        ストレッチ: 
-        <% if board.did_stretch %>
-          <span class="text-green-600">やった</span>
-        <% else %>
-          <span class="text-red-500">やってない</span>
+        <% if board.goal_title.present? %>
+          <div class="bg-gray-50 border-t pt-4 mt-4 text-sm text-gray-600 space-y-1">
+            <p><span class="font-semibold text-gray-700">目標:</span> <%= board.goal_title %></p>
+            <p><span class="font-semibold text-gray-700">内容:</span> <%= board.goal_content %></p>
+            <% if board.goal_reward.present? %>
+              <p><span class="font-semibold text-gray-700">達成報酬:</span> <%= board.goal_reward %></p>
+            <% end %>
+            <% if board.goal_punishment.present? %>
+              <p><span class="font-semibold text-gray-700">ペナルティ:</span> <%= board.goal_punishment %></p>
+            <% end %>
+          </div>
         <% end %>
-      </p>
 
-      <!-- 前屈レベル画像 -->
-      <% if board.flexibility_level.present? %>
-        <div class="w-32">
-          <img src="<%= asset_path("zenkutsu_level_#{format('%02d', board.flexibility_level)}.jpg") %>" 
-               alt="前屈レベル <%= board.flexibility_level %>" 
-               class="rounded-md shadow-md" />
-        </div>
-      <% end %>
+        <!-- ストレッチやった？ -->
+        <p class="text-lg font-semibold">
+          ストレッチ: 
+          <% if board.did_stretch %>
+            <span class="text-green-600">やった</span>
+          <% else %>
+            <span class="text-red-500">やってない</span>
+          <% end %>
+        </p>
 
-      <!-- 本文 -->
-      <% if board.content.present? %>
-        <p class="text-gray-800 whitespace-pre-wrap"><%= simple_format(board.content) %></p>
-      <% end %>
+        <!-- 前屈レベル画像 -->
+        <% if board.flexibility_level.present? %>
+          <div class="w-32">
+            <img src="<%= asset_path("zenkutsu_level_#{format('%02d', board.flexibility_level)}.jpg") %>" 
+                 alt="前屈レベル <%= board.flexibility_level %>" 
+                 class="rounded-md shadow-md" />
+          </div>
+        <% end %>
 
-      <!-- 添付画像（ActiveStorage）-->
-      <% if board.image.attached? %>
-        <div>
-          <%= image_tag board.display_image, class: "rounded-md shadow-md max-w-xs mt-2" %>
-        </div>
-      <% end %>
+        <!-- 本文 -->
+        <% if board.content.present? %>
+          <p class="text-gray-800 whitespace-pre-wrap"><%= simple_format(board.content) %></p>
+        <% end %>
 
-      <!-- 投稿日 -->
-      <p class="text-xs text-gray-400 mt-2">
-        投稿日: <%= l(board.created_at, format: :long) %>
-      </p>
-    </div>
+        <!-- 添付画像（ActiveStorage）-->
+        <% if board.image.attached? %>
+          <div>
+            <%= image_tag board.display_image, class: "rounded-md shadow-md max-w-xs mt-2" %>
+          </div>
+        <% end %>
+
+        <!-- 投稿日 -->
+        <p class="text-xs text-gray-400 mt-2">
+          投稿日: <%= l(board.created_at, format: :long) %>
+        </p>
+      </div>
+    <% end %>
   <% end %>
 </div>

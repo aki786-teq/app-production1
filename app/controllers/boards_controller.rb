@@ -1,6 +1,6 @@
 class BoardsController < ApplicationController
   def index
-    @boards = Board.includes(:user)
+    @boards = Board.includes(:user).order(created_at: :desc)
   end
 
   def new
@@ -24,6 +24,10 @@ class BoardsController < ApplicationController
       Rails.logger.debug(@board.errors.full_messages)
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def show
+  @board = Board.find(params[:id])
   end
 
   private
