@@ -5,7 +5,7 @@ class BoardsController < ApplicationController
 
   def new
     if current_user.boards.where(created_at: Time.zone.today.all_day).exists?
-      redirect_to boards_path, alert: "1日に投稿できるのは1件までです。"
+      redirect_to boards_path, danger: t('boards.flash_message.daily_limit')
     else
       @board = Board.new
     end
@@ -13,7 +13,7 @@ class BoardsController < ApplicationController
 
   def create
     if current_user.boards.where(created_at: Time.zone.today.all_day).exists?
-      flash[:alert] = "1日に投稿できるのは1件までです。"
+      flash[:alert] = t('boards.flash_message.daily_limit')
       redirect_to boards_path and return
     end
 
@@ -28,9 +28,9 @@ class BoardsController < ApplicationController
     end
 
     if @board.save
-      redirect_to boards_path, notice: "投稿が完了しました！"
+      redirect_to boards_path, success: t('boards.flash_message.create_success')
     else
-      Rails.logger.debug(@board.errors.full_messages)
+      flash.now[:danger] = t('boards.flash_message.create_failure')
       render :new, status: :unprocessable_entity
     end
   end
@@ -46,8 +46,9 @@ class BoardsController < ApplicationController
   def update
     @board = current_user.boards.find(params[:id])
     if @board.update(board_params)
-      redirect_to boards_path
+      redirect_to boards_path, success: t('boards.flash_message.update_success')
     else
+      flash.now[:danger] = t('boards.flash_message.update_failure')
       render :edit, status: :unprocessable_entity
     end
   end
@@ -55,7 +56,7 @@ class BoardsController < ApplicationController
   def destroy
   board = current_user.boards.find(params[:id])
   board.destroy!
-  redirect_to boards_path, status: :see_other
+  redirect_to boards_path, success: t('boards.flash_message.destroy_success'), status: :see_other
   end
 
   private
