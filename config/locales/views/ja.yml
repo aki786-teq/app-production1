@@ -1,0 +1,16 @@
+ja:
+  goals:
+    flash_message:
+      already_exists: "すでに目標が設定されています。"
+      create_success: "ストレッチ目標を設定しました。"
+      create_failure: "ストレッチ目標を設定できませんでした。"
+      update_success: "ストレッチ目標を更新しました。"
+      update_failure: "ストレッチ目標を更新できませんでした。"
+  boards:
+    flash_message:
+      create_success: "投稿が完了しました。"
+      create_failure: "投稿に失敗しました。入力内容を確認してください。"
+      update_success: "投稿を更新しました。"
+      update_failure: "投稿の更新に失敗しました。"
+      destroy_success: "投稿を削除しました。"
+      daily_limit: "1日に投稿できるのは1件までです。"

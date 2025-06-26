@@ -59,6 +59,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+
+  # 新規登録失敗のフラッシュメッセージ
+  def create
+    super do |resource|
+      if resource.errors.any?
+        flash[:danger] = I18n.t("devise.registrations.new.failure")
+      end
+    end
+  end
+
   protected
 
   # 新規登録後のリダイレクト先

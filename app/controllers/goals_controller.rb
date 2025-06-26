@@ -4,7 +4,7 @@ class GoalsController < ApplicationController
 
   def new
     if current_user.goal
-      redirect_to edit_goal_path
+      redirect_to edit_goal_path, danger: t("goals.flash_message.already_exists")
     else
       @goal = current_user.build_goal
     end
@@ -13,9 +13,10 @@ class GoalsController < ApplicationController
   def create
     @goal = current_user.build_goal(goal_params)
     if @goal.save
-      redirect_to edit_goal_path, notice: "ストレッチ目標を設定しました"
+      redirect_to edit_goal_path, success: t("goals.flash_message.create_success")
     else
-      render :new
+      flash.now[:danger] = t("goals.flash_message.create_failure")
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -23,9 +24,10 @@ class GoalsController < ApplicationController
 
   def update
     if @goal.update(goal_params)
-      redirect_to edit_goal_path, notice: "ストレッチ目標を更新しました"
+      redirect_to edit_goal_path, success: t("goals.flash_message.update_success")
     else
-      render :edit
+      flash.now[:danger] = t("goals.flash_message.update_failure")
+      render :edit, status: :unprocessable_entity
     end
   end
 
