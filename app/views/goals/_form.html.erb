@@ -3,11 +3,13 @@
   <div>
     <%= form.label :goal, "目標（必須）", class: "block text-sm font-medium text-gray-700" %>
     <%= form.text_area :goal, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" %>
+    <%= render "shared/error_message", model: @goal, attribute: :goal %>
   </div>
 
   <div>
     <%= form.label :content, "内容（必須）", class: "block text-sm font-medium text-gray-700" %>
     <%= form.text_area :content, class: "mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" %>
+    <%= render "shared/error_message", model: @goal, attribute: :content %>
   </div>
 
   <div>

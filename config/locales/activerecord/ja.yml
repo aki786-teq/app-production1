@@ -9,3 +9,9 @@ ja:
         first_name: 名
         password: パスワード
         password_confirmation: パスワード確認
+      goal:
+        goal: 目標
+        content: 内容
+      board:
+        content: "本文"
+        did_stretch: "どちらか"
