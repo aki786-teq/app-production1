@@ -17,9 +17,11 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body  class="font-lato font-zen">
+  <body>
     <%= render 'shared/header' %>
     <%= render 'shared/flash_message' %>
+    <main class="mx-auto px-4 py-14 sm:px-6 lg:px-8 max-w-screen-md">
     <%= yield %>
+    </main>
   </body>
 </html>
