@@ -9,7 +9,7 @@
   <!-- 目標情報 -->
   <div class="mb-4">
     <% if @board.goal_title.present? %>
-      <div class="bg-amber-50 py-2 px-2 text-sm space-y-1">
+      <div class="text-sm space-y-1">
         <p><span class="font-medium">目標：</span> <%= @board.goal_title %></p>
         <p><span class="font-medium">内容：</span> <%= @board.goal_content %></p>
         <% if @board.goal_reward.present? %>
@@ -47,7 +47,9 @@
   <!-- 本文 -->
   <div class="mb-4">
     <% if @board.content.present? %>
-      <p class="whitespace-pre-wrap"><%= simple_format(@board.content) %></p>
+      <div class="bg-amber-50 p-4 rounded-md">
+        <p class="whitespace-pre-wrap"><%= simple_format(@board.content) %></p>
+      </div>
     <% end %>
   </div>
 
