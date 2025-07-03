@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+# exit on error
 set -o errexit
 
 bundle install
-DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rails db:reset
-bundle exec rails assets:precompile
-bundle exec rails assets:clean
+bundle exec rake assets:precompile
+bundle exec rake assets:clean
