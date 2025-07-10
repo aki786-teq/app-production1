@@ -75,10 +75,11 @@
         <% end %>
         </div>
 
-        <!-- 投稿日 -->
-        <p class="text-xs text-stone-400">
-          投稿日: <%= l(board.created_at, format: :long) %>
-        </p>
+        <!-- 投稿日と応援ボタン -->
+        <div class="flex justify-between items-center">
+          <p class="text-xs text-stone-400">投稿日: <%= l(board.created_at, format: :long) %></p>
+          <%= render "cheers/btn", board: board %>
+        </div>
       </div>
     <% end %>
   <% end %>
