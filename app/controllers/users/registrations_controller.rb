@@ -76,8 +76,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     new_goal_path
   end
 
-  # アカウント削除後のリダイレクト先
-  def after_inactive_sign_up_path_for(resource)
+  # ログアウト後のリダイレクト先（アカウント削除後にも適用される）
+  def after_sign_out_path_for(resource_or_scope)
     root_path
   end
 end
