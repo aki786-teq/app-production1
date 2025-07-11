@@ -1,0 +1,27 @@
+<% if user_signed_in? %>
+  <% if board.bookmarked_by?(current_user) %>
+    <% bookmark = current_user.bookmarks.find_by(board: board) %>
+    <%= link_to board_bookmark_path(board, bookmark), 
+        id: "bookmark-button-#{board.id}", 
+        data: { 
+          turbo_method: :delete
+        }, 
+        class: "relative text-xl text-sky-500 hover:text-sky-600 transition" do %>
+      <%= icon_with_text("solid", "bookmark", "#{board.bookmarks.count}") %>
+    <% end %>
+  <% else %>
+    <%= link_to board_bookmarks_path(board), 
+        id: "bookmark-button-#{board.id}", 
+        data: { 
+          turbo_method: :post
+        }, 
+        class: "relative text-xl hover:text-sky-600 transition" do %>
+      <%= icon_with_text("regular", "bookmark", "#{board.bookmarks.count}") %>
+    <% end %>
+  <% end %>
+<% else %>
+  <!-- ログアウト状態ではブックマークボタンはクリックできない -->
+  <span class="relative text-xl text-gray-400">
+    <%= icon_with_text("regular", "bookmark", "#{board.bookmarks.count}") %>
+  </span>
+<% end %>

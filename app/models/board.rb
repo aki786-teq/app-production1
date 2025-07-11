@@ -2,6 +2,7 @@ class Board < ApplicationRecord
   belongs_to :user
   belongs_to :goal
   has_many :cheers, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
 
   has_one_attached :image
 
@@ -37,5 +38,9 @@ class Board < ApplicationRecord
   # ある投稿が特定のユーザによって応援されているか判定
   def cheered_by?(user)
     cheers.exists?(user_id: user.id)
+  end
+
+  def bookmarked_by?(user)
+    bookmarks.exists?(user_id: user.id)
   end
 end
