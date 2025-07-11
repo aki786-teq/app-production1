@@ -89,13 +89,13 @@ LINE Messaging API SDK for Ruby
 
 ## ■ 技術選定
 ■ 開発環境: Docker  
-■ サーバサイド:  
-　　Ruby 3.3.2 Rails 7.2.2.1  
-■ フロントエンド: Hotwire(Rails 7標準)  
-■ CSSフレームワーク: Tailwind CSS v4  
-■ インフラ:  
-・ Webアプリケーションサーバ: Render  
-・ データベースサーバ: PostgreSQL  
+■ バックエンド: Ruby 3.3.2 Rails 7.2.2.1  
+■ フロントエンド: Hotwire（Turbo / Stimulus）  
+■ UIフレームワーク: Tailwind CSS v4  
+■ 認証機能: Devise  
+■ アニメーション: mo.js  
+■ インフラ: Render（Web & DBホスティング）  
+■ データベース: PostgreSQL
 
 ## ■ 画面遷移図
 [画面遷移図はこちら](https://www.figma.com/design/Jg9DoTwcuFs81g2lGf5JZG/MainichiZenkutsu?t=XiZe1nUTuCa2LMLC-1)
