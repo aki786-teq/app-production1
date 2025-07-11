@@ -1,7 +1,6 @@
-// application.js
-
 import "@hotwired/turbo-rails"
 import "./controllers"
+import mojs from "@mojs/core"
 
 // グローバル変数でリスナー管理
 let listenersAttached = false;
@@ -126,3 +125,58 @@ document.addEventListener("turbo:before-visit", resetListeners);
 
 // 初回読み込み対応
 document.addEventListener("DOMContentLoaded", initializeForm);
+
+// mojsで応援ボタンに効果
+document.addEventListener("turbo:load", () => {
+  setupCheerButtons();
+});
+
+// Turbo Stream後に確実にイベントリスナーを再設定
+document.addEventListener("turbo:render", () => {
+  setupCheerButtons();
+});
+
+// イベント委譲を使用してより確実にイベントを捕捉
+document.addEventListener("click", (e) => {
+  // 応援ボタンのクリックかチェック
+  if (e.target.closest("[id^='cheer-button-']")) {
+    const cheerBtn = e.target.closest("[id^='cheer-button-']");
+    const method = cheerBtn.dataset.turboMethod;
+
+    if (method === "post") {
+      const rect = cheerBtn.getBoundingClientRect();
+
+      const burst = new mojs.Burst({
+        left: 0,
+        top: 0,
+        x: rect.left + rect.width / 2 + window.scrollX,
+        y: rect.top + rect.height / 2 + window.scrollY,
+        radius: { 0: 40 },
+        count: 7,
+        rotate: { 0: 90 },
+        opacity: { 1: 0 },
+        children: {
+          shape: "circle",
+          radius: 2,
+          fill: "orangered",
+          duration: 2000,
+          easing: "cubic.out",
+        },
+      });
+
+      burst.play();
+    }
+  }
+});
+
+function setupCheerButtons() {
+  // 実処理はイベント委譲に移行済み
+  console.log("Cheer buttons setup completed");
+}
+
+// 応援ボタンのリスナー管理をリセット
+document.addEventListener("turbo:before-cache", () => {
+  document.querySelectorAll("[id^='cheer-button-']").forEach((cheerBtn) => {
+    delete cheerBtn.dataset.cheerSetup;
+  });
+});

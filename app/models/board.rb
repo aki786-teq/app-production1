@@ -1,6 +1,7 @@
 class Board < ApplicationRecord
   belongs_to :user
   belongs_to :goal
+  has_many :cheers, dependent: :destroy
 
   has_one_attached :image
 
@@ -31,5 +32,10 @@ class Board < ApplicationRecord
     resize_to_limit: [800, 800],
     saver: { strip: true } # Exif情報を削除
     ).processed
+  end
+
+  # ある投稿が特定のユーザによって応援されているか判定
+  def cheered_by?(user)
+    cheers.exists?(user_id: user.id)
   end
 end
