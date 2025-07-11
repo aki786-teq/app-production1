@@ -7,4 +7,18 @@ class User < ApplicationRecord
   has_one :goal, dependent: :destroy
   has_many :boards, dependent: :destroy
   has_many :cheers, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
+  has_many :bookmarked_boards, through: :bookmarks, source: :board
+
+  def bookmark(board)
+    bookmarked_boards << board
+  end
+
+  def unbookmark(board)
+    bookmarked_boards.destroy(board)
+  end
+
+  def bookmark?(board)
+    bookmarked_boards.include?(board)
+  end
 end

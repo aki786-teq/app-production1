@@ -59,6 +59,10 @@ class BoardsController < ApplicationController
   redirect_to boards_path, success: t('boards.flash_message.destroy_success'), status: :see_other
   end
 
+  def bookmarks
+  @bookmark_boards = current_user.bookmarked_boards.includes(:user).order(created_at: :desc)
+  end
+
   private
 
   def board_params

@@ -16,6 +16,10 @@ Rails.application.routes.draw do
 
   resource :goal, only: %i[new create edit update]
   resources :boards, only: %i[index new create show edit update destroy] do
-    resource :cheer, only: [:create, :destroy]
+    resource :cheer, only: %i[create destroy]
+    resources :bookmarks, only: %i[create destroy]
+    collection do
+      get :bookmarks
+    end
   end
 end
