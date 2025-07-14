@@ -22,6 +22,10 @@ Rails.application.routes.draw do
       get :bookmarks
     end
   end
-  resources :notifications, only: %i[index destroy]
+  resources :notifications, only: [:index] do
+    collection do
+      delete :destroy_all
+    end
+  end
   resources :users, only: %i[show]
 end
