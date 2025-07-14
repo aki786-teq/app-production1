@@ -22,4 +22,5 @@ Rails.application.routes.draw do
       get :bookmarks
     end
   end
+  resources :notifications, only: %i[index destroy]
 end

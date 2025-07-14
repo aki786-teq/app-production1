@@ -3,6 +3,7 @@ class Board < ApplicationRecord
   belongs_to :goal
   has_many :cheers, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
+  has_one :notification, as: :subject, dependent: :destroy
 
   has_one_attached :image
 

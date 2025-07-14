@@ -1,0 +1,7 @@
+<div>
+  <%= notification.subject.user.name %>
+  があなたの
+  <%= link_to '投稿', board_path(notification.subject.board), class:"text-orange-500 hover:underline" %>
+  を応援しました！
+  <%= " (#{time_ago_in_words(notification.created_at)}前)" %>
+</div>
