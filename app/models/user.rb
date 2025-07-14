@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :cheers, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
   has_many :bookmarked_boards, through: :bookmarks, source: :board
+  has_many :notifications, dependent: :destroy
 
   def bookmark(board)
     bookmarked_boards << board

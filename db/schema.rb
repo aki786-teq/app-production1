@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_11_082109) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_13_223645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -90,6 +90,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_11_082109) do
     t.index ["user_id"], name: "index_goals_on_user_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.string "subject_type"
+    t.bigint "subject_id"
+    t.bigint "user_id"
+    t.integer "action_type", null: false
+    t.boolean "checked", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subject_type", "subject_id"], name: "index_notifications_on_subject"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -113,4 +125,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_11_082109) do
   add_foreign_key "cheers", "boards"
   add_foreign_key "cheers", "users"
   add_foreign_key "goals", "users"
+  add_foreign_key "notifications", "users"
 end

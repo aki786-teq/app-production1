@@ -6,7 +6,7 @@ module ApplicationHelper
     when :alert, :danger
       "bg-red-100 text-red-700"
     else
-      "bg-gray-100 text-gray-700"
+      "bg-stone-100 text-stone-700"
     end
   end
 

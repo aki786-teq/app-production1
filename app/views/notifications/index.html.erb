@@ -1,0 +1,10 @@
+<h1>通知</h1>
+<% if @notifications.present? %>
+  <%= link_to "全削除", notifications_path, method: :delete, data: { turbo_confirm: "本当に全て削除しますか？" }, class:"px-4 py-2 border border-stone-500 text-stone-700 bg-white transition rounded inline-block mb-8 hover:bg-neutral-500 hover:text-white" %>
+
+  <% @notifications.each do |notification| %>
+    <%= render "#{notification.action_type}", notification: notification %>
+  <% end %>
+<% else %>
+  通知はありません
+<% end %>
