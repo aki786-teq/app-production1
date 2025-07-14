@@ -4,8 +4,8 @@ class NotificationsController < ApplicationController
     current_user.notifications.where(checked: false).update_all(checked: true)
   end
 
-  def destroy
+  def destroy_all
     current_user.notifications.destroy_all
-    redirect_to notifications_path
+    redirect_to notifications_path, success: "通知を全て削除しました。", status: :see_other
   end
 end

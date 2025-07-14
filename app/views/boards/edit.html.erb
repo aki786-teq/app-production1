@@ -1,7 +1,9 @@
-<h1>投稿を編集</h1>
-<%= render "form", board: @board, submit_label: "更新する" %>
+<div class="my-container">
+  <h1>投稿を編集</h1>
+  <%= render "form", board: @board, submit_label: "更新する" %>
 
-<!-- 戻るボタン -->
-<div class="mt-6">
-  <%= link_to "一覧に戻る", boards_path, class: "text-orange-500 hover:underline" %>
+  <!-- 戻るボタン -->
+  <div class="mt-6">
+    <%= link_to "一覧に戻る", boards_path, class: "text-orange-500 hover:underline" %>
+  </div>
 </div>
