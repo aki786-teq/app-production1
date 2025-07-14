@@ -23,4 +23,5 @@ Rails.application.routes.draw do
     end
   end
   resources :notifications, only: %i[index destroy]
+  resources :users, only: %i[show]
 end
