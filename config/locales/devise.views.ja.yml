@@ -22,8 +22,8 @@ ja:
       reset_password_instructions:
         action: "パスワード変更"
         greeting: "こんにちは、%{recipient}さん!"
-        instruction: "誰かがパスワードの再設定を希望しました。次のリンクでパスワードの再設定が出来ます。"
-        instruction_2: "あなたが希望したのではないのなら、このメールは無視してください。"
+        instruction: "誰かがパスワードの再設定を希望しました。次のリンクでパスワードの再設定ができます。"
+        instruction_2: "あなたが希望していない場合、このメールは無視してください。"
         instruction_3: "上のリンクにアクセスして新しいパスワードを設定するまで、パスワードは変更されません。"
       unlock_instructions:
         action: "アカウントのロック解除"
@@ -37,8 +37,8 @@ ja:
         confirm_new_password: "確認用新しいパスワード"
         new_password: "新しいパスワード"
       new:
-        forgot_your_password: "パスワードを忘れましたか?"
-        send_me_reset_password_instructions: "パスワードの再設定方法を送信する"
+        forgot_your_password: "パスワードをリセット"
+        send_me_reset_password_instructions: "パスワード再設定メールを送信する"
     registrations:
       edit:
         are_you_sure: "本当に良いですか?"
