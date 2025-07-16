@@ -17,8 +17,8 @@ ja:
     mailer:
       confirmation_instructions:
         action: "アカウント確認"
-        greeting: "ようこそ、%{recipient}さん!"
-        instruction: "次のリンクでメールアドレスの確認が完了します:"
+        greeting: "こんにちは、%{recipient}さん!"
+        instruction: "以下のリンクをクリックして、メールアドレスの承認を完了してください。あなたが希望していない場合、このメールは無視してください。"
       reset_password_instructions:
         action: "パスワード変更"
         greeting: "こんにちは、%{recipient}さん!"
