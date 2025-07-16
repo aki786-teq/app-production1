@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  prepend_before_action :authenticate_scope!, only: [:update]
+  prepend_before_action :authenticate_scope!, only: [:update, :destroy]
   before_action :configure_account_update_params, only: [:update]
   # before_action :configure_sign_up_params, only: [:create]
 
@@ -61,14 +61,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   super
   end
 
-  def destroy
-    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-    resource.destroy
-    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
-    set_flash_message! :notice, :destroyed
-    yield resource if block_given?
-    redirect_to after_sign_out_path_for(resource_name)
-  end
+  # def destroy
+  #   super
+  # end
 
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign
@@ -106,11 +101,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # 新規登録後のリダイレクト先
   def after_sign_up_path_for(resource)
     new_goal_path
-  end
-
-  # ログアウト後のリダイレクト先（アカウント削除後にも適用される）
-  def after_sign_out_path_for(resource_or_scope)
-    root_path
   end
 
   def configure_account_update_params
