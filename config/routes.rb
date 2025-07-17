@@ -28,5 +28,10 @@ Rails.application.routes.draw do
       delete :destroy_all
     end
   end
-  resources :users, only: %i[show]
+  resources :users, only: [:show] do
+    member do
+      get :edit_profile
+      patch :update_profile
+    end
+  end
 end

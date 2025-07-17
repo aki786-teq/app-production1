@@ -4,6 +4,10 @@ class User < ApplicationRecord
          :confirmable
 
   validates :name, presence: true
+  validates :introduce, length: {
+    maximum: 500,
+    message: "は500文字以内で入力してください"
+  }
 
   has_one :goal, dependent: :destroy
   has_many :boards, dependent: :destroy

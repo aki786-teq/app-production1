@@ -3,21 +3,39 @@
 
     <!-- メインコンテンツ -->
     <div class="<%= current_user == @user ? 'md:col-span-3' : 'md:col-span-4 text-center' %> space-y-6">
-      <h1 class="text-2xl font-bold"><%= @user.name %>さんのプロフィール</h1>
-
-      <h2 class="text-xl font-semibold mt-6 mb-4 text-left">投稿一覧</h2>
-
-      <% if @user.boards.any? %>
-        <div class="grid gap-6">
-          <% @user.boards.order(created_at: :desc).each do |board| %>
-            <%= link_to board_path(board), class: "block rounded-md" do %>
-              <%= render partial: "boards/board_card", locals: { board: board } %>
-            <% end %>
+      <h1 class=""><%= @user.name %>さんのマイページ</h1>
+      <!-- プロフィール情報エリア -->
+      <div class="p-6 border border-stone-200 rounded-lg shadow-sm bg-white">
+        <div class="flex justify-between items-start mb-6">
+          <h2 class="text-lg font-bold"><%= @user.name %>さんのプロフィール</h2>
+          <% if current_user == @user %>
+            <%= link_to "プロフィール編集", edit_profile_user_path(@user),
+                class: "px-4 py-2 bg-blue-500 text-white rounded transition hover:bg-blue-600 text-sm" %>
           <% end %>
         </div>
-      <% else %>
-        <p>まだ投稿がありません。</p>
-      <% end %>
+
+        <div>
+          <p>
+            <%= @user.introduce.present? ? simple_format(@user.introduce) : "まだ紹介文が設定されていません。" %>
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold text-center">投稿一覧</h2>
+
+        <% if @user.boards.any? %>
+          <div class="space-y-4">
+            <% @user.boards.order(created_at: :desc).each do |board| %>
+              <%= link_to board_path(board), class: "block rounded-md mb-4" do %>
+                <%= render partial: "boards/board_card", locals: { board: board } %>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <p>まだ投稿がありません。</p>
+        <% end %>
+      </div>
     </div>
 
     <!-- サイドバー（ログインユーザー本人のみ） -->
@@ -40,7 +58,6 @@
             },
             class: "px-4 py-2 bg-red-500 text-white rounded transition hover:bg-red-600" %>
       </aside>
-
     <% end %>
 
   </div>

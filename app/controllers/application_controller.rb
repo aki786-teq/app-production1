@@ -26,4 +26,9 @@ class ApplicationController < ActionController::Base
       redirect_to new_goal_path, danger: t("goals.flash_message.setup_required")
     end
   end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :introduce])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :introduce])
+  end
 end
