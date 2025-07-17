@@ -9,6 +9,7 @@ ja:
         first_name: 名
         password: パスワード
         password_confirmation: パスワード確認
+        introduce: "紹介文"
       goal:
         goal: 目標
         content: 内容
