@@ -10,7 +10,7 @@
           <h2 class="text-lg font-bold"><%= @user.name %>さんのプロフィール</h2>
           <% if current_user == @user %>
             <%= link_to "プロフィール編集", edit_profile_user_path(@user),
-                class: "px-4 py-2 bg-blue-500 text-white rounded transition hover:bg-blue-600 text-sm" %>
+                class: "my-orange-btn text-sm" %>
           <% end %>
         </div>
 
@@ -45,7 +45,7 @@
             class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
 
         <%= link_to "ブックマーク一覧", bookmarks_boards_path,
-            class: "px-4 py-2 bg-amber-500 text-white rounded transition hover:bg-amber-600" %>
+            class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
 
         <%= link_to "アカウント情報変更", edit_user_registration_path,
             class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
