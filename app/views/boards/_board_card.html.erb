@@ -42,6 +42,18 @@
     </div>
   </div>
 
+  <!-- 前屈レベル画像 -->
+  <div class="mb-4">
+    <% if board.flexibility_level.present? %>
+      <p class="text-center mb-2">前屈レベル</p>
+      <div class="flex justify-center">
+        <div class="w-32">
+          <img src="<%= asset_path("zenkutsu_level_#{format('%02d', board.flexibility_level)}.jpg") %>" alt="前屈レベル <%= board.flexibility_level %>" class="rounded-md shadow-md" />
+        </div>
+      </div>
+    <% end %>
+  </div>
+
   <!-- 本文 -->
   <div class="mb-4">
     <% if board.content.present? %>
@@ -51,13 +63,17 @@
     <% end %>
   </div>
 
-  <!-- 前屈レベル画像 -->
-  <div class="mb-7">
-    <% if board.flexibility_level.present? %>
-      <p class="text-center mb-2">前屈レベル</p>
+  <!-- YouTube動画 -->
+  <div class="mb-4">
+    <% if board.has_youtube_video? %>
       <div class="flex justify-center">
-        <div class="w-32">
-          <img src="<%= asset_path("zenkutsu_level_#{format('%02d', board.flexibility_level)}.jpg") %>" alt="前屈レベル <%= board.flexibility_level %>" class="rounded-md shadow-md" />
+        <div class="w-full max-w-md">
+          <% video_id = board.youtube_video_id %>
+          <%= link_to board.youtube_link, target: "_blank", rel: "noopener noreferrer", class: "block" do %>
+            <div class="rounded-md shadow-md overflow-hidden hover:shadow-lg transition">
+              <%= youtube_thumbnail(video_id, class: 'object-cover') %>
+            </div>
+          <% end %>
         </div>
       </div>
     <% end %>

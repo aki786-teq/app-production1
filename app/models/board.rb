@@ -4,15 +4,14 @@ class Board < ApplicationRecord
   has_many :cheers, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
   has_one :notification, as: :subject, dependent: :destroy
-
   has_one_attached :image
 
   validates :did_stretch, inclusion: { in: [true, false], message: "選択してください" }
   validates :content, length: { maximum: 1000 }, allow_blank: true
   validates :flexibility_level, numericality: { only_integer: true }, allow_nil: true
-
   validate :image_type
   validate :image_size
+  validate :youtube_link_format
 
   def image_type
     if image.attached? && !image.content_type.in?(%w[image/jpeg image/png image/webp])
@@ -43,5 +42,31 @@ class Board < ApplicationRecord
 
   def bookmarked_by?(user)
     bookmarks.exists?(user_id: user.id)
+  end
+
+  # YouTube リンクのフォーマットをチェック
+  def youtube_link_format
+    return if youtube_link.blank?
+    
+    # YouTube URLの正規表現パターン
+    youtube_pattern = /\A(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/
+    
+    unless youtube_link.match(youtube_pattern)
+      errors.add(:youtube_link, "は有効なYouTube URLを入力してください")
+    end
+  end
+
+  # YouTube動画IDを取得
+  def youtube_video_id
+    return nil if youtube_link.blank?
+    # YouTube URLから動画IDを抽出
+    youtube_pattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/
+    match = youtube_link.match(youtube_pattern)
+    match ? match[1] : nil
+  end
+
+  # YouTube動画が添付されているかチェック
+  def has_youtube_video?
+    youtube_link.present? && youtube_video_id.present?
   end
 end

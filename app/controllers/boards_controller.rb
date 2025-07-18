@@ -66,7 +66,7 @@ class BoardsController < ApplicationController
   private
 
   def board_params
-    permitted = params.require(:board).permit(:did_stretch, :content, :flexibility_level, :goal_id, :image)
+    permitted = params.require(:board).permit(:did_stretch, :content, :flexibility_level, :goal_id, :image, :youtube_link)
     permitted[:did_stretch] = ActiveModel::Type::Boolean.new.cast(permitted[:did_stretch])
     permitted
   end
