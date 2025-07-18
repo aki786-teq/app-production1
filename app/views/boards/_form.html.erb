@@ -24,13 +24,6 @@
       <%= render "shared/error_message", model: @board, attribute: :did_stretch %>
     </div>
 
-    <!-- 本文 -->
-    <div>
-      <%= f.label :content, "今日の記録", class: "my-label-title" %>
-      <%= f.text_area :content, rows: 4, class: "my-form-text" %>
-      <%= render "shared/error_message", model: @board, attribute: :content %>
-    </div>
-
     <!-- 前屈レベル選択 -->
     <div>
       <label class="my-label-title">前屈レベルを選択</label>
@@ -44,6 +37,21 @@
           </div>
         <% end %>
       </div>
+    </div>
+
+    <!-- 本文 -->
+    <div>
+      <%= f.label :content, "今日の記録", class: "my-label-title" %>
+      <%= f.text_area :content, rows: 4, class: "my-form-text" %>
+      <%= render "shared/error_message", model: @board, attribute: :content %>
+    </div>
+
+
+    <!-- 動画URL -->
+    <div>
+      <%= f.label :youtube_link, "YouTube動画URL", class: "my-label-title" %>
+      <%= f.url_field :youtube_link, placeholder: "https://www.youtube.com/watch?v=...", class: "my-form-text" %>
+      <%= render "shared/error_message", model: @board, attribute: :youtube_link %>
     </div>
 
     <!-- 画像アップロード -->

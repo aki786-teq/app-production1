@@ -69,3 +69,5 @@ gem "rails-i18n", "~> 7.0.0"
 
 gem 'image_processing', '~> 1.12'
 gem "ruby-vips"
+
+gem 'google-api-client', '~> 0.53.0', require: 'google/apis/youtube_v3'
