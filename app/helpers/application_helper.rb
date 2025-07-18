@@ -25,23 +25,23 @@ module ApplicationHelper
   def extract_youtube_video_id(link)
     # もしリンクが提供されていない場合、ビデオIDは存在しないので nil を返す
     return nil if link.nil? || link.empty?
-    
+
     begin
       # URLを解析してビデオIDを取得する
       uri = URI(link) # リンクのURLをURIオブジェクトに変換
-      
+
       # youtu.be形式の場合
       if uri.host == 'youtu.be'
         return uri.path[1..-1] # 先頭の/を除去
       end
-      
+
       # youtube.com形式の場合
       if uri.host&.include?('youtube.com') && uri.query
         query = URI.decode_www_form(uri.query) # URLのクエリパラメータをデコードして取得
         query_hash = Hash[query] # クエリパラメータをハッシュに変換
         return query_hash["v"] # ハッシュからキー"v"に対応する値、ビデオIDを返す
       end
-      
+
       nil
     rescue URI::InvalidURIError
       nil
