@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     resources :bookmarks, only: %i[create destroy]
     collection do
       get :bookmarks
+      get :search_items
     end
   end
   resources :notifications, only: [:index] do

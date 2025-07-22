@@ -13,6 +13,11 @@ class Board < ApplicationRecord
   validate :image_size
   validate :youtube_link_format
 
+  validates :item_name, length: { maximum: 255 }, allow_blank: true
+  validates :item_price, numericality: { greater_than: 0 }, allow_nil: true
+  validates :item_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]) }, allow_blank: true
+  validates :item_image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]) }, allow_blank: true
+
   def image_type
     if image.attached? && !image.content_type.in?(%w[image/jpeg image/png image/webp])
       errors.add(:image, "はJPEG, PNG, WebP形式の画像のみ対応しています")
@@ -47,10 +52,10 @@ class Board < ApplicationRecord
   # YouTube リンクのフォーマットをチェック
   def youtube_link_format
     return if youtube_link.blank?
-    
+
     # YouTube URLの正規表現パターン
     youtube_pattern = /\A(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/
-    
+
     unless youtube_link.match(youtube_pattern)
       errors.add(:youtube_link, "は有効なYouTube URLを入力してください")
     end

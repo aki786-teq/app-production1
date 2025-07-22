@@ -54,6 +54,61 @@
       <%= render "shared/error_message", model: @board, attribute: :youtube_link %>
     </div>
 
+    <div data-controller="rakuten-search">
+      <label class="my-label-title">楽天おすすめ商品</label>
+
+      <!-- 商品検索フォーム -->
+      <div class="mb-4">
+        <div class="flex gap-2">
+          <input 
+            type="text" 
+            data-rakuten-search-target="searchInput"
+            placeholder="商品名を入力してください"
+            class="flex-1 px-3 py-2 border rounded" />
+          <button 
+            type="button"
+            data-action="click->rakuten-search#search"
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" >
+            検索
+          </button>
+        </div>
+      </div>
+
+      <!-- 検索結果表示エリア -->
+      <div data-rakuten-search-target="results" class="hidden"></div>
+
+      <!-- 選択された商品表示エリア -->
+      <div data-rakuten-search-target="selectedItem">
+        <% if @board.item_code.present? && @board.item_name.present? %>
+          <div class="border p-4 rounded bg-green-50 relative">
+            <h4 class="font-bold text-green-800">選択された商品</h4>
+            <button 
+              type="button"
+              data-action="click->rakuten-search#clearSelectedItem"
+              class="absolute top-2 text-2xl right-2 text-red-600 hover:text-red-800"
+              aria-label="選択解除"
+            >
+              &times;
+            </button>
+            <div class="flex items-center mt-2">
+              <img src="<%= @board.item_image_url %>" alt="<%= @board.item_name %>" class="w-16 h-16 object-cover mr-3" />
+              <div>
+                <p class="font-semibold"><%= @board.item_name %></p>
+                <p class="text-red-600 font-bold">¥<%= number_with_delimiter(@board.item_price) %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- 隠しフィールド -->
+      <input data-rakuten-search-target="itemCode" type="hidden" name="board[item_code]" id="board_item_code" value="<%= @board.item_code %>">
+      <input data-rakuten-search-target="itemName" type="hidden" name="board[item_name]" id="board_item_name" value="<%= @board.item_name %>">
+      <input data-rakuten-search-target="itemPrice" type="hidden" name="board[item_price]" id="board_item_price" value="<%= @board.item_price %>">
+      <input data-rakuten-search-target="itemUrl" type="hidden" name="board[item_url]" id="board_item_url" value="<%= @board.item_url %>">
+      <input data-rakuten-search-target="itemImageUrl" type="hidden" name="board[item_image_url]" id="board_item_image_url" value="<%= @board.item_image_url %>">
+    </div>
+
     <!-- 画像アップロード -->
     <!--
     <div>
