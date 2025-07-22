@@ -63,10 +63,52 @@ class BoardsController < ApplicationController
   @bookmarks = current_user.bookmarks.includes(:board).order(created_at: :desc)
   end
 
+  def search_items
+    if params[:keyword].blank?
+      render json: { items: [] }
+      return
+    end
+
+    begin
+      @items = RakutenWebService::Ichiba::Item.search(
+        keyword: params[:keyword],
+        hits: 5
+      )
+
+      render json: {
+        items: @items.map do |item|
+          {
+            item_code: item['itemCode'],
+            item_name: item['itemName'],
+            item_price: item['itemPrice'],
+            item_url: item['itemUrl'],
+            small_image_urls: item['smallImageUrls'],
+            medium_image_urls: item['mediumImageUrls']
+          }
+        end
+      }
+    rescue => e
+      Rails.logger.error "楽天API検索エラー: #{e.message}"
+      render json: { error: '商品検索でエラーが発生しました' }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def board_params
-    permitted = params.require(:board).permit(:did_stretch, :content, :flexibility_level, :goal_id, :image, :youtube_link)
+    permitted = params.require(:board).permit(
+      :did_stretch,
+      :content,
+      :flexibility_level,
+      :goal_id,
+      :image,
+      :youtube_link,
+      :item_code,
+      :item_name,
+      :item_price,
+      :item_url,
+      :item_image_url
+    )
     permitted[:did_stretch] = ActiveModel::Type::Boolean.new.cast(permitted[:did_stretch])
     permitted
   end

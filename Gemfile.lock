@@ -298,6 +298,10 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.0)
+    rakuten_web_service (1.15.0)
+      base64 (~> 0.2)
+      bigdecimal (~> 3.1)
+      json (~> 2.3)
     rdoc (6.14.0)
       erb
       psych (>= 4.0.0)
@@ -427,6 +431,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rails (~> 7.2.2, >= 7.2.2.1)
   rails-i18n (~> 7.0.0)
+  rakuten_web_service
   rubocop-rails-omakase
   ruby-vips
   selenium-webdriver

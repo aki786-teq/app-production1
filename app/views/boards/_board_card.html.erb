@@ -79,6 +79,37 @@
     <% end %>
   </div>
 
+  <!-- 楽天商品 -->
+  <div class="mb-4">
+    <% if board.item_name.present? && board.item_url.present? %>
+      <p class="text-center mb-2">おすすめ商品</p>
+      <div class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-4 transition hover:shadow-md">
+        <%= link_to board.item_url, target: "_blank", rel: "noopener noreferrer", class: "block hover:bg-red-50 rounded-lg transition-colors" do %>
+          <div class="flex items-center space-x-4">
+            <% if board.item_image_url.present? %>
+              <div class="flex-shrink-0">
+                <img src="<%= board.item_image_url %>" alt="<%= board.item_name %>" class="w-20 h-20 object-cover rounded-lg shadow-sm" />
+              </div>
+            <% end %>
+            <div class="flex-1 min-w-0">
+              <h4 class="font-semibold text-sm leading-tight mb-2">
+                <%= truncate(board.item_name, length: 80) %>
+              </h4>
+              <% if board.item_price.present? %>
+                <p class="text-red-600 font-bold text-lg">
+                  ¥<%= number_with_delimiter(board.item_price) %>
+                </p>
+              <% end %>
+              <p class="text-xs text-stone-500 mt-1">
+                楽天市場で詳細を見る →
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
   <!-- 添付画像 -->
   <div class="mb-2">
     <% if board.image.attached? %>

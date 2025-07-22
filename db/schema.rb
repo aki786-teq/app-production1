@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_18_070043) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_22_013304) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,6 +56,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_18_070043) do
     t.datetime "updated_at", null: false
     t.boolean "is_deleted", default: false, null: false
     t.string "youtube_link"
+    t.string "item_code"
+    t.string "item_name"
+    t.integer "item_price"
+    t.text "item_url"
+    t.text "item_image_url"
     t.index ["goal_id"], name: "index_boards_on_goal_id"
     t.index ["user_id"], name: "index_boards_on_user_id"
   end
