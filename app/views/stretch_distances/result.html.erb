@@ -1,0 +1,13 @@
+<div class="my-container">
+  <h1>測定結果</h1>
+
+  <div class="bg-amber-50 p-4 rounded-md">
+    <p><strong>距離：</strong><%= number_with_precision(@stretch_distance.distance_cm, precision: 1) %> cm（指先から地面まで）</p>
+    <p><strong>柔軟性レベル：</strong><%= @stretch_distance.localized_flexibility_level %></p>
+    <p><%= @stretch_distance.comment_template %></p>
+  </div>
+
+  <div class="mt-6 text-center">
+    <%= button_to "結果を投稿する", create_post_with_result_stretch_distance_path(@stretch_distance), method: :post, class: "my-orange-btn" %>
+  </div>
+</div>

@@ -8,6 +8,15 @@ class BoardsController < ApplicationController
       redirect_to boards_path, danger: t('boards.flash_message.daily_limit')
     else
       @board = Board.new
+
+      # 前屈測定結果がセッションにある場合は本文に自動入力
+      if session[:stretch_measurement_data].present?
+        @stretch_data = session[:stretch_measurement_data]
+        @board.content = format_stretch_measurement_content(@stretch_data)
+
+        # セッションから削除（一度使用したら削除）
+        session.delete(:stretch_measurement_data)
+      end
     end
   end
 
@@ -25,6 +34,12 @@ class BoardsController < ApplicationController
       @board.goal_content   = current_user.goal.content
       @board.goal_reward    = current_user.goal.reward
       @board.goal_punishment = current_user.goal.punishment
+    end
+
+    # 前屈測定結果IDがパラメータにある場合は関連付け
+    if params[:stretch_distance_id].present?
+      stretch_distance = current_user.stretch_distances.find_by(id: params[:stretch_distance_id])
+      @board.stretch_distances << stretch_distance if stretch_distance
     end
 
     if @board.save
@@ -111,5 +126,29 @@ class BoardsController < ApplicationController
     )
     permitted[:did_stretch] = ActiveModel::Type::Boolean.new.cast(permitted[:did_stretch])
     permitted
+  end
+
+  # 前屈測定結果を投稿本文用の文章に変換
+  def format_stretch_measurement_content(stretch_data)
+    flexibility_level_text = case stretch_data['flexibility_level']
+    when 'excellent'
+      '優秀'
+    when 'good'
+      '良好'
+    when 'average'
+      '平均'
+    when 'needs_improvement'
+      '要改善'
+    else
+      stretch_data['flexibility_level']
+    end
+
+    <<~TEXT
+      🎉 前屈測定結果 🎉
+      測定日時: #{stretch_data['created_at']}
+      距離: #{stretch_data['distance_cm']}cm（指先から地面まで）
+      柔軟性レベル: #{flexibility_level_text}
+      #{stretch_data['comment']}
+    TEXT
   end
 end

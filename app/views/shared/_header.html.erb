@@ -19,6 +19,7 @@
           <%= link_to "投稿作成", new_board_path, class: "px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500" %>
         <% end %>
         <%= link_to 'みんなの投稿', boards_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
+        <%= link_to '前屈測定', measure_stretch_distances_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
         <%= link_to 'マイページ', user_path(current_user), class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
         <%= link_to notifications_path, class: "relative inline-block" do %>
           <% has_unread = current_user.notifications.where(checked: false).exists? %>
