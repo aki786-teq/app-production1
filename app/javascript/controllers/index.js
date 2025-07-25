@@ -9,3 +9,6 @@ application.register("hello", HelloController)
 
 import RakutenSearchController from "./rakuten_search_controller"
 application.register("rakuten-search", RakutenSearchController)
+
+import StretchAnalyzerController from "./stretch_analyzer_controller"
+application.register("stretch-analyzer", StretchAnalyzerController)

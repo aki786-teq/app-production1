@@ -35,4 +35,14 @@ Rails.application.routes.draw do
       patch :update_profile
     end
   end
+  resources :stretch_distances, only: [] do
+    collection do
+      get :measure
+      post :analyze
+    end
+    member do
+      get :result
+      post :create_post_with_result
+    end
+  end
 end

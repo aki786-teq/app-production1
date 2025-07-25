@@ -3,6 +3,7 @@ class Board < ApplicationRecord
   belongs_to :goal
   has_many :cheers, dependent: :destroy
   has_many :bookmarks, dependent: :destroy
+  has_many :stretch_distances, dependent: :nullify
   has_one :notification, as: :subject, dependent: :destroy
   has_one_attached :image
 
@@ -73,5 +74,10 @@ class Board < ApplicationRecord
   # YouTube動画が添付されているかチェック
   def has_youtube_video?
     youtube_link.present? && youtube_video_id.present?
+  end
+
+  # 前屈測定結果が含まれているか
+  def has_stretch_measurement?
+    stretch_distances.exists?
   end
 end
