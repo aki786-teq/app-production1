@@ -73,3 +73,7 @@ gem "ruby-vips"
 gem 'google-api-client', '~> 0.53.0', require: 'google/apis/youtube_v3'
 
 gem 'rakuten_web_service'
+
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
