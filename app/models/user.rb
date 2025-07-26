@@ -1,13 +1,14 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable
+         :confirmable, :omniauthable, omniauth_providers: [:google_oauth2]
 
   validates :name, presence: true
   validates :introduce, length: {
     maximum: 500,
     message: "は500文字以内で入力してください"
   }
+  validates :uid, uniqueness: { scope: :provider }, allow_nil: true
 
   has_one :goal, dependent: :destroy
   has_many :boards, dependent: :destroy
@@ -72,5 +73,30 @@ class User < ApplicationRecord
     end
 
     days
+  end
+
+  def self.from_omniauth(auth)
+    user = where(provider: auth.provider, uid: auth.uid).first # SNSログイン済ユーザーを検索
+    return user if user.present?
+    user = find_by(email: auth.info.email)# 同じメールアドレスを持つ既存ユーザーがいるかチェック
+    if user
+      # 既存ユーザーにSNS情報（provider / uid）を紐づけて更新
+      user.update(provider: auth.provider, uid: auth.uid)
+    else
+      user = new(
+        provider: auth.provider,
+        uid: auth.uid,
+        email: auth.info.email,
+        name: auth.info.name,
+        password: Devise.friendly_token[0, 20]
+      )
+      user.skip_confirmation!
+      user.save!
+    end
+    user
+  end
+
+  def self.create_unique_string
+    SecureRandom.uuid
   end
 end
