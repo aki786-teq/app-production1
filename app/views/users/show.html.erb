@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-4xl px-4 py-8">
+<div class="my-container max-w-4xl">
   <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 
     <!-- メインコンテンツ -->
@@ -19,6 +19,12 @@
             <%= @user.introduce.present? ? simple_format(@user.introduce) : "まだ紹介文が設定されていません。" %>
           </p>
         </div>
+      </div>
+
+      <div class="mb-8">
+        <turbo-frame id="calendar">
+          <%= render 'users/calendar', calendar: @calendar, events: @calendar_posts %>
+        </turbo-frame>
       </div>
 
       <div class="space-y-4">
