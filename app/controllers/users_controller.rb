@@ -4,7 +4,18 @@ class UsersController < ApplicationController
   before_action :ensure_correct_user, only: [:edit_profile, :update_profile]
 
   def show
+    @user = User.find(params[:id])
     @boards = @user.boards.order(created_at: :desc)
+    @calendar_posts = @user.boards.order(:created_at)
+
+    @calendar = SimpleCalendar::Calendar.new(params[:month]) 
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream {
+        render partial: 'users/calendar', locals: { calendar: @calendar, events: @calendar_posts }
+      }
+    end
   end
 
   def edit_profile

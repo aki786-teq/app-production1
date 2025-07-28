@@ -1,0 +1,46 @@
+<div class="simple-calendar w-full mx-auto">
+  <!-- カレンダーヘッダー -->
+  <div class="flex justify-between items-center mb-4">
+    <time datetime="<%= start_date.strftime('%Y-%m') %>" class="text-xl font-semibold">
+      <%= t('date.month_names')[start_date.month] %> <%= start_date.year %>
+    </time>
+
+    <nav class="flex gap-2">
+      <%= link_to t('simple_calendar.previous', default: '<'), calendar.url_for_previous_view,
+        class: "px-3 py-1 bg-stone-200 hover:bg-stone-300 rounded",
+        data: { turbo_frame: "calendar" } %>
+
+      <%= link_to t('simple_calendar.today', default: '今日'), calendar.url_for_today_view,
+        class: "px-3 py-1 bg-yellow-200 hover:bg-yellow-300 rounded",
+        data: { turbo_frame: "calendar" } %>
+
+      <%= link_to t('simple_calendar.next', default: '>'), calendar.url_for_next_view,
+        class: "px-3 py-1 bg-stone-200 hover:bg-stone-300 rounded",
+        data: { turbo_frame: "calendar" } %>
+    </nav>
+  </div>
+
+  <!-- カレンダー本体 -->
+  <div class="grid grid-cols-7 border border-stone-300 rounded text-sm">
+    <!-- 曜日ヘッダー -->
+    <% date_range.slice(0, 7).each do |day| %>
+      <div class="bg-stone-100 text-center font-medium text-stone-600 py-2 border-b border-stone-300">
+        <%= t('date.abbr_day_names')[day.wday] %>
+      </div>
+    <% end %>
+
+    <!-- 日ごとのセル -->
+    <% date_range.each do |day| %>
+      <% classes = calendar.td_classes_for(day) %>
+      <% is_today = day == Date.current %>
+      <div class="relative h-28 p-1 border border-stone-200 <%= 'bg-amber-50' if is_today %> <%= classes %>">
+        <div class="text-right text-xs font-semibold text-stone-600">
+          <%= day.day %>
+        </div>
+        <div class="mt-1 space-y-1 text-xs">
+          <% instance_exec(day, calendar.sorted_events_for(day), &passed_block) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

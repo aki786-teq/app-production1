@@ -21,6 +21,12 @@
         </div>
       </div>
 
+      <div class="mb-8">
+        <turbo-frame id="calendar">
+          <%= render 'users/calendar', calendar: @calendar, events: @calendar_posts %>
+        </turbo-frame>
+      </div>
+
       <div class="space-y-4">
         <h2 class="text-xl font-semibold text-center">投稿一覧</h2>
 
