@@ -9,5 +9,15 @@
   <section class="">
     <p class="text-center">全身をやわらかく、前屈ができるようサポートします。<br>めんどくさがりでも毎日のストッチを記録することで習慣的に続けられます。</p>
   </section>
+  <section class="w-full max-w-2xl">
+    <h2 class="text-2xl font-bold text-center mb-4">週間ランキング</h2>
+  <div class="grid gap-6">
+    <% @ranking_boards.each do |board| %>
+      <%= link_to board_path(board), class: "block rounded-md" do %>
+        <%= render partial: "boards/board_card", locals: { board: board } %>
+      <% end %>
+    <% end %>
+  </div>
+  </section>
 </article>
 </div>
