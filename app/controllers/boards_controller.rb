@@ -136,7 +136,7 @@ class BoardsController < ApplicationController
     when 'good'
       '良好'
     when 'average'
-      '平均'
+      '普通'
     when 'needs_improvement'
       '要改善'
     else
@@ -146,7 +146,6 @@ class BoardsController < ApplicationController
     <<~TEXT
       🎉 前屈測定結果 🎉
       測定日時: #{stretch_data['created_at']}
-      距離: #{stretch_data['distance_cm']}cm（指先から地面まで）
       柔軟性レベル: #{flexibility_level_text}
       #{stretch_data['comment']}
     TEXT
