@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_25_081509) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -111,8 +111,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_25_081509) do
   create_table "stretch_distances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "board_id"
-    t.decimal "distance_cm", precision: 4, scale: 1, null: false
-    t.decimal "height_cm", precision: 4, scale: 1, null: false
     t.text "comment_template"
     t.string "flexibility_level"
     t.datetime "created_at", null: false
