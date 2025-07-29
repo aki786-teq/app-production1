@@ -46,4 +46,11 @@ Rails.application.routes.draw do
       post :create_post_with_result
     end
   end
+
+  resource :static, only: [] do
+    collection do
+      get "terms_of_service"
+      get "privacy_policy"
+    end
+  end
 end
