@@ -1,0 +1,24 @@
+<footer class="border-t border-stone-300">
+  <div class="flex flex-col items-center px-6 py-4 mx-auto">
+    <div class="flex justify-center mx-2">
+        <%= link_to "https://github.com/aki786-teq/app-production1", class: "relative inline-block", target: :_blank,rel: "noopener noreferrer" do %>
+          <span class="text-3xl mx-1 text-stone-600 transition-colors duration-300 hover:text-green-500">
+            <%= icon("brands", "github") %>
+          </span>
+        <% end %>
+        <%= link_to "https://x.com/akikero786", class: "relative inline-block", target: :_blank,rel: "noopener noreferrer" do %>
+            <span class="text-3xl mx-1 text-stone-600 transition-colors duration-300 hover:text-green-500">
+            <%= icon("brands", "x-twitter") %>
+          </span>
+        <% end %>
+    </div>
+    <div class="flex justify-center my-3 mx-2 text-sm gap-2">
+        <%= link_to "利用規約", terms_of_service_static_path, class: "text-stone-600 transition-colors duration-300 hover:text-green-500" %>
+        <span class="w-[1px] bg-stone-600"></span>
+        <%= link_to "プライバシーポリシー", privacy_policy_static_path, class: "text-stone-600 transition-colors duration-300 hover:text-green-500" %>
+        <span class="w-[1px] bg-stone-600"></span>
+        <%= link_to "お問い合わせ", "https://forms.gle/ZvjaJRigM8Vk9xXk8", class: "text-stone-600 transition-colors duration-300 hover:text-green-500", target: :_blank,rel: "noopener noreferrer" %>
+    </div>
+    <p class="text-xs text-stone-500">© 2025 まいにち前屈</p>
+  </div>
+</footer>
