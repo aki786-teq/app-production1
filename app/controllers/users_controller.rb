@@ -7,8 +7,8 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @boards = @user.boards.order(created_at: :desc)
     @calendar_posts = @user.boards.order(:created_at)
-
-    @calendar = SimpleCalendar::Calendar.new(params[:month]) 
+    @calendar = SimpleCalendar::Calendar.new(params[:month])
+    @streak_days = calculate_streak_days(@user)
 
     respond_to do |format|
       format.html
@@ -41,5 +41,19 @@ class UsersController < ApplicationController
 
   def profile_params
     params.require(:user).permit(:name, :introduce)
+  end
+
+  def calculate_streak_days(user)
+    post_dates = user.boards.pluck(:created_at).map(&:to_date).to_set
+
+    streak = 0
+    today = Date.current
+
+    while post_dates.include?(today)
+      streak += 1
+      today -= 1
+    end
+
+    streak
   end
 end
