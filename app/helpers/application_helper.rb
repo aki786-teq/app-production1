@@ -20,7 +20,6 @@ module ApplicationHelper
     tag.span(icon(icon_style, icon_name), class: "mr-2") + tag.span(text)
   end
 
-  module ApplicationHelper
   # YouTubeの動画リンクからビデオIDを抽出するメソッド
   def extract_youtube_video_id(link)
     # もしリンクが提供されていない場合、ビデオIDは存在しないので nil を返す
@@ -47,5 +46,10 @@ module ApplicationHelper
       nil
     end
   end
-end
+
+  # タイトルを動的に出力するメソッド
+  def page_title(title = '')
+    base_title = 'まいにち前屈'
+    title.present? ? "#{title} | #{base_title}" : base_title
+  end
 end

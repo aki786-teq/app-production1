@@ -12,9 +12,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.turbo_stream {
-        render partial: 'users/calendar', locals: { calendar: @calendar, events: @calendar_posts }
-      }
+      format.turbo_stream
     end
   end
 

@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "calendar" do %>
+  <turbo-frame id="calendar">
+    <%= render partial: "users/calendar", formats: [:html], locals: { calendar: calendar, events: events } %>
+  </turbo-frame>
+<% end %>

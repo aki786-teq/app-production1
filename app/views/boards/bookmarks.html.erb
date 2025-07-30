@@ -1,12 +1,17 @@
 
+<% content_for(:title, "ブックマーク一覧ページ") %>
 <div class="my-container">
   <h1>ブックマーク一覧</h1>
 
-  <div class="grid gap-6">
-    <% @bookmarks.each do |bookmark| %>
-      <%= link_to board_path(bookmark.board) do %>
-        <%= render partial: "boards/board_card", locals: { board: bookmark.board } %>
+  <% if @bookmarks.any? %>
+    <div class="grid gap-6">
+      <% @bookmarks.each do |bookmark| %>
+        <%= link_to board_path(bookmark.board) do %>
+          <%= render partial: "boards/board_card", locals: { board: bookmark.board } %>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+  <% else %>
+    <p>まだブックマークはありません。</p>
+  <% end %>
 </div>
