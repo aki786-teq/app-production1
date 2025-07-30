@@ -2,7 +2,11 @@
 <div class="my-container">
   <h1>プロフィールを編集</h1>
   <div id="profile-form">
-    <%= form_with(model: @user, url: update_profile_user_path(@user.id), method: :patch, local: false) do |form| %>
+    <%= form_with(model: @user, 
+                  url: update_profile_user_path(@user), 
+                  method: :patch, 
+                  local: true,
+                  data: { turbo: false }) do |form| %>
 
     <div class="space-y-6">
       <div>
