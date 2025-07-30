@@ -1,4 +1,43 @@
 module ApplicationHelper
+  def default_meta_tags
+    {
+      site: 'まいにち前屈',
+      reverse: true,
+      charset: 'utf-8',
+      description: '柔軟運動が苦手、肩こり腰痛などの不調に悩まされている方など、めんどくさがりでも楽しく続けやすいをコンセプトに前屈ができるようストレッチをサポートします。',
+      keywords: '前屈, 柔軟, 運動不足, ストレッチ, 肩こり, 腰痛, 健康管理',
+      canonical: request.original_url,
+      separator: '|',
+      viewport: 'width=device-width, initial-scale=1',
+
+      # Apple PWA関連のメタタグ
+      'apple-mobile-web-app-capable' => 'yes',
+
+      og: {
+        site_name: 'まいにち前屈',
+        title: 'まいにち前屈 - 毎日続けやすい柔軟運動アプリ',
+        description: '柔軟運動が苦手、肩こり腰痛などの不調に悩まされている方など、めんどくさがりでも楽しく続けやすいをコンセプトに前屈ができるようストレッチをサポートします。',
+        type: 'website',
+        url: request.original_url,
+        image: image_url('ogp.png'),
+        locale: 'ja_JP'
+      },
+      twitter: {
+        card: 'summary_large_image',
+        creator: '@akikero786',
+        title: 'まいにち前屈 - 毎日続けやすい柔軟運動アプリ',
+        description: '柔軟運動が苦手、肩こり腰痛などの不調に悩まされている方など、めんどくさがりでも楽しく続けやすいをコンセプトに前屈ができるようストレッチをサポートします。',
+        image: image_url('ogp.png')
+      }
+    }
+  end
+
+    # タイトルを動的に出力するメソッド
+  def page_title(title = '')
+    base_title = 'まいにち前屈'
+    title.present? ? "#{title} | #{base_title}" : base_title
+  end
+
   def flash_background_color(type)
     case type.to_sym
     when :notice, :success
@@ -45,11 +84,5 @@ module ApplicationHelper
     rescue URI::InvalidURIError
       nil
     end
-  end
-
-  # タイトルを動的に出力するメソッド
-  def page_title(title = '')
-    base_title = 'まいにち前屈'
-    title.present? ? "#{title} | #{base_title}" : base_title
   end
 end
