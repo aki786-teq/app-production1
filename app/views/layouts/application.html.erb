@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
     <title><%= page_title(content_for(:title)) %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%# すべてのメタタグとOGP %>
+    <%= display_meta_tags(default_meta_tags) %>
+
+    <%# favicon %>
+    <%= favicon_link_tag '/favicon.ico' %>
+    <%= favicon_link_tag '/apple-touch-icon.png', rel: 'apple-touch-icon', type: 'image/png', sizes: '180x180' %>
+    <%= favicon_link_tag '/android-chrome-192x192.png', rel: 'icon', type: 'image/png', sizes: '192x192' %>
+    <%= favicon_link_tag '/android-chrome-512x512.png', rel: 'icon', type: 'image/png', sizes: '512x512' %>
+    <%= favicon_link_tag '/safari-pinned-tab.svg', rel: 'mask-icon' %>
+
     <%= yield :head %>
 
+    <%# PWA Manifest %>
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
-    <script src="https://kit.fontawesome.com/1cc9b5767f.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1cc9b5767f.js" crossorigin="anonymous" async></script>
   </head>
 
   <body>
