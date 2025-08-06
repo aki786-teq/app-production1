@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_01_041948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,6 +61,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
     t.integer "item_price"
     t.text "item_url"
     t.text "item_image_url"
+    t.datetime "start_time"
     t.index ["goal_id"], name: "index_boards_on_goal_id"
     t.index ["user_id"], name: "index_boards_on_user_id"
   end
@@ -94,6 +95,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_goals_on_user_id"
+  end
+
+  create_table "line_notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "last_notified_at"
+    t.boolean "notification_enabled", default: true, null: false
+    t.integer "consecutive_inactive_days", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_notified_at"], name: "index_line_notifications_on_last_notified_at"
+    t.index ["user_id"], name: "index_line_notifications_on_user_id", unique: true
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -137,8 +149,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
     t.text "introduce"
     t.string "provider"
     t.string "uid"
+    t.string "line_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["line_id"], name: "index_users_on_line_id"
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -152,6 +166,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
   add_foreign_key "cheers", "boards"
   add_foreign_key "cheers", "users"
   add_foreign_key "goals", "users"
+  add_foreign_key "line_notifications", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "stretch_distances", "boards"
   add_foreign_key "stretch_distances", "users"

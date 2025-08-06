@@ -1,0 +1,67 @@
+<% content_for(:title, "リマインダー設定ページ") %>
+<div class="my-container">
+  <h1>リマインダー設定</h1>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold mb-4">LINE通知設定</h2>
+
+    <% if current_user.line_id.present? %>
+      <!-- LINE連携済みの場合 -->
+      <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-green-700">LINE連携が完了しています</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 通知設定フォーム -->
+      <%= form_with model: @line_notification, url: reminder_settings_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+        <div class="flex items-center">
+          <%= form.check_box :notification_enabled, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+          <%= form.label :notification_enabled, "3日間投稿がない場合にLINE通知を受け取る", class: "ml-2 text-sm text-gray-700" %>
+        </div>
+
+        <div class="flex space-x-4">
+          <%= form.submit "設定を保存", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+          <%= link_to "LINE連携を解除", line_auth_disconnect_path, method: :delete, data: { confirm: "LINE連携を解除しますか？通知が届かなくなります。", turbo: false } %>
+        </div>
+      <% end %>
+
+    <% else %>
+      <!-- LINE未連携の場合 -->
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-yellow-700">
+              LINE通知を受け取るには、LINEアカウントとの連携が必要です
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <%= link_to "/users/auth/line", method: :post, class: "btn btn-success btn-line" do %>
+        LINEと連携する
+        <% end %>
+      </div>
+
+      <div class="mt-4 text-sm text-gray-600">
+        <h3 class="font-medium mb-2">LINE連携について</h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li>3日間投稿がない場合に、毎朝7時にリマインド通知をお送りします</li>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>
