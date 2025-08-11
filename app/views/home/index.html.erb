@@ -1,16 +1,54 @@
 <% content_for(:title, "") %>
 <div class="my-container">
-<article class="flex flex-col gap-10 justify-center items-center">
+<article class="flex flex-col gap-20 justify-center items-center">
   <section class="">
-    <p class="text-center text-4xl font-bold">まいにち前屈</p>
-  </section>
-  <section class="">
-    <%= image_tag 'stretch_cat.jpg', alt: "ストレッチする猫", class: "block rounded-md w-full max-w-[600px]" %>
-  </section>
-  <section class="">
+    <p class="text-center text-4xl font-bold mb-10">まいにち前屈</p>
+    <%= image_tag 'stretch_cat.jpg', alt: "ストレッチする猫", class: "block rounded-md w-full max-w-[600px] mb-10" %>
     <p class="text-center">全身をやわらかく、前屈ができるようサポートします。<br>めんどくさがりでも毎日のストッチを記録することで習慣的に続けられます。</p>
   </section>
-  <section class="w-full max-w-2xl">
+
+  <section class="w-full">
+    <h2 class="text-2xl font-bold text-center mb-8">使い方</h2>
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div class="bg-white rounded-lg p-6 shadow-md">
+        <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">1</div>
+        <h3 class="text-lg font-semibold mb-3 text-center">会員登録・ログイン</h3>
+        <p class="text-sm">まずは新規登録、またはログインして始めましょう。</p>
+      </div>
+
+      <div class="bg-white rounded-lg p-6 shadow-md">
+        <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">2</div>
+        <h3 class="text-lg font-semibold mb-3 text-center">目標を設定</h3>
+        <p class="text-sm">自分に合ったストレッチ目標を決めると、続けやすくなります。</p>
+      </div>
+
+      <div class="bg-white rounded-lg p-6 shadow-md">
+        <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">3</div>
+        <h3 class="text-lg font-semibold mb-3 text-center">今日のストレッチを投稿</h3>
+        <p class="text-sm">「投稿作成」から記録を残しましょう。毎日の小さな積み重ねが体を変えていきます。</p>
+      </div>
+
+      <div class="bg-white rounded-lg p-6 shadow-md">
+        <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">4</div>
+        <h3 class="text-lg font-semibold mb-3 text-center">みんなの投稿をチェック</h3>
+        <p class="text-sm">「みんなの投稿」では他の人の頑張りが見られます。応援ボタンで励まし合いましょう。</p>
+      </div>
+
+      <div class="bg-white rounded-lg p-6 shadow-md">
+        <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">5</div>
+        <h3 class="text-lg font-semibold mb-3 text-center">前屈測定にチャレンジ</h3>
+        <p class="text-sm">昨日から過去4日間の連続投稿があると測定できます。継続して、今の柔軟性を確認しましょう。</p>
+      </div>
+
+      <div class="bg-white rounded-lg p-6 shadow-md">
+        <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">6</div>
+        <h3 class="text-lg font-semibold mb-3 text-center">リマインダー設定で三日坊主防止</h3>
+        <p class="text-sm">マイページの「リマインダー設定」からLINE連携と友達追加をすると、3日投稿がない場合、毎朝7時にお知らせが届きます。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full">
     <h2 class="text-2xl font-bold text-center mb-4">週間ランキング</h2>
   <div class="grid gap-6">
     <% @ranking_boards.each do |board| %>
