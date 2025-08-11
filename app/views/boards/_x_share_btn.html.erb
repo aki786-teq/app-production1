@@ -1,0 +1,17 @@
+<%# Xシェアボタンの部分テンプレート %>
+<% 
+  share_text = "#まいにち前屈\n"
+  share_text += "#{board.user.name}さんの「#{board.created_at.strftime('%Y年%m月%d日')}の運動記録」はこちら\n"
+  share_text += board_url(board)
+  encoded_text = CGI.escape(share_text)
+  x_share_url = "https://twitter.com/intent/tweet?text=#{encoded_text}"
+%>
+
+<div class="flex justify-center mt-4">
+  <%= link_to x_share_url, 
+      target: "_blank", 
+      rel: "noopener noreferrer",
+      class: "inline-flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition" do %>
+            <%= icon("brands", "x-twitter") %>でシェア
+  <% end %>
+</div>

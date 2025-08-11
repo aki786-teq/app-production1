@@ -13,6 +13,8 @@
     </div>
   <% end %>
 
+  <%= render partial: "boards/x_share_btn", locals: { board: @board } %>
+
   <div class="mt-6">
     <%= link_to "一覧に戻る", boards_path, class: "text-orange-500 hover:underline" %>
   </div>
