@@ -81,3 +81,9 @@ gem 'omniauth-rails_csrf_protection'
 gem 'simple_calendar'
 
 gem 'meta-tags'
+
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
+gem 'line-bot-api'
+
+gem 'omniauth-line'

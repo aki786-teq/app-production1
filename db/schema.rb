@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_06_051644) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
     t.index ["user_id"], name: "index_goals_on_user_id"
   end
 
+  create_table "line_notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "last_notified_at"
+    t.boolean "notification_enabled", default: true, null: false
+    t.integer "consecutive_inactive_days", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_notified_at"], name: "index_line_notifications_on_last_notified_at"
+    t.index ["user_id"], name: "index_line_notifications_on_user_id", unique: true
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.string "subject_type"
     t.bigint "subject_id"
@@ -106,6 +117,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
     t.datetime "updated_at", null: false
     t.index ["subject_type", "subject_id"], name: "index_notifications_on_subject"
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "oauth_accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.json "auth_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_oauth_accounts_on_provider_and_uid", unique: true
+    t.index ["user_id"], name: "index_oauth_accounts_on_user_id"
   end
 
   create_table "stretch_distances", force: :cascade do |t|
@@ -135,11 +157,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.text "introduce"
-    t.string "provider"
-    t.string "uid"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -152,7 +171,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_26_142925) do
   add_foreign_key "cheers", "boards"
   add_foreign_key "cheers", "users"
   add_foreign_key "goals", "users"
+  add_foreign_key "line_notifications", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "oauth_accounts", "users"
   add_foreign_key "stretch_distances", "boards"
   add_foreign_key "stretch_distances", "users"
 end

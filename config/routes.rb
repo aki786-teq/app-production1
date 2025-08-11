@@ -53,4 +53,11 @@ Rails.application.routes.draw do
       get "privacy_policy"
     end
   end
+
+  # リマインダー設定
+  get 'reminder_settings', to: 'reminder_settings#show'
+  patch 'reminder_settings', to: 'reminder_settings#update'
+
+  # LINE連携解除
+  delete '/auth/line/disconnect', to: 'line_auth#disconnect', as: :line_auth_disconnect
 end
