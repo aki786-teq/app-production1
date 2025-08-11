@@ -82,11 +82,8 @@ gem 'simple_calendar'
 
 gem 'meta-tags'
 
-# 非同期ジョブを処理するためのバックグラウンドジョブ処理ライブラリ
 gem 'sidekiq'
-# Sidekiqを使用して定期的なジョブ実行を行う
 gem 'sidekiq-scheduler'
-# LINE Messaging APIを簡単に利用出来る
 gem 'line-bot-api'
 
 gem 'omniauth-line'

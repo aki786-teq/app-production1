@@ -310,7 +310,16 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
-  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET']
 
-  config.omniauth :line, ENV['LINE_KEY'], ENV['LINE_SECRET']
+  # 既にログインしている場合の処理をカスタマイズ
+  config.warden do |manager|
+    manager.failure_app = ->(env) do
+      if env['warden.options'] && env['warden.options'][:already_authenticated]
+        # 既にログインしている場合は、リマインダー設定ページにリダイレクト
+        [302, {'Location' => '/reminder_settings'}, []]
+      else
+        Devise::FailureApp.new.call(env)
+      end
+    end
+  end
 end

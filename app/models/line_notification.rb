@@ -10,11 +10,6 @@ class LineNotification < ApplicationRecord
   # 通知が有効なユーザーのみを取得
   scope :notification_enabled, -> { where(notification_enabled: true) }
 
-  # 指定日数以上通知していないユーザーを取得
-  scope :not_notified_for_days, ->(days) {
-    where('last_notified_at IS NULL OR last_notified_at < ?', days.days.ago)
-  }
-
   # 通知記録を更新
   def record_notification!
     update!(

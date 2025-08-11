@@ -58,6 +58,6 @@ Rails.application.routes.draw do
   get 'reminder_settings', to: 'reminder_settings#show'
   patch 'reminder_settings', to: 'reminder_settings#update'
 
-  # LINE連携
+  # LINE連携解除
   delete '/auth/line/disconnect', to: 'line_auth#disconnect', as: :line_auth_disconnect
 end

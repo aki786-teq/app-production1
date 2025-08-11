@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_01_041948) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_06_051644) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,7 +61,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_01_041948) do
     t.integer "item_price"
     t.text "item_url"
     t.text "item_image_url"
-    t.datetime "start_time"
     t.index ["goal_id"], name: "index_boards_on_goal_id"
     t.index ["user_id"], name: "index_boards_on_user_id"
   end
@@ -120,6 +119,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_01_041948) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "oauth_accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.json "auth_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_oauth_accounts_on_provider_and_uid", unique: true
+    t.index ["user_id"], name: "index_oauth_accounts_on_user_id"
+  end
+
   create_table "stretch_distances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "board_id"
@@ -147,13 +157,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_01_041948) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.text "introduce"
-    t.string "provider"
-    t.string "uid"
-    t.string "line_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["line_id"], name: "index_users_on_line_id"
-    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -168,6 +173,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_01_041948) do
   add_foreign_key "goals", "users"
   add_foreign_key "line_notifications", "users"
   add_foreign_key "notifications", "users"
+  add_foreign_key "oauth_accounts", "users"
   add_foreign_key "stretch_distances", "boards"
   add_foreign_key "stretch_distances", "users"
 end

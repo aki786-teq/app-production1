@@ -8,7 +8,6 @@ class User < ApplicationRecord
     maximum: 500,
     message: "は500文字以内で入力してください"
   }
-  validates :uid, uniqueness: { scope: :provider }, allow_nil: true
   validates :email, uniqueness: true
 
   has_one :goal, dependent: :destroy
@@ -19,6 +18,7 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :stretch_distances, dependent: :destroy
   has_one :line_notification, dependent: :destroy
+  has_many :oauth_accounts, dependent: :destroy
 
   def bookmark(board)
     bookmarked_boards << board
@@ -36,19 +36,16 @@ class User < ApplicationRecord
   def four_days_consecutive_posts?
     return false if boards.empty?
 
-    # 昨日から4日前までの日付を生成
     start_date = 4.days.ago.to_date
     end_date = 1.day.ago.to_date
     required_dates = (start_date..end_date).to_a
 
-    # 各日に投稿があるかチェック
     posted_dates = boards
       .where(created_at: start_date.beginning_of_day..end_date.end_of_day)
       .pluck(:created_at)
       .map(&:to_date)
       .uniq
 
-    # 4日間すべての日に投稿があるかチェック
     required_dates.all? { |date| posted_dates.include?(date) }
   end
 
@@ -64,7 +61,6 @@ class User < ApplicationRecord
     today = Time.zone.today
     days = 0
 
-    # 昨日から過去に遡って、投稿がある日を連続してカウント
     (1..4).each do |i|
       day = today - i
       if boards.where(created_at: day.beginning_of_day..day.end_of_day).exists?
@@ -77,48 +73,49 @@ class User < ApplicationRecord
     days
   end
 
+  # アプリログイン時、既存ユーザーの検索または新規ユーザーの作成を行う（Google専用）
   def self.from_omniauth(auth)
-    # まず、provider/uidの組み合わせで既存ユーザーをチェック
-    user = where(provider: auth.provider, uid: auth.uid).first
-    return user if user.present?
-
-    # 同じメールアドレスを持つ既存ユーザーがいるかチェック
-    user = find_by(email: auth.info.email) if auth.info.email.present?
-
-    if user
-      # 既存ユーザーにSNS情報を紐づけて更新
-      user.update!(
-        provider: auth.provider,
-        uid: auth.uid,
-        # LINEの場合はline_idも更新
-        line_id: auth.provider == 'line' ? auth.uid : user.line_id
-      )
-    else
-      # 新規ユーザー作成
-      email = auth.info.email.present? ? auth.info.email : generate_fake_email(auth.uid, auth.provider)
-      name = extract_name_from_auth(auth)
-
-      user = new(
-        provider: auth.provider,
-        uid: auth.uid,
-        email: email,
-        name: name,
-        password: Devise.friendly_token[0, 20],
-        # LINEの場合はline_idも設定
-        line_id: auth.provider == 'line' ? auth.uid : nil
-      )
-
-      # 確認メールをスキップ（SNSログインの場合）
-      user.skip_confirmation!
-      user.save!
-    end
-
+    user = find_user_by_google(auth) || create_user_for_google!(auth)
+    attach_google_oauth!(user, auth)
     user
   end
 
-  # ダミーメール生成（プライベートメソッドとして移動）
-  def self.generate_fake_email(uid, provider)
-    "#{uid}-#{provider}@example.com"
+  # ===== Google OAuth共通処理 =====
+
+  def self.find_user_by_google(auth)
+    account = OauthAccount.find_by(provider: 'google_oauth2', uid: auth.uid)
+    return account.user if account
+
+    return find_by(email: auth.info.email) if auth.respond_to?(:info) && auth.info&.email.present?
+
+    nil
+  end
+
+  def self.create_user_for_google!(auth)
+    email = auth.info.email
+    name = extract_name_from_auth(auth)
+
+    user = new(
+      email: email,
+      name: name,
+      password: Devise.friendly_token[0, 20]
+    )
+
+    user.skip_confirmation!
+    user.save!
+    user
+  end
+
+  def self.attach_google_oauth!(user, auth)
+    return user if user.oauth_accounts.find_by(provider: 'google_oauth2')
+
+    user.oauth_accounts.create!(
+      provider: 'google_oauth2',
+      uid: auth.uid,
+      auth_data: auth.to_hash
+    )
+
+    user
   end
 
   # 認証情報から名前を抽出
@@ -131,10 +128,6 @@ class User < ApplicationRecord
     else
       auth.info.name || "User"
     end
-  end
-
-  def self.create_unique_string
-    SecureRandom.uuid
   end
 
   # LINE通知設定を取得または作成
@@ -155,17 +148,38 @@ class User < ApplicationRecord
 
   # LINE通知可能かチェック
   def line_notifiable?
-    line_id.present? && line_notification_setting.notification_enabled?
+    line_connected? && line_notification_setting.notification_enabled?
   end
 
   # LINEアカウントと連携しているかチェック
   def line_connected?
-    provider == 'line' && uid.present? && line_id.present?
+    oauth_accounts.exists?(provider: 'line')
+  end
+
+  # Googleアカウントと連携しているかチェック
+  def google_connected?
+    oauth_accounts.exists?(provider: 'google_oauth2')
   end
 
   # SNSログインユーザーかどうか
   def omniauth_user?
-    provider.present? && uid.present?
+    oauth_accounts.exists?
+  end
+
+  # 指定したプロバイダーと連携しているかチェック
+  def connected_to?(provider_name)
+    oauth_accounts.exists?(provider: provider_name.to_s)
+  end
+
+  # 指定したプロバイダーのOAuthAccountを取得
+  def oauth_account_for(provider_name)
+    oauth_accounts.find_by(provider: provider_name.to_s)
+  end
+
+  # LINE IDを取得（後方互換性のため）
+  def line_id
+    line_account = oauth_account_for('line')
+    line_account&.uid
   end
 
   # 通常のパスワードログインが可能かどうか
