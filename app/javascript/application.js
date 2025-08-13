@@ -1,5 +1,6 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
+import "./loading"
 import mojs from "@mojs/core"
 
 // グローバル変数でリスナー管理
