@@ -6,8 +6,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   # LINE Login
   provider :line, ENV['LINE_KEY'], ENV['LINE_SECRET']
 
-  # CSRF保護を有効化（POSTリクエストのみ許可）
-  OmniAuth.config.allowed_request_methods = [:post]
+  # CSRF保護を有効化
+  OmniAuth.config.allowed_request_methods = [:get, :post]
 end
 
 # OmniAuthのパスプレフィックスを設定
