@@ -1,4 +1,5 @@
 module ApplicationHelper
+  include Pagy::Frontend
   def default_meta_tags
     {
       site: 'まいにち前屈',
@@ -84,5 +85,53 @@ module ApplicationHelper
     rescue URI::InvalidURIError
       nil
     end
+  end
+
+  # ページネーションデザイン
+  def pagy_nav_circle(pagy)
+    return ''.html_safe if pagy.nil? || pagy.pages <= 1
+
+    link = ->(n, text = n, html_opts = {}) { link_to(text, url_for(page: n), html_opts) }
+
+    base_btn    = 'inline-flex items-center justify-center w-10 h-10 rounded-full border border-stone-300 text-stone-700 hover:bg-stone-100 transition'
+    current_btn = 'inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-400 text-white font-bold border border-orange-400'
+    disabled_btn = 'inline-flex items-center justify-center w-10 h-10 rounded-full border border-stone-200 text-stone-300 bg-stone-100 cursor-not-allowed'
+
+    parts = []
+
+    if pagy.prev
+      parts << link.call(pagy.prev, '‹', class: base_btn)
+    else
+      parts << content_tag(:span, '‹', class: disabled_btn)
+    end
+
+    last = pagy.pages
+    pages = [1, pagy.page - 1, pagy.page, pagy.page + 1, last]
+              .select { |n| n >= 1 && n <= last }
+              .uniq
+              .sort
+
+    prev_n = nil
+    pages.each do |n|
+      if prev_n && n > prev_n + 1
+        parts << content_tag(:span, '…', class: 'px-2 select-none')
+      end
+
+      if n == pagy.page
+        parts << content_tag(:span, n.to_s, class: current_btn)
+      else
+        parts << link.call(n, n.to_s, class: base_btn)
+      end
+
+      prev_n = n
+    end
+
+    if pagy.next
+      parts << link.call(pagy.next, '›', class: base_btn)
+    else
+      parts << content_tag(:span, '›', class: disabled_btn)
+    end
+
+    content_tag(:nav, safe_join(parts, content_tag(:span, '', class: 'w-1')), class: 'pagy nav flex items-center justify-center gap-2')
   end
 end

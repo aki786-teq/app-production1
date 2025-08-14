@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Pagy::Backend
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :require_goal_setup, if: :user_signed_in?
   # allow_browser versions: :modern

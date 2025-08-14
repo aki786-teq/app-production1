@@ -87,3 +87,5 @@ gem 'sidekiq-scheduler'
 gem 'line-bot-api'
 
 gem 'omniauth-line'
+
+gem 'pagy'

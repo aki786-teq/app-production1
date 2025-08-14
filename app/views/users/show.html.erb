@@ -6,7 +6,7 @@
     <div class="<%= current_user == @user ? 'md:col-span-3' : 'md:col-span-4 text-center' %> space-y-6">
       <h1 class=""><%= @user.name %>さんのマイページ</h1>
       <!-- プロフィール情報エリア -->
-      <div class="p-6 border border-stone-200 rounded-lg shadow-sm bg-white">
+      <div class="p-6 border border-stone-200 rounded-lg shadow-sm bg-white text-left">
         <div class="flex flex-col items-start sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
           <h2 class="text-lg font-bold"><%= @user.name %>さんのプロフィール</h2>
           <% if current_user == @user %>
@@ -32,12 +32,40 @@
         投稿の継続日数：<%= @streak_days %>日
       </div>
 
+      <% if current_user == @user %>
+        <!-- スマホ専用：マイページボタン群（投稿一覧の上に表示） -->
+        <div class="md:hidden flex flex-col items-center space-y-3 mb-10">
+          <%= link_to "目標を編集", edit_goal_path,
+              class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
+
+          <%= link_to "ブックマーク一覧", bookmarks_boards_path,
+              class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
+
+          <%= link_to "リマインダー設定", reminder_settings_path,
+              class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
+
+          <%= link_to "アカウント情報変更", edit_user_registration_path,
+              class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
+
+          <%= link_to "ログアウト", destroy_user_session_path,
+              data: { turbo_method: :delete },
+              class: "px-4 py-2 bg-stone-400 text-white rounded transition hover:bg-stone-500" %>
+
+          <%= link_to "アカウントを削除", user_registration_path,
+              data: {
+                turbo_confirm: "本当に削除しますか？全てのデータが削除されます。この操作は取り消せません。",
+                turbo_method: :delete
+              },
+              class: "px-4 py-2 bg-red-500 text-white rounded transition hover:bg-red-600" %>
+        </div>
+      <% end %>
+
       <div class="space-y-4">
         <h2 class="border-b border-orange-400 pb-1 w-fit mx-auto text-xl font-semibold">投稿一覧</h2>
 
-        <% if @user.boards.any? %>
+        <% if @boards.any? %>
           <div class="space-y-4">
-            <% @user.boards.order(created_at: :desc).each do |board| %>
+            <% @boards.each do |board| %>
               <div class="block rounded-md mb-4 cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
                 <%= render partial: "boards/board_card", locals: { board: board } %>
               </div>
@@ -46,12 +74,15 @@
         <% else %>
           <p>まだ投稿がありません。</p>
         <% end %>
+        <div class="mt-6">
+          <%== pagy_nav_circle(@pagy) if @pagy.present? %>
+        </div>
       </div>
     </div>
 
     <!-- サイドバー（ログインユーザー本人のみ） -->
     <% if current_user == @user %>
-      <aside class="flex flex-col space-y-4 items-start">
+      <aside class="hidden md:flex flex-col space-y-4 items-start">
         <%= link_to "目標を編集", edit_goal_path,
             class: "px-4 py-2 bg-lime-500 text-white rounded transition hover:bg-green-500" %>
 

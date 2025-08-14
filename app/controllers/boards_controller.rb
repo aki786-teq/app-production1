@@ -1,6 +1,6 @@
 class BoardsController < ApplicationController
   def index
-    @boards = Board.includes(:user).order(created_at: :desc)
+    @pagy, @boards = pagy(Board.includes(:user).order(created_at: :desc))
   end
 
   def new
@@ -80,7 +80,7 @@ class BoardsController < ApplicationController
   end
 
   def bookmarks
-  @bookmarks = current_user.bookmarks.includes(:board).order(created_at: :desc)
+  @pagy, @bookmarks = pagy(current_user.bookmarks.includes(:board).order(created_at: :desc))
   end
 
   def search_items

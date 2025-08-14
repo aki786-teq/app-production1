@@ -11,6 +11,9 @@
         </div>
       <% end %>
     </div>
+    <div class="mt-6">
+      <%== pagy_nav_circle(@pagy) if @pagy.present? %>
+    </div>
   <% else %>
     <p>まだブックマークはありません。</p>
   <% end %>

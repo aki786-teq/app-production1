@@ -1,6 +1,6 @@
 class NotificationsController < ApplicationController
   def index
-    @notifications = current_user.notifications.order(created_at: :desc)
+    @pagy, @notifications = pagy(current_user.notifications.order(created_at: :desc))
     current_user.notifications.where(checked: false).update_all(checked: true)
   end
 
