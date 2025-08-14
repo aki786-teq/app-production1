@@ -9,6 +9,9 @@
       <%= render "#{notification.action_type}", notification: notification %>
     <% end %>
   </div>
+  <div class="mt-6">
+    <%== pagy_nav_circle(@pagy) if @pagy.present? %>
+  </div>
 <% else %>
   通知はありません
 <% end %>
