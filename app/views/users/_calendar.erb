@@ -1,11 +1,11 @@
 <%= month_calendar(events: @calendar_posts, attribute: :created_at) do |date, posts| %>
-  <div class="relative">
-    <% if posts.any? %>
+  <% if posts.any? %>
+    <div class="absolute inset-0 z-10 flex items-center justify-center">
       <% posts.each do |post| %>
-        <%= link_to board_path(post), class: "absolute top-4 right-6 text-orange-500 text-2xl hover:text-orange-600", data: { turbo_frame: "_top" } do %>
+        <%= link_to board_path(post), class: "text-orange-500 text-2xl hover:text-orange-600 mx-0.5", data: { turbo_frame: "_top" } do %>
           <%= icon("solid", "thumbs-up") %>
         <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 <% end %>

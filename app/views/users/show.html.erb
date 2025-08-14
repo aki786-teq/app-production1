@@ -7,11 +7,11 @@
       <h1 class=""><%= @user.name %>さんのマイページ</h1>
       <!-- プロフィール情報エリア -->
       <div class="p-6 border border-stone-200 rounded-lg shadow-sm bg-white">
-        <div class="flex justify-between items-start mb-6">
+        <div class="flex flex-col items-start sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
           <h2 class="text-lg font-bold"><%= @user.name %>さんのプロフィール</h2>
           <% if current_user == @user %>
             <%= link_to "プロフィール編集", edit_profile_user_path(@user),
-                class: "my-orange-btn text-sm" %>
+                class: "my-orange-btn text-sm inline-flex w-auto self-start" %>
           <% end %>
         </div>
 
@@ -33,14 +33,14 @@
       </div>
 
       <div class="space-y-4">
-        <h2 class="text-xl font-semibold text-center">投稿一覧</h2>
+        <h2 class="border-b border-orange-400 pb-1 w-fit mx-auto text-xl font-semibold">投稿一覧</h2>
 
         <% if @user.boards.any? %>
           <div class="space-y-4">
             <% @user.boards.order(created_at: :desc).each do |board| %>
-              <%= link_to board_path(board), class: "block rounded-md mb-4" do %>
+              <div class="block rounded-md mb-4 cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
                 <%= render partial: "boards/board_card", locals: { board: board } %>
-              <% end %>
+              </div>
             <% end %>
           </div>
         <% else %>

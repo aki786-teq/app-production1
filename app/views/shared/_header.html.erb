@@ -1,41 +1,103 @@
 <header class="bg-yellow-50 shadow-sm sticky top-0 w-full z-50">
-  <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
-
-    <!-- ロゴ -->
-    <div class="flex h-13 items-center">
-      <%= link_to '/', class: "block max-w-[200px]" do %>
-      <%= image_tag 'logo.png', alt: "まいにち前屈", class: "block w-full transition hover:opacity-75" %>
-      <% end %>
-    </div>
-
-    <!-- 認証リンク -->
-    <div class="space-x-4">
-      <% if user_signed_in? %>
-        <% if current_user.boards.where(created_at: Time.zone.today.all_day).exists? %>
-          <%= link_to "投稿作成", "#",
-          class: "px-4 py-2 bg-stone-400 text-white rounded cursor-not-allowed",
-          onclick: "alert('※1日に投稿できるのは1件までです。'); return false;" %>
-        <% else %>
-          <%= link_to "投稿作成", new_board_path, class: "px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500" %>
+  <nav class="container mx-auto px-4 py-1 md:py-3 relative">
+    <div class="flex justify-between items-center">
+      <!-- ロゴ -->
+      <div class="flex h-13 items-center">
+        <%= link_to '/', class: "block max-w-[160px] md:max-w-[200px]" do %>
+        <%= image_tag 'logo.png', alt: "まいにち前屈", class: "block w-full transition hover:opacity-75" %>
         <% end %>
-        <%= link_to 'みんなの投稿', boards_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
-        <%= link_to '前屈測定', measure_stretch_distances_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
-        <%= link_to 'マイページ', user_path(current_user), class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
-        <%= link_to notifications_path, class: "relative inline-block" do %>
-          <% has_unread = current_user.notifications.where(checked: false).exists? %>
-          <span class="text-2xl text-stone-400 transition hover:text-stone-500">
-            <%= icon("solid", "bell") %>
-          </span>
-          <% if has_unread %>
-            <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full px-1.5">!</span>
+      </div>
+
+      <!-- デスクトップメニュー -->
+      <div class="hidden md:flex items-center space-x-4">
+        <% if user_signed_in? %>
+          <% if current_user.boards.where(created_at: Time.zone.today.all_day).exists? %>
+            <%= link_to "投稿作成", "#",
+            class: "px-4 py-2 bg-stone-400 text-white rounded cursor-not-allowed",
+            onclick: "alert('※1日に投稿できるのは1件までです。'); return false;" %>
+          <% else %>
+            <%= link_to "投稿作成", new_board_path, class: "px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500" %>
           <% end %>
+          <%= link_to 'みんなの投稿', boards_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
+          <%= link_to '前屈測定', measure_stretch_distances_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
+          <%= link_to 'マイページ', user_path(current_user), class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
+          <%= link_to notifications_path, class: "inline-flex items-center" do %>
+            <% has_unread = current_user.notifications.where(checked: false).exists? %>
+            <span class="relative inline-flex items-center">
+              <span class="text-2xl leading-[0] text-stone-400 transition hover:text-stone-500">
+                <%= icon("solid", "bell") %>
+              </span>
+              <% if has_unread %>
+                <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full px-1.5">!</span>
+              <% end %>
+            </span>
+          <% end %>
+        <% else %>
+          <%= link_to 'ログイン', new_user_session_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
+          <%= link_to '新規登録', new_user_registration_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
+          <%= link_to 'みんなの投稿', boards_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
         <% end %>
-      <% else %>
-        <%= link_to 'ログイン', new_user_session_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
-        <%= link_to '新規登録', new_user_registration_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
-        <%= link_to 'みんなの投稿', boards_path, class: 'px-4 py-2 bg-lime-500 text-white transition rounded hover:bg-green-500' %>
-      <% end %>
+      </div>
+
+      <!-- ハンバーガーメニューボタン（モバイル） -->
+      <div class="md:hidden">
+        <button class="hamburger" aria-label="メニュー" aria-controls="nav-menu" aria-expanded="false">
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+        </button>
+      </div>
     </div>
 
+    <!-- モバイルメニュー -->
+    <nav id="nav-menu" class="nav" aria-hidden="true">
+      <ul class="nav__list">
+        <% if user_signed_in? %>
+          <% if current_user.boards.where(created_at: Time.zone.today.all_day).exists? %>
+            <li class="nav__item">
+              <%= link_to "#", class: "nav__link", onclick: "alert('※1日に投稿できるのは1件までです。'); return false;" do %>
+                投稿作成
+              <% end %>
+            </li>
+          <% else %>
+            <li class="nav__item">
+              <%= link_to "投稿作成", new_board_path, class: "nav__link" %>
+            </li>
+          <% end %>
+          <li class="nav__item">
+            <%= link_to 'みんなの投稿', boards_path, class: 'nav__link' %>
+          </li>
+          <li class="nav__item">
+            <%= link_to '前屈測定', measure_stretch_distances_path, class: 'nav__link' %>
+          </li>
+          <li class="nav__item">
+            <%= link_to 'マイページ', user_path(current_user), class: 'nav__link' %>
+          </li>
+          <li class="nav__item">
+            <%= link_to notifications_path, class: "nav__link nav__link--no-underline" do %>
+              <% has_unread = current_user.notifications.where(checked: false).exists? %>
+              <span class="relative inline-block align-middle">
+                <span class="text-2xl text-stone-400 transition hover:text-stone-500">
+                  <%= icon("solid", "bell") %>
+                </span>
+                <% if has_unread %>
+                  <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full px-1.5">!</span>
+                <% end %>
+              </span>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="nav__item">
+            <%= link_to 'ログイン', new_user_session_path, class: 'nav__link' %>
+          </li>
+          <li class="nav__item">
+            <%= link_to '新規登録', new_user_registration_path, class: 'nav__link' %>
+          </li>
+          <li class="nav__item">
+            <%= link_to 'みんなの投稿', boards_path, class: 'nav__link' %>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
   </nav>
 </header>
