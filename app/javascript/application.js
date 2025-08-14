@@ -6,6 +6,32 @@ import mojs from "@mojs/core"
 // グローバル変数でリスナー管理
 let listenersAttached = false;
 
+// ハンバーガーメニューの制御
+function setupHamburgerMenu() {
+  const hamburger = document.querySelector('.hamburger');
+  const nav = document.querySelector('.nav');
+
+  if (hamburger && nav) {
+    // 既存のリスナーを削除してから新しいリスナーを追加
+    const newHamburger = hamburger.cloneNode(true);
+    hamburger.parentNode.replaceChild(newHamburger, hamburger);
+
+    const finalHamburger = document.querySelector('.hamburger');
+
+    finalHamburger.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      finalHamburger.classList.toggle('active');
+      nav.classList.toggle('active');
+
+      const isOpen = finalHamburger.classList.contains('active');
+      finalHamburger.setAttribute('aria-expanded', isOpen);
+      nav.setAttribute('aria-hidden', !isOpen);
+    });
+  }
+}
+
 function applySelection(groupSelector, labelClass) {
   const radios = document.querySelectorAll(`[data-role='${groupSelector}']`);
   const labels = document.querySelectorAll(`.${labelClass}`);
@@ -119,13 +145,21 @@ function resetListeners() {
 }
 
 // Turbo対応のイベントリスナー
-document.addEventListener("turbo:load", initializeForm);
-document.addEventListener("turbo:render", initializeForm);
+document.addEventListener("turbo:load", () => {
+  setupHamburgerMenu();
+});
+document.addEventListener("turbo:render", () => {
+  initializeForm();
+  setupHamburgerMenu();
+});
 document.addEventListener("turbo:before-cache", resetListeners);
 document.addEventListener("turbo:before-visit", resetListeners);
 
 // 初回読み込み対応
-document.addEventListener("DOMContentLoaded", initializeForm);
+document.addEventListener("DOMContentLoaded", () => {
+  initializeForm();
+  setupHamburgerMenu();
+});
 
 // mojsで応援ボタンに効果
 document.addEventListener("turbo:load", () => {
