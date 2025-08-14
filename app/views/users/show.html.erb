@@ -38,9 +38,9 @@
         <% if @user.boards.any? %>
           <div class="space-y-4">
             <% @user.boards.order(created_at: :desc).each do |board| %>
-              <%= link_to board_path(board), class: "block rounded-md mb-4" do %>
+              <div class="block rounded-md mb-4 cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
                 <%= render partial: "boards/board_card", locals: { board: board } %>
-              <% end %>
+              </div>
             <% end %>
           </div>
         <% else %>

@@ -6,9 +6,9 @@
   <% if @bookmarks.any? %>
     <div class="grid gap-6">
       <% @bookmarks.each do |bookmark| %>
-        <%= link_to board_path(bookmark.board) do %>
+        <div class="block rounded-md cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(bookmark.board) %>">
           <%= render partial: "boards/board_card", locals: { board: bookmark.board } %>
-        <% end %>
+        </div>
       <% end %>
     </div>
   <% else %>

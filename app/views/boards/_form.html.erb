@@ -49,7 +49,7 @@
 
     <!-- 動画URL -->
     <div>
-      <%= f.label :youtube_link, "YouTube動画URL", class: "my-label-title" %>
+      <%= f.label :youtube_link, "YouTube動画紹介URL", class: "my-label-title" %>
       <%= f.url_field :youtube_link, placeholder: "https://www.youtube.com/watch?v=...", class: "my-form-text" %>
       <%= render "shared/error_message", model: @board, attribute: :youtube_link %>
     </div>

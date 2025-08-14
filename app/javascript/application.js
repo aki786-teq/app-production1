@@ -202,6 +202,22 @@ document.addEventListener("click", (e) => {
       burst.play();
     }
   }
+
+  // カード全体クリックで遷移（ネストリンク回避）
+  const card = e.target.closest("[data-navigate-to]");
+  if (card) {
+    // 内部のリンクやボタンがクリックされた場合は何もしない
+    if (e.target.closest("a, button, [role='button'], input, label")) return;
+    const url = card.getAttribute("data-navigate-to");
+    if (url) {
+      e.preventDefault();
+      if (window.Turbo && typeof Turbo.visit === "function") {
+        Turbo.visit(url);
+      } else {
+        window.location.href = url;
+      }
+    }
+  }
 });
 
 function setupCheerButtons() {

@@ -4,9 +4,9 @@
 
   <div class="grid gap-6">
     <% @boards.each do |board| %>
-      <%= link_to board_path(board), class: "block rounded-md" do %>
+      <div class="block rounded-md cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
         <%= render partial: "boards/board_card", locals: { board: board } %>
-      <% end %>
+      </div>
     <% end %>
   </div>
 </div>

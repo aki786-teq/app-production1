@@ -4,11 +4,11 @@
   <section class="">
     <p class="text-center text-4xl font-bold mb-10">まいにち前屈</p>
     <%= image_tag 'stretch_cat.jpg', alt: "ストレッチする猫", class: "block rounded-md w-full max-w-[600px] mb-10" %>
-    <p class="text-center">全身をやわらかく、前屈ができるようサポートします。<br>めんどくさがりでも毎日のストッチを記録することで習慣的に続けられます。</p>
+    <p class="text-center">全身をやわらかく、前屈ができるようサポートします。<br>めんどくさがりでも毎日のストレッチを記録することで習慣的に続けられます。</p>
   </section>
 
   <section class="w-full">
-    <h2 class="text-2xl font-bold text-center mb-8">使い方</h2>
+    <h2 class="text-2xl font-bold mb-8 border-b border-orange-400 pb-1 w-fit mx-auto">使い方</h2>
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <div class="bg-white rounded-lg p-6 shadow-md">
         <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">1</div>
@@ -43,18 +43,18 @@
       <div class="bg-white rounded-lg p-6 shadow-md">
         <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">6</div>
         <h3 class="text-lg font-semibold mb-3 text-center">リマインダー設定で三日坊主防止</h3>
-        <p class="text-sm">マイページの「リマインダー設定」からLINE連携と友達追加をすると、3日投稿がない場合、毎朝7時にお知らせが届きます。</p>
+        <p class="text-sm">マイページの「リマインダー設定」からLINE連携と友達追加をすると、3日投稿がない場合、毎朝7時にLINE通知が届きます。</p>
       </div>
     </div>
   </section>
 
   <section class="w-full">
-    <h2 class="text-2xl font-bold text-center mb-4">週間ランキング</h2>
+    <h2 class="text-2xl font-bold border-b border-orange-400 pb-1 w-fit mx-auto mb-4">週間ランキング</h2>
   <div class="grid gap-6">
     <% @ranking_boards.each do |board| %>
-      <%= link_to board_path(board), class: "block rounded-md" do %>
+      <div class="block rounded-md cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
         <%= render partial: "boards/board_card", locals: { board: board } %>
-      <% end %>
+      </div>
     <% end %>
   </div>
   </section>
