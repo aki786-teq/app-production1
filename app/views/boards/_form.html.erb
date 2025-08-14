@@ -75,10 +75,10 @@
       </div>
 
       <!-- 検索結果表示エリア -->
-      <div data-rakuten-search-target="results" class="hidden"></div>
+      <div data-rakuten-search-target="results" class="hidden mb-4"></div>
 
       <!-- 選択された商品表示エリア -->
-      <div data-rakuten-search-target="selectedItem">
+      <div data-rakuten-search-target="selectedItem" class="mt-4">
         <% if @board.item_code.present? && @board.item_name.present? %>
           <div class="border p-4 rounded bg-green-50 relative">
             <h4 class="font-bold text-green-800">選択された商品</h4>

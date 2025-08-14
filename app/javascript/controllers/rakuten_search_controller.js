@@ -69,7 +69,7 @@ export default class extends Controller {
       return
     }
 
-    let html = '<div class="grid gap-4">'
+    let html = '<div class="grid gap-4 mb-4">'
 
     data.items.forEach(item => {
       html += `

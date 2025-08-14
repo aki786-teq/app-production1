@@ -1,4 +1,4 @@
 <div>
-  <%= link_to "#{notification.subject.user.name}さん", user_path(notification.subject.user), class: "text-orange-500 hover:underline" %>があなたの<%= link_to '投稿', board_path(notification.subject.board), class: "text-orange-500 hover:underline" %>を応援しました！
+  <%= link_to "#{notification.subject.user.name}さん", user_path(notification.subject.user), class: "text-orange-500 hover:underline" %>があなたの<%= link_to "#{notification.subject.board.created_at.strftime("%-m月%-d日")}の投稿", board_path(notification.subject.board), class: "text-orange-500 hover:underline" %>を応援しました！
   <%= " (#{time_ago_in_words(notification.created_at)}前)" %>
 </div>

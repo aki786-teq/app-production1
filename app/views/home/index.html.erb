@@ -49,7 +49,7 @@
   </section>
 
   <section class="w-full">
-    <h2 class="text-2xl font-bold border-b border-orange-400 pb-1 w-fit mx-auto mb-4">週間ランキング</h2>
+    <h2 class="text-2xl font-bold border-b border-orange-400 pb-1 w-fit mx-auto mb-8">週間ランキング</h2>
   <div class="grid gap-6">
     <% @ranking_boards.each do |board| %>
       <div class="block rounded-md cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
