@@ -83,7 +83,7 @@
     <% if board.item_name.present? && board.item_url.present? %>
       <p class="text-center mb-2">楽天おすすめ商品</p>
       <div class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-lg p-4 transition hover:shadow-md">
-        <%= link_to board.item_url, target: "_blank", rel: "noopener noreferrer", class: "block hover:bg-red-50 rounded-lg transition-colors" do %>
+        <%= link_to board.item_url, target: "_blank", rel: "noopener noreferrer nofollow", class: "block hover:bg-red-50 rounded-lg transition-colors" do %>
           <div class="flex items-center space-x-4">
             <% if board.item_image_url.present? %>
               <div class="flex-shrink-0">
