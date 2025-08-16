@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_06_051644) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_16_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_06_051644) do
     t.index ["user_id"], name: "index_goals_on_user_id"
   end
 
+  create_table "line_link_tokens", force: :cascade do |t|
+    t.string "token", null: false, comment: "連携URLで使用する一意トークン"
+    t.string "messaging_user_id", null: false, comment: "LINE Messaging APIのユーザーID"
+    t.bigint "user_id"
+    t.datetime "expires_at", null: false, comment: "トークンの有効期限"
+    t.datetime "consumed_at", comment: "トークンを使用した日時"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["messaging_user_id"], name: "index_line_link_tokens_on_messaging_user_id"
+    t.index ["token"], name: "index_line_link_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_line_link_tokens_on_user_id"
+  end
+
   create_table "line_notifications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "last_notified_at"
@@ -171,6 +184,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_06_051644) do
   add_foreign_key "cheers", "boards"
   add_foreign_key "cheers", "users"
   add_foreign_key "goals", "users"
+  add_foreign_key "line_link_tokens", "users"
   add_foreign_key "line_notifications", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "oauth_accounts", "users"

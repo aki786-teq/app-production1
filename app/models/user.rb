@@ -176,10 +176,13 @@ class User < ApplicationRecord
     oauth_accounts.find_by(provider: provider_name.to_s)
   end
 
-  # LINE IDを取得（後方互換性のため）
+  # LINE Messaging API の userId を優先して取得（後方互換でLINE LoginのUIDを返す）
   def line_id
-    line_account = oauth_account_for('line')
-    line_account&.uid
+    messaging = oauth_account_for('line_messaging')
+    return messaging.uid if messaging
+
+    login = oauth_account_for('line')
+    login&.uid
   end
 
   # 通常のパスワードログインが可能かどうか
