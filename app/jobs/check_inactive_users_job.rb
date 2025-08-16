@@ -42,15 +42,18 @@ class CheckInactiveUsersJob < ApplicationJob
   private
 
   def find_inactive_users(days)
-    User.joins(:line_notification)
-        .where(is_deleted: false)
-        .where.not(line_id: [nil, ''])
-        .where(line_notifications: { notification_enabled: true })
-        .where("NOT EXISTS (
-                 SELECT 1 FROM boards
-                 WHERE boards.user_id = users.id
-                   AND boards.is_deleted = false
-                   AND boards.created_at >= ?
-               )", days.days.ago)
+    User
+      .joins(:line_notification)
+      .joins(:oauth_accounts)
+      .where(is_deleted: false)
+      .where(line_notifications: { notification_enabled: true })
+      .where(oauth_accounts: { provider: 'line_messaging' })
+      .where("NOT EXISTS (
+               SELECT 1 FROM boards
+               WHERE boards.user_id = users.id
+                 AND boards.is_deleted = false
+                 AND boards.created_at >= ?
+             )", days.days.ago)
+      .distinct
   end
 end

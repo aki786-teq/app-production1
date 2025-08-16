@@ -60,4 +60,8 @@ Rails.application.routes.draw do
 
   # LINE連携解除
   delete '/auth/line/disconnect', to: 'line_auth#disconnect', as: :line_auth_disconnect
+
+  # LINE Messaging API Webhook / 連携リンク
+  post '/line/webhook', to: 'line_webhook#callback'
+  get '/line/link', to: 'line_webhook#link'
 end
