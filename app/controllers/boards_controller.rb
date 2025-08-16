@@ -101,7 +101,8 @@ class BoardsController < ApplicationController
             item_code: item['itemCode'],
             item_name: item['itemName'],
             item_price: item['itemPrice'],
-            item_url: item['itemUrl'],
+            # アフィリエイトURLが返る場合は優先利用
+            item_url: item['affiliateUrl'].presence || item['itemUrl'],
             small_image_urls: item['smallImageUrls'],
             medium_image_urls: item['mediumImageUrls']
           }

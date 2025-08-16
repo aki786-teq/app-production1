@@ -61,6 +61,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_16_090000) do
     t.integer "item_price"
     t.text "item_url"
     t.text "item_image_url"
+    t.datetime "start_time"
     t.index ["goal_id"], name: "index_boards_on_goal_id"
     t.index ["user_id"], name: "index_boards_on_user_id"
   end
@@ -140,6 +141,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_16_090000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["provider", "uid"], name: "index_oauth_accounts_on_provider_and_uid", unique: true
+    t.index ["user_id", "provider"], name: "index_oauth_accounts_on_user_id_and_provider", unique: true
     t.index ["user_id"], name: "index_oauth_accounts_on_user_id"
   end
 
