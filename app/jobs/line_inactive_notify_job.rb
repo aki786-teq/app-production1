@@ -47,10 +47,7 @@ class LineInactiveNotifyJob < ApplicationJob
   end
 
   def create_inactive_message(user)
-    last_post_date = user.last_post_date
-    days_inactive = last_post_date ? (Date.current - last_post_date).to_i : "多数"
-
-    "#{user.name}さん、お疲れ様です！\n\n最後の投稿から#{days_inactive}日が経過しています。\n継続は力なり💪今日も一緒に頑張りましょう！"
+    "#{user.name}さん、お疲れ様です！\n\n最後の投稿から3日以上が経過しています。\n継続は力なり💪今日も一緒に頑張りましょう！"
   end
 
   def send_line_message(message_text, line_id)
@@ -64,17 +61,17 @@ class LineInactiveNotifyJob < ApplicationJob
     )
 
     # HTTP情報を含むレスポンスを取得
-    _body, status_code, _headers = client.push_message_with_http_info(push_message_request: push_request)
+    response_body, status_code, response_headers = client.push_message_with_http_info(push_message_request: push_request)
 
     # エラーハンドリング
     case status_code
     when 200
       Rails.logger.info "LINE通知送信成功: ステータス=#{status_code}"
     when 400..499
-      Rails.logger.error "LINE通知送信失敗: ステータス=#{status_code}"
+      Rails.logger.error "LINE通知送信失敗: ステータス=#{status_code} body=#{response_body} headers=#{response_headers.inspect}"
       raise "LINE通知の送信に失敗しました"
     else
-      Rails.logger.error "LINE通知送信失敗: ステータス=#{status_code}"
+      Rails.logger.error "LINE通知送信失敗: ステータス=#{status_code} body=#{response_body} headers=#{response_headers.inspect}"
       raise "LINE通知の送信に失敗しました"
     end
   end
