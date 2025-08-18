@@ -42,18 +42,23 @@ class LineWebhookController < ApplicationController
       redirect_to reminder_settings_path, alert: '連携用リンクが無効または期限切れです。' and return
     end
 
-    # 既に連携済みならスキップ
+    # 既に同じUIDで連携済みならスキップ
     if current_user.oauth_accounts.find_by(provider: 'line_messaging', uid: link_token.messaging_user_id).present?
       link_token.consume!(user: current_user) unless link_token.consumed?
       redirect_to reminder_settings_path, notice: 'すでにLINE通知の連携は完了しています。' and return
     end
 
-    # 連携を作成
-    current_user.oauth_accounts.create!(
-      provider: 'line_messaging',
-      uid: link_token.messaging_user_id,
-      auth_data: {}
-    )
+    # 既存のline_messaging連携があればUIDを更新、なければ新規作成
+    existing = current_user.oauth_accounts.find_by(provider: 'line_messaging')
+    if existing
+      existing.update!(uid: link_token.messaging_user_id, auth_data: {})
+    else
+      current_user.oauth_accounts.create!(
+        provider: 'line_messaging',
+        uid: link_token.messaging_user_id,
+        auth_data: {}
+      )
+    end
 
     # 通知を有効化（任意）
     current_user.line_notification_setting.update!(notification_enabled: true)
@@ -133,10 +138,10 @@ class LineWebhookController < ApplicationController
   def send_push_text(to_user_id, text)
     message = Line::Bot::V2::MessagingApi::TextMessage.new(text: text)
     request = Line::Bot::V2::MessagingApi::PushMessageRequest.new(to: to_user_id, messages: [message])
-    _body, status_code, _headers = messaging_client.push_message_with_http_info(push_message_request: request)
+    response_body, status_code, response_headers = messaging_client.push_message_with_http_info(push_message_request: request)
 
     unless status_code == 200
-      Rails.logger.error("[LINE Webhook] Push failed: status=#{status_code}")
+      Rails.logger.error("[LINE Webhook] Push failed: status=#{status_code} body=#{response_body} headers=#{response_headers.inspect}")
     end
   rescue => e
     Rails.logger.error("[LINE Webhook] Push exception: #{e.message}")
@@ -147,11 +152,11 @@ class LineWebhookController < ApplicationController
     return false if reply_token.blank?
     message = Line::Bot::V2::MessagingApi::TextMessage.new(text: text)
     request = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(reply_token: reply_token, messages: [message])
-    _body, status_code, _headers = messaging_client.reply_message_with_http_info(reply_message_request: request)
+    response_body, status_code, response_headers = messaging_client.reply_message_with_http_info(reply_message_request: request)
     if status_code == 200
       true
     else
-      Rails.logger.error("[LINE Webhook] Reply failed: status=#{status_code}")
+      Rails.logger.error("[LINE Webhook] Reply failed: status=#{status_code} body=#{response_body} headers=#{response_headers.inspect}")
       false
     end
   rescue => e

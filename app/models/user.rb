@@ -135,17 +135,6 @@ class User < ApplicationRecord
     line_notification || create_line_notification
   end
 
-  # 最後の投稿日を取得
-  def last_post_date
-    boards.where(is_deleted: false).maximum(:created_at)&.to_date
-  end
-
-  # 指定日数以上投稿していないかチェック
-  def inactive_for_days?(days)
-    return true if last_post_date.nil?
-    last_post_date < days.days.ago.to_date
-  end
-
   # LINE通知可能かチェック
   def line_notifiable?
     line_connected? && line_notification_setting.notification_enabled?
@@ -153,7 +142,7 @@ class User < ApplicationRecord
 
   # LINEアカウントと連携しているかチェック
   def line_connected?
-    oauth_accounts.exists?(provider: 'line')
+    line_id.present?
   end
 
   # Googleアカウントと連携しているかチェック
