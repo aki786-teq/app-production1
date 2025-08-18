@@ -185,12 +185,6 @@ class User < ApplicationRecord
     login&.uid
   end
 
-  # 通常のパスワードログインが可能かどうか
-  def password_required?
-    # SNSログインのみのユーザーの場合はパスワード不要
-    !omniauth_user? || encrypted_password.present?
-  end
-
   protected
 
   # Deviseのバリデーションをオーバーライド（SNSログイン時のパスワード要求を回避）

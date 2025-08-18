@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "calendar" do %>
+  <turbo-frame id="calendar">
+    <%= render 'users/calendar', calendar: @calendar, events: @calendar_posts %>
+  </turbo-frame>
+<% end %>
+
+
