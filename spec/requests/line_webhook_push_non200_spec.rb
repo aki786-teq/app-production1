@@ -10,8 +10,8 @@ RSpec.describe "LineWebhook push non-200", type: :request do
 
   it 'pushが非200でも 200 を返す（エラーログ経路）' do
     client = double(
-      reply_message_with_http_info: [nil, 500, {}],
-      push_message_with_http_info: [nil, 500, {}]
+      reply_message_with_http_info: [ nil, 500, {} ],
+      push_message_with_http_info: [ nil, 500, {} ]
     )
     allow(Line::Bot::V2::MessagingApi::ApiClient).to receive(:new).and_return(client)
 
@@ -36,5 +36,3 @@ RSpec.describe "LineWebhook push non-200", type: :request do
     expect(response).to have_http_status(:ok)
   end
 end
-
-

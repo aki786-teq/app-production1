@@ -11,5 +11,3 @@ RSpec.describe Board, type: :model do
     expect(user.last_post_date).to eq 1.day.ago.to_date
   end
 end
-
-

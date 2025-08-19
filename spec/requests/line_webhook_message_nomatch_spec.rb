@@ -10,8 +10,8 @@ RSpec.describe "LineWebhook message no match", type: :request do
 
   it '連携キーワードにマッチしないメッセージは何もしない（200）' do
     client = double(
-      reply_message_with_http_info: [nil, 200, {}],
-      push_message_with_http_info: [nil, 200, {}]
+      reply_message_with_http_info: [ nil, 200, {} ],
+      push_message_with_http_info: [ nil, 200, {} ]
     )
     allow(Line::Bot::V2::MessagingApi::ApiClient).to receive(:new).and_return(client)
 
@@ -36,5 +36,3 @@ RSpec.describe "LineWebhook message no match", type: :request do
     expect(response).to have_http_status(:ok)
   end
 end
-
-

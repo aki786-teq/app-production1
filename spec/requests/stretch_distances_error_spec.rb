@@ -14,9 +14,7 @@ RSpec.describe "StretchDistances errors", type: :request do
 
   it 'create_post_with_result は存在しないIDで measure にリダイレクト' do
     post create_post_with_result_stretch_distance_path(999999)
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(measure_stretch_distances_path)
   end
 end
-
-

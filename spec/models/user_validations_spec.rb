@@ -24,5 +24,3 @@ RSpec.describe User, type: :model do
     expect(build(:user).send(:email_required?)).to be true
   end
 end
-
-

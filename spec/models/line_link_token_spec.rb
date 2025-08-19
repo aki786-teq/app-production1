@@ -48,5 +48,3 @@ RSpec.describe LineLinkToken, type: :model do
     end
   end
 end
-
-

@@ -10,5 +10,3 @@ RSpec.describe Bookmark, type: :model do
     expect(dup).to be_invalid
   end
 end
-
-

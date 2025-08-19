@@ -18,11 +18,11 @@ RSpec.describe "Boards more flows", type: :request do
     expect(response).to have_http_status(:ok)
 
     patch board_path(board), params: { board: { content: 'updated', did_stretch: true } }
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(boards_path)
 
     delete board_path(board)
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(boards_path)
   end
 
@@ -43,5 +43,3 @@ RSpec.describe "Boards more flows", type: :request do
     expect(response).to have_http_status(:unprocessable_entity)
   end
 end
-
-

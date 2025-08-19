@@ -14,5 +14,3 @@ RSpec.describe "LineWebhook errors", type: :request do
     expect(response).to have_http_status(:internal_server_error)
   end
 end
-
-

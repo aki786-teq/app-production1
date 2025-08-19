@@ -5,5 +5,3 @@ FactoryBot.define do
     comment_template { '良好な柔軟性です。' }
   end
 end
-
-

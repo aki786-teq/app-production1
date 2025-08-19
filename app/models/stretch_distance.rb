@@ -26,10 +26,10 @@ class StretchDistance < ApplicationRecord
   }.freeze
 
   FLEXIBILITY_LEVEL_JA = {
-    'excellent' => '優秀',
-    'good' => '良好',
-    'average' => '普通',
-    'needs_improvement' => '要改善'
+    "excellent" => "優秀",
+    "good" => "良好",
+    "average" => "普通",
+    "needs_improvement" => "要改善"
   }.freeze
 
   validates :flexibility_level, presence: true

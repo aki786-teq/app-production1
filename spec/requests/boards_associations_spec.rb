@@ -9,7 +9,7 @@ RSpec.describe "Boards associations", type: :request do
   it 'POST /boards で stretch_distance_id を関連付ける' do
     sd = create(:stretch_distance, user: user)
     post boards_path, params: { board: { did_stretch: true, content: 'with sd' }, stretch_distance_id: sd.id }
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     board = Board.order(:created_at).last
     expect(board.stretch_distances).to include(sd)
   end
@@ -19,9 +19,7 @@ RSpec.describe "Boards associations", type: :request do
     ln.update!(consecutive_inactive_days: 3)
 
     post boards_path, params: { board: { did_stretch: true, content: 'reset inactive' } }
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(user.reload.line_notification_setting.consecutive_inactive_days).to eq(0)
   end
 end
-
-

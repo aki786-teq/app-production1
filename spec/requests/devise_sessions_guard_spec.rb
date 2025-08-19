@@ -11,5 +11,3 @@ RSpec.describe "Devise sessions guard", type: :request do
     expect(response.headers['Location']).not_to include(new_goal_path)
   end
 end
-
-

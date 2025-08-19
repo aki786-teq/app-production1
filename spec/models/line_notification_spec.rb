@@ -30,5 +30,3 @@ RSpec.describe LineNotification, type: :model do
     expect(described_class.notification_enabled).not_to include(off)
   end
 end
-
-

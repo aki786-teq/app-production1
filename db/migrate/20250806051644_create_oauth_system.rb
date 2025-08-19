@@ -20,7 +20,7 @@ class CreateOauthSystem < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :oauth_accounts, [:provider, :uid], unique: true
+    add_index :oauth_accounts, [ :provider, :uid ], unique: true
 
     # 3. 既存のSNS連携データをOAuthAccountテーブルに移行
     migrate_existing_oauth_data
@@ -41,7 +41,7 @@ class CreateOauthSystem < ActiveRecord::Migration[7.2]
   private
 
   def migrate_existing_oauth_data
-    User.where.not(provider: [nil, '']).find_each do |user|
+    User.where.not(provider: [ nil, '' ]).find_each do |user|
       next if user.oauth_accounts.exists?(provider: user.provider)
 
       user.oauth_accounts.create!(
@@ -53,22 +53,22 @@ class CreateOauthSystem < ActiveRecord::Migration[7.2]
   end
 
   def remove_old_oauth_columns
-    old_columns = [:provider, :uid]
+    old_columns = [ :provider, :uid ]
     old_columns.each do |column|
       remove_column :users, column, :string if column_exists?(:users, column)
     end
 
-    remove_index :users, [:provider, :uid], if_exists: true
+    remove_index :users, [ :provider, :uid ], if_exists: true
   end
 
   def restore_old_oauth_columns
-    old_columns = [:provider, :uid]
+    old_columns = [ :provider, :uid ]
     old_columns.each do |column|
       add_column :users, column, :string unless column_exists?(:users, column)
     end
 
-    add_index :users, [:provider, :uid], unique: true, name: "index_users_on_provider_and_uid" if column_exists?(:users, :provider) &&
+    add_index :users, [ :provider, :uid ], unique: true, name: "index_users_on_provider_and_uid" if column_exists?(:users, :provider) &&
                                           column_exists?(:users, :uid) &&
-                                          !index_exists?(:users, [:provider, :uid])
+                                          !index_exists?(:users, [ :provider, :uid ])
   end
 end

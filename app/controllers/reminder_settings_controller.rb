@@ -9,7 +9,7 @@ class ReminderSettingsController < ApplicationController
     @line_notification = current_user.line_notification_setting
 
     if @line_notification.update(notification_params)
-      redirect_to reminder_settings_path, notice: '設定を更新しました'
+      redirect_to reminder_settings_path, notice: "設定を更新しました"
     else
       render :show, status: :unprocessable_entity
     end

@@ -12,5 +12,3 @@ RSpec.describe Cheer, type: :model do
       .to change { Notification.count }.by(1)
   end
 end
-
-

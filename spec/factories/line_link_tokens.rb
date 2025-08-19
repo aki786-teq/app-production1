@@ -6,5 +6,3 @@ FactoryBot.define do
     consumed_at { nil }
   end
 end
-
-

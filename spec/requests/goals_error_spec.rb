@@ -16,5 +16,3 @@ RSpec.describe "Goals errors", type: :request do
     expect(response).to have_http_status(:unprocessable_entity)
   end
 end
-
-

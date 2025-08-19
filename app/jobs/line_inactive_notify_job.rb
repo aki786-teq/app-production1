@@ -1,4 +1,4 @@
-require 'line-bot-api'
+require "line-bot-api"
 
 class LineInactiveNotifyJob < ApplicationJob
   sidekiq_options retry: 3
@@ -57,7 +57,7 @@ class LineInactiveNotifyJob < ApplicationJob
 
     push_request = Line::Bot::V2::MessagingApi::PushMessageRequest.new(
       to: line_id,
-      messages: [text_message]
+      messages: [ text_message ]
     )
 
     # HTTP情報を含むレスポンスを取得

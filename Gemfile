@@ -47,10 +47,10 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem 'dotenv-rails'
+  gem "dotenv-rails"
 
-  gem 'rspec-rails'
-  gem 'factory_bot_rails'
+  gem "rspec-rails"
+  gem "factory_bot_rails"
 end
 
 group :development do
@@ -63,7 +63,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 
-  gem 'simplecov', require: false
+  gem "simplecov", require: false
 end
 
 gem "devise"
@@ -72,25 +72,25 @@ gem "devise-i18n-views"
 
 gem "rails-i18n", "~> 7.0.0"
 
-gem 'image_processing', '~> 1.12'
+gem "image_processing", "~> 1.12"
 gem "ruby-vips"
 
-gem 'google-api-client', '~> 0.53.0', require: 'google/apis/youtube_v3'
+gem "google-api-client", "~> 0.53.0", require: "google/apis/youtube_v3"
 
-gem 'rakuten_web_service'
+gem "rakuten_web_service"
 
-gem 'omniauth'
-gem 'omniauth-google-oauth2'
-gem 'omniauth-rails_csrf_protection'
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 
-gem 'simple_calendar'
+gem "simple_calendar"
 
-gem 'meta-tags'
+gem "meta-tags"
 
-gem 'sidekiq'
-gem 'sidekiq-scheduler'
-gem 'line-bot-api'
+gem "sidekiq"
+gem "sidekiq-scheduler"
+gem "line-bot-api"
 
-gem 'omniauth-line'
+gem "omniauth-line"
 
-gem 'pagy'
+gem "pagy"

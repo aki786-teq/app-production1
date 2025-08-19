@@ -16,6 +16,3 @@ RSpec.describe Board, type: :model do
     expect(board).to be_invalid
   end
 end
-
-
-

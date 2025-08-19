@@ -8,12 +8,12 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name ])
   end
 
   private
   def require_goal_setup
-    # Deviseのログアウト時は許可
+  # Deviseのログアウト時は許可
   return if controller_path == "devise/sessions" && action_name == "destroy"
 
   # goal#newまたはcreateアクションの場合は許可
@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :introduce])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :introduce])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :name, :introduce ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :name, :introduce ])
   end
 end

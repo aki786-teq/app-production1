@@ -17,5 +17,3 @@ RSpec.describe "Notifications edge", type: :request do
     expect(user.notifications.reload.where(checked: false).count).to eq(0)
   end
 end
-
-

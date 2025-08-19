@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user
-  before_action :ensure_correct_user, only: [:edit_profile, :update_profile]
+  before_action :ensure_correct_user, only: [ :edit_profile, :update_profile ]
 
   def show
     @user = User.find(params[:id])
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
 
   def update_profile
     if @user.update(profile_params)
-      redirect_to user_path(@user), success: 'プロフィールが更新されました。'
+      redirect_to user_path(@user), success: "プロフィールが更新されました。"
     else
       render :edit_profile, status: :unprocessable_entity
     end

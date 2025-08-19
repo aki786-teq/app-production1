@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable, :omniauthable, omniauth_providers: [:google_oauth2, :line]
+         :confirmable, :omniauthable, omniauth_providers: [ :google_oauth2, :line ]
 
   validates :name, presence: true
   validates :introduce, length: {
@@ -83,7 +83,7 @@ class User < ApplicationRecord
   # ===== Google OAuth共通処理 =====
 
   def self.find_user_by_google(auth)
-    account = OauthAccount.find_by(provider: 'google_oauth2', uid: auth.uid)
+    account = OauthAccount.find_by(provider: "google_oauth2", uid: auth.uid)
     return account.user if account
 
     return find_by(email: auth.info.email) if auth.respond_to?(:info) && auth.info&.email.present?
@@ -107,10 +107,10 @@ class User < ApplicationRecord
   end
 
   def self.attach_google_oauth!(user, auth)
-    return user if user.oauth_accounts.find_by(provider: 'google_oauth2')
+    return user if user.oauth_accounts.find_by(provider: "google_oauth2")
 
     user.oauth_accounts.create!(
-      provider: 'google_oauth2',
+      provider: "google_oauth2",
       uid: auth.uid,
       auth_data: auth.to_hash
     )
@@ -121,9 +121,9 @@ class User < ApplicationRecord
   # 認証情報から名前を抽出
   def self.extract_name_from_auth(auth)
     case auth.provider
-    when 'line'
+    when "line"
       auth.info.name || auth.info.display_name || "LINE User"
-    when 'google_oauth2'
+    when "google_oauth2"
       auth.info.name || "Google User"
     else
       auth.info.name || "User"
@@ -147,7 +147,7 @@ class User < ApplicationRecord
 
   # Googleアカウントと連携しているかチェック
   def google_connected?
-    oauth_accounts.exists?(provider: 'google_oauth2')
+    oauth_accounts.exists?(provider: "google_oauth2")
   end
 
   # SNSログインユーザーかどうか
@@ -167,10 +167,10 @@ class User < ApplicationRecord
 
   # LINE Messaging API の userId を優先して取得（後方互換でLINE LoginのUIDを返す）
   def line_id
-    messaging = oauth_account_for('line_messaging')
+    messaging = oauth_account_for("line_messaging")
     return messaging.uid if messaging
 
-    login = oauth_account_for('line')
+    login = oauth_account_for("line")
     login&.uid
   end
 

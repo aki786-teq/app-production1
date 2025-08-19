@@ -15,5 +15,3 @@ RSpec.describe OauthAccount, type: :model do
     expect(dup).to be_invalid
   end
 end
-
-

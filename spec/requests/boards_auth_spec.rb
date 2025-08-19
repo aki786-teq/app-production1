@@ -21,5 +21,3 @@ RSpec.describe "Boards auth flows", type: :request do
     expect(response).to redirect_to(boards_path)
   end
 end
-
-

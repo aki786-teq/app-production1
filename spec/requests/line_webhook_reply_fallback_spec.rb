@@ -11,8 +11,8 @@ RSpec.describe "LineWebhook reply fallback", type: :request do
   it 'replyが非200のときpushでフォールバックしても 200 を返す（pushは呼ばれる）' do
     # replyは500で失敗、pushは200で成功
     client = double(
-      reply_message_with_http_info: [nil, 500, {}],
-      push_message_with_http_info: [nil, 200, {}]
+      reply_message_with_http_info: [ nil, 500, {} ],
+      push_message_with_http_info: [ nil, 200, {} ]
     )
     expect(Line::Bot::V2::MessagingApi::ApiClient).to receive(:new).and_return(client)
 
@@ -37,5 +37,3 @@ RSpec.describe "LineWebhook reply fallback", type: :request do
     expect(response).to have_http_status(:ok)
   end
 end
-
-

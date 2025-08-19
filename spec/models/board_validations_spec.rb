@@ -32,5 +32,3 @@ RSpec.describe Board, type: :model do
     expect(b).to be_valid
   end
 end
-
-

@@ -2,7 +2,7 @@ class LineNotification < ApplicationRecord
   belongs_to :user
 
   validates :user_id, presence: true, uniqueness: true
-  validates :notification_enabled, inclusion: { in: [true, false] }
+  validates :notification_enabled, inclusion: { in: [ true, false ] }
   validates :consecutive_inactive_days, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   after_initialize :set_defaults, if: :new_record?
