@@ -4,19 +4,19 @@ class LineWebhookController < ApplicationController
   # LINE Messaging API Webhook エンドポイント
   def callback
     request_body = request.raw_post
-    signature = request.env['HTTP_X_LINE_SIGNATURE']
+    signature = request.env["HTTP_X_LINE_SIGNATURE"]
 
     unless valid_signature?(request_body, signature)
-      Rails.logger.warn('[LINE Webhook] Invalid signature')
+      Rails.logger.warn("[LINE Webhook] Invalid signature")
       head :bad_request and return
     end
 
-    events = JSON.parse(request_body)['events'] || []
+    events = JSON.parse(request_body)["events"] || []
     events.each do |event|
-      case event['type']
-      when 'follow'
+      case event["type"]
+      when "follow"
         handle_follow_event(event)
-      when 'message'
+      when "message"
         handle_message_event(event)
       else
         # no-op
@@ -33,31 +33,31 @@ class LineWebhookController < ApplicationController
   end
 
   # 連携URLを踏んだときの処理（ユーザーにMessaging userIdをひも付け）
-  before_action :authenticate_user!, only: [:link]
+  before_action :authenticate_user!, only: [ :link ]
   def link
     token = params[:token].to_s
     link_token = LineLinkToken.valid_unconsumed.find_by(token: token)
 
     if link_token.nil?
-      redirect_to reminder_settings_path, alert: '連携用リンクが無効または期限切れです。' and return
+      redirect_to reminder_settings_path, alert: "連携用リンクが無効または期限切れです。" and return
     end
 
     messaging_uid = link_token.messaging_user_id
 
     # 既に同じUIDで連携済みならスキップ
-    if current_user.oauth_accounts.find_by(provider: 'line_messaging', uid: messaging_uid).present?
+    if current_user.oauth_accounts.find_by(provider: "line_messaging", uid: messaging_uid).present?
       link_token.consume!(user: current_user) unless link_token.consumed?
-      redirect_to reminder_settings_path, notice: 'すでにLINE通知の連携は完了しています。' and return
+      redirect_to reminder_settings_path, notice: "すでにLINE通知の連携は完了しています。" and return
     end
 
     # 他ユーザーに紐づいているUIDなら所有権移譲
-    foreign_account = OauthAccount.find_by(provider: 'line_messaging', uid: messaging_uid)
+    foreign_account = OauthAccount.find_by(provider: "line_messaging", uid: messaging_uid)
     if foreign_account.present? && foreign_account.user_id != current_user.id
       ActiveRecord::Base.transaction do
         old_user = foreign_account.user
 
         # current_user側にline_messagingがある場合は削除（ユニーク制約回避）
-        mine = current_user.oauth_accounts.find_by(provider: 'line_messaging')
+        mine = current_user.oauth_accounts.find_by(provider: "line_messaging")
         mine&.destroy!
 
         # 所有権をcurrent_userに移譲
@@ -74,16 +74,16 @@ class LineWebhookController < ApplicationController
         link_token.consume!(user: current_user)
       end
 
-      redirect_to reminder_settings_path, notice: 'LINE通知の連携を新しいアカウントに移行しました。' and return
+      redirect_to reminder_settings_path, notice: "LINE通知の連携を新しいアカウントに移行しました。" and return
     end
 
     # 既存のline_messaging連携があればUIDを更新、なければ新規作成
-    existing = current_user.oauth_accounts.find_by(provider: 'line_messaging')
+    existing = current_user.oauth_accounts.find_by(provider: "line_messaging")
     if existing
       existing.update!(uid: messaging_uid, auth_data: {})
     else
       current_user.oauth_accounts.create!(
-        provider: 'line_messaging',
+        provider: "line_messaging",
         uid: messaging_uid,
         auth_data: {}
       )
@@ -94,32 +94,32 @@ class LineWebhookController < ApplicationController
 
     link_token.consume!(user: current_user)
 
-    redirect_to reminder_settings_path, notice: 'LINE通知の連携が完了しました！'
+    redirect_to reminder_settings_path, notice: "LINE通知の連携が完了しました！"
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("[LINE Link] Failed to link: #{e.message}")
-    redirect_to reminder_settings_path, alert: '連携に失敗しました。時間をおいて再度お試しください。'
+    redirect_to reminder_settings_path, alert: "連携に失敗しました。時間をおいて再度お試しください。"
   end
 
   private
 
   def valid_signature?(body, signature)
-    secret = ENV['LINE_CHANNEL_SECRET']
+    secret = ENV["LINE_CHANNEL_SECRET"]
     return true if secret.blank? # 環境未設定時は検証スキップ（本番では必ず設定）
 
-    hash = OpenSSL::HMAC.digest('sha256', secret, body)
+    hash = OpenSSL::HMAC.digest("sha256", secret, body)
     expected_signature = Base64.strict_encode64(hash)
     ActiveSupport::SecurityUtils.secure_compare(expected_signature, signature.to_s)
   end
 
   def messaging_client
     @messaging_client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
-      channel_access_token: ENV.fetch('LINE_CHANNEL_TOKEN')
+      channel_access_token: ENV.fetch("LINE_CHANNEL_TOKEN")
     )
   end
 
   def handle_follow_event(event)
-    messaging_user_id = event.dig('source', 'userId')
-    reply_token = event['replyToken']
+    messaging_user_id = event.dig("source", "userId")
+    reply_token = event["replyToken"]
     return if messaging_user_id.blank?
 
     # 連携用トークンを作成
@@ -139,9 +139,9 @@ class LineWebhookController < ApplicationController
   end
 
   def handle_message_event(event)
-    messaging_user_id = event.dig('source', 'userId')
-    reply_token = event['replyToken']
-    text = event.dig('message', 'text').to_s.strip
+    messaging_user_id = event.dig("source", "userId")
+    reply_token = event["replyToken"]
+    text = event.dig("message", "text").to_s.strip
     return if messaging_user_id.blank?
 
     # 「連携」「link」などのキーワードで再発行
@@ -160,13 +160,13 @@ class LineWebhookController < ApplicationController
   end
 
   def build_link_url(token)
-    base_url = ENV['APP_BASE_URL'] || 'https://mainichi-zenkutsu.jp'
+    base_url = ENV["APP_BASE_URL"] || "https://mainichi-zenkutsu.jp"
     URI.join(base_url, "/line/link?token=#{CGI.escape(token)}").to_s
   end
 
   def send_push_text(to_user_id, text)
     message = Line::Bot::V2::MessagingApi::TextMessage.new(text: text)
-    request = Line::Bot::V2::MessagingApi::PushMessageRequest.new(to: to_user_id, messages: [message])
+    request = Line::Bot::V2::MessagingApi::PushMessageRequest.new(to: to_user_id, messages: [ message ])
     response_body, status_code, response_headers = messaging_client.push_message_with_http_info(push_message_request: request)
 
     unless status_code == 200
@@ -180,7 +180,7 @@ class LineWebhookController < ApplicationController
   def send_reply_text(reply_token, text)
     return false if reply_token.blank?
     message = Line::Bot::V2::MessagingApi::TextMessage.new(text: text)
-    request = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(reply_token: reply_token, messages: [message])
+    request = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(reply_token: reply_token, messages: [ message ])
     response_body, status_code, response_headers = messaging_client.reply_message_with_http_info(reply_message_request: request)
     if status_code == 200
       true

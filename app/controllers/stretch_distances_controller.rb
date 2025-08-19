@@ -1,7 +1,7 @@
 class StretchDistancesController < ApplicationController
   before_action :authenticate_user!
-  before_action :check_consecutive_posts, only: [:measure, :analyze, :create_post_with_result]
-  before_action :set_stretch_distance, only: [:result]
+  before_action :check_consecutive_posts, only: [ :measure, :analyze, :create_post_with_result ]
+  before_action :set_stretch_distance, only: [ :result ]
 
   def measure
     @stretch_distance = StretchDistance.new
@@ -39,12 +39,12 @@ end
     session[:stretch_measurement_data] = {
       flexibility_level: stretch_distance.flexibility_level,
       comment: stretch_distance.comment_template,
-      created_at: stretch_distance.created_at.strftime('%Y年%m月%d日 %H:%M')
+      created_at: stretch_distance.created_at.strftime("%Y年%m月%d日 %H:%M")
     }
 
     redirect_to new_board_path(stretch_distance_id: stretch_distance.id)
   rescue ActiveRecord::RecordNotFound
-    redirect_to measure_stretch_distances_path, alert: '測定記録が見つかりません。'
+    redirect_to measure_stretch_distances_path, alert: "測定記録が見つかりません。"
   end
 
   private
@@ -52,7 +52,7 @@ end
   def set_stretch_distance
     @stretch_distance = current_user.stretch_distances.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to measure_stretch_distances_path, alert: '測定記録が見つかりません。'
+    redirect_to measure_stretch_distances_path, alert: "測定記録が見つかりません。"
   end
 
   def check_consecutive_posts
@@ -60,7 +60,7 @@ end
       consecutive_days = current_user.consecutive_post_days
       remaining_days = 4 - consecutive_days
 
-      redirect_to root_path, 
+      redirect_to root_path,
                   alert: "前屈測定機能を利用するには昨日から過去4日間の連続投稿が必要です。現在#{consecutive_days}日連続投稿中です。あと#{remaining_days}日継続してください。"
     end
   end

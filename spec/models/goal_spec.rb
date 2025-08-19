@@ -8,5 +8,3 @@ RSpec.describe Goal, type: :model do
     expect(g.errors[:content]).to be_present
   end
 end
-
-

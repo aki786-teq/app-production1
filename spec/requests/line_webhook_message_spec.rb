@@ -10,8 +10,8 @@ RSpec.describe "LineWebhook message", type: :request do
 
   before do
     allow(Line::Bot::V2::MessagingApi::ApiClient).to receive(:new).and_return(double(
-      reply_message_with_http_info: [nil, 200, {}],
-      push_message_with_http_info: [nil, 200, {}]
+      reply_message_with_http_info: [ nil, 200, {} ],
+      push_message_with_http_info: [ nil, 200, {} ]
     ))
   end
 
@@ -42,5 +42,3 @@ RSpec.describe "LineWebhook message", type: :request do
     expect(response).to have_http_status(:ok)
   end
 end
-
-

@@ -13,7 +13,7 @@ RSpec.describe "ReminderSettings", type: :request do
 
   it 'PATCH /reminder_settings 更新成功でリダイレクト' do
     patch reminder_settings_path, params: { line_notification: { notification_enabled: false } }
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(reminder_settings_path)
   end
 
@@ -23,5 +23,3 @@ RSpec.describe "ReminderSettings", type: :request do
     expect(response).to have_http_status(:unprocessable_entity)
   end
 end
-
-

@@ -36,8 +36,8 @@ RSpec.describe "LineWebhook", type: :request do
 
     # 外部API呼び出しをスタブ
     allow(Line::Bot::V2::MessagingApi::ApiClient).to receive(:new).and_return(double(
-      reply_message_with_http_info: [nil, 200, {}],
-      push_message_with_http_info: [nil, 200, {}]
+      reply_message_with_http_info: [ nil, 200, {} ],
+      push_message_with_http_info: [ nil, 200, {} ]
     ))
 
     old_secret = ENV['LINE_CHANNEL_SECRET']
@@ -56,8 +56,6 @@ RSpec.describe "LineWebhook", type: :request do
 
   it 'JSONパースエラーで 400' do
     post path, params: 'invalid json', headers: { 'CONTENT_TYPE' => 'application/json' }
-    expect([400, 422]).to include(response.status)
+    expect([ 400, 422 ]).to include(response.status)
   end
 end
-
-

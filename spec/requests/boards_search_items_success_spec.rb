@@ -13,11 +13,11 @@ RSpec.describe "Boards search_items success", type: :request do
       'itemPrice' => 1000,
       'itemUrl' => 'https://example.com/item',
       'affiliateUrl' => nil,
-      'smallImageUrls' => ['https://img/small.jpg'],
-      'mediumImageUrls' => ['https://img/medium.jpg']
+      'smallImageUrls' => [ 'https://img/small.jpg' ],
+      'mediumImageUrls' => [ 'https://img/medium.jpg' ]
     }
 
-    fake_enum = [fake_item]
+    fake_enum = [ fake_item ]
     allow(RakutenWebService::Ichiba::Item).to receive(:search).and_return(fake_enum)
 
     get search_items_boards_path, params: { keyword: 'yoga' }
@@ -27,5 +27,3 @@ RSpec.describe "Boards search_items success", type: :request do
     expect(json['items'].first['item_url']).to eq('https://example.com/item')
   end
 end
-
-

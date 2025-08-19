@@ -11,14 +11,12 @@ RSpec.describe "Cheers", type: :request do
 
   it 'POST /boards/:board_id/cheer は リダイレクトする' do
     post board_cheer_path(board), headers: { 'HTTP_REFERER' => boards_path }
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
   end
 
   it 'DELETE /boards/:board_id/cheer は リダイレクトする' do
     user.cheers.create!(board: board)
     delete board_cheer_path(board), headers: { 'HTTP_REFERER' => boards_path }
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
   end
 end
-
-

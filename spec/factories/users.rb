@@ -6,6 +6,3 @@ FactoryBot.define do
     confirmed_at { Time.current }
   end
 end
-
-
-

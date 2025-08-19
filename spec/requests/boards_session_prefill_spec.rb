@@ -19,5 +19,3 @@ RSpec.describe "Boards session prefill", type: :request do
     expect(session[:stretch_measurement_data]).to be_nil
   end
 end
-
-

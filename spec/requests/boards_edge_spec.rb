@@ -29,16 +29,14 @@ RSpec.describe "Boards edges", type: :request do
   it '同日に既に投稿があると new はリダイレクト' do
     create(:board, user: user, goal: goal, created_at: Time.zone.now)
     get new_board_path
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(boards_path)
   end
 
   it '同日に既に投稿があると create はリダイレクト' do
     create(:board, user: user, goal: goal, created_at: Time.zone.now)
     post boards_path, params: { board: { did_stretch: true, content: 'x' } }
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(boards_path)
   end
 end
-
-

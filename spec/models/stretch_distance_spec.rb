@@ -27,5 +27,3 @@ RSpec.describe StretchDistance, type: :model do
     expect(sd.comment_template).to be_nil
   end
 end
-
-

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'ユーザー登録から投稿まで', type: :system do
-
   it '新規登録 → 目標作成 → 投稿作成 → 投稿表示 ができる' do
     # 新規登録
     visit new_user_registration_path
@@ -34,5 +33,3 @@ RSpec.describe 'ユーザー登録から投稿まで', type: :system do
     expect(page).to have_content('みんなの投稿')
   end
 end
-
-

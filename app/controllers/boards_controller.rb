@@ -5,7 +5,7 @@ class BoardsController < ApplicationController
 
   def new
     if current_user.boards.where(created_at: Time.zone.today.all_day).exists?
-      redirect_to boards_path, danger: t('boards.flash_message.daily_limit')
+      redirect_to boards_path, danger: t("boards.flash_message.daily_limit")
     else
       @board = Board.new
 
@@ -22,7 +22,7 @@ class BoardsController < ApplicationController
 
   def create
     if current_user.boards.where(created_at: Time.zone.today.all_day).exists?
-      flash[:alert] = t('boards.flash_message.daily_limit')
+      flash[:alert] = t("boards.flash_message.daily_limit")
       redirect_to boards_path and return
     end
 
@@ -48,9 +48,9 @@ class BoardsController < ApplicationController
         current_user.line_notification_setting.reset_inactive_days!
       end
 
-      redirect_to boards_path, success: t('boards.flash_message.create_success')
+      redirect_to boards_path, success: t("boards.flash_message.create_success")
     else
-      flash.now[:danger] = t('boards.flash_message.create_failure')
+      flash.now[:danger] = t("boards.flash_message.create_failure")
       render :new, status: :unprocessable_entity
     end
   end
@@ -66,9 +66,9 @@ class BoardsController < ApplicationController
   def update
     @board = current_user.boards.find(params[:id])
     if @board.update(board_params)
-      redirect_to boards_path, success: t('boards.flash_message.update_success')
+      redirect_to boards_path, success: t("boards.flash_message.update_success")
     else
-      flash.now[:danger] = t('boards.flash_message.update_failure')
+      flash.now[:danger] = t("boards.flash_message.update_failure")
       render :edit, status: :unprocessable_entity
     end
   end
@@ -76,7 +76,7 @@ class BoardsController < ApplicationController
   def destroy
   board = current_user.boards.find(params[:id])
   board.destroy!
-  redirect_to boards_path, success: t('boards.flash_message.destroy_success'), status: :see_other
+  redirect_to boards_path, success: t("boards.flash_message.destroy_success"), status: :see_other
   end
 
   def bookmarks
@@ -98,19 +98,19 @@ class BoardsController < ApplicationController
       render json: {
         items: @items.map do |item|
           {
-            item_code: item['itemCode'],
-            item_name: item['itemName'],
-            item_price: item['itemPrice'],
+            item_code: item["itemCode"],
+            item_name: item["itemName"],
+            item_price: item["itemPrice"],
             # アフィリエイトURLが返る場合は優先利用
-            item_url: item['affiliateUrl'].presence || item['itemUrl'],
-            small_image_urls: item['smallImageUrls'],
-            medium_image_urls: item['mediumImageUrls']
+            item_url: item["affiliateUrl"].presence || item["itemUrl"],
+            small_image_urls: item["smallImageUrls"],
+            medium_image_urls: item["mediumImageUrls"]
           }
         end
       }
     rescue => e
       Rails.logger.error "楽天API検索エラー: #{e.message}"
-      render json: { error: '商品検索でエラーが発生しました' }, status: :unprocessable_entity
+      render json: { error: "商品検索でエラーが発生しました" }, status: :unprocessable_entity
     end
   end
 
@@ -136,17 +136,17 @@ class BoardsController < ApplicationController
 
   # 前屈測定結果を投稿本文用の文章に変換
   def format_stretch_measurement_content(stretch_data)
-    flexibility_level_text = case stretch_data['flexibility_level']
-    when 'excellent'
-      '優秀'
-    when 'good'
-      '良好'
-    when 'average'
-      '普通'
-    when 'needs_improvement'
-      '要改善'
+    flexibility_level_text = case stretch_data["flexibility_level"]
+    when "excellent"
+      "優秀"
+    when "good"
+      "良好"
+    when "average"
+      "普通"
+    when "needs_improvement"
+      "要改善"
     else
-      stretch_data['flexibility_level']
+      stretch_data["flexibility_level"]
     end
 
     <<~TEXT

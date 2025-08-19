@@ -9,7 +9,7 @@ RSpec.describe "LineWebhook unknown event", type: :request do
   end
 
   it '未知の event.type でも 200' do
-    body = { events: [{ 'type' => 'unknown', 'replyToken' => 'x', 'source' => { 'userId' => 'U1' } }] }.to_json
+    body = { events: [ { 'type' => 'unknown', 'replyToken' => 'x', 'source' => { 'userId' => 'U1' } } ] }.to_json
     headers = sign_header(body, 'secret').merge('CONTENT_TYPE' => 'application/json')
 
     old_secret = ENV['LINE_CHANNEL_SECRET']
@@ -23,5 +23,3 @@ RSpec.describe "LineWebhook unknown event", type: :request do
     expect(response).to have_http_status(:ok)
   end
 end
-
-

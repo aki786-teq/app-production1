@@ -15,9 +15,7 @@ RSpec.describe "Notifications", type: :request do
 
   it 'DELETE /notifications/destroy_all は リダイレクトする' do
     delete destroy_all_notifications_path
-    expect([302, 303]).to include(response.status)
+    expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(notifications_path)
   end
 end
-
-

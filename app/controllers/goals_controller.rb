@@ -1,6 +1,6 @@
 class GoalsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_goal, only: [:edit, :update]
+  before_action :set_goal, only: [ :edit, :update ]
 
   def new
     if current_user.goal

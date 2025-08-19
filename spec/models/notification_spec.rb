@@ -15,5 +15,3 @@ RSpec.describe Notification, type: :model do
     expect(n.subject).to eq cheer
   end
 end
-
-

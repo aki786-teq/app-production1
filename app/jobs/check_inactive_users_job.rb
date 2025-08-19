@@ -1,14 +1,14 @@
-require 'line/bot'
+require "line/bot"
 
 class CheckInactiveUsersJob < ApplicationJob
   sidekiq_options retry: false
 
   def perform
-    Rails.logger.info('無投稿ユーザーのチェックを開始します')
+    Rails.logger.info("無投稿ユーザーのチェックを開始します")
     # 3日間投稿していないユーザーを取得
     inactive_users = find_inactive_users(3)
     if inactive_users.empty?
-      Rails.logger.info('3日間無投稿のユーザーは存在しません')
+      Rails.logger.info("3日間無投稿のユーザーは存在しません")
       return
     end
 
@@ -36,7 +36,7 @@ class CheckInactiveUsersJob < ApplicationJob
       next
     end
 
-    Rails.logger.info('無投稿ユーザーのチェックを完了しました')
+    Rails.logger.info("無投稿ユーザーのチェックを完了しました")
   end
 
   private
@@ -47,7 +47,7 @@ class CheckInactiveUsersJob < ApplicationJob
       .joins(:oauth_accounts)
       .where(is_deleted: false)
       .where(line_notifications: { notification_enabled: true })
-      .where(oauth_accounts: { provider: 'line_messaging' })
+      .where(oauth_accounts: { provider: "line_messaging" })
       .where("NOT EXISTS (
                SELECT 1 FROM boards
                WHERE boards.user_id = users.id

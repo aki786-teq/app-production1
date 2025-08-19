@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    registrations: 'users/registrations',
-    passwords: 'users/passwords',
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    registrations: "users/registrations",
+    passwords: "users/passwords",
+    omniauth_callbacks: "users/omniauth_callbacks"
     }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -25,12 +25,12 @@ Rails.application.routes.draw do
       get :search_items
     end
   end
-  resources :notifications, only: [:index] do
+  resources :notifications, only: [ :index ] do
     collection do
       delete :destroy_all
     end
   end
-  resources :users, only: [:show] do
+  resources :users, only: [ :show ] do
     member do
       get :edit_profile
       patch :update_profile
@@ -55,13 +55,13 @@ Rails.application.routes.draw do
   end
 
   # リマインダー設定
-  get 'reminder_settings', to: 'reminder_settings#show'
-  patch 'reminder_settings', to: 'reminder_settings#update'
+  get "reminder_settings", to: "reminder_settings#show"
+  patch "reminder_settings", to: "reminder_settings#update"
 
   # LINE連携解除
-  delete '/auth/line/disconnect', to: 'line_auth#disconnect', as: :line_auth_disconnect
+  delete "/auth/line/disconnect", to: "line_auth#disconnect", as: :line_auth_disconnect
 
   # LINE Messaging API Webhook / 連携リンク
-  post '/line/webhook', to: 'line_webhook#callback'
-  get '/line/link', to: 'line_webhook#link'
+  post "/line/webhook", to: "line_webhook#callback"
+  get "/line/link", to: "line_webhook#link"
 end
