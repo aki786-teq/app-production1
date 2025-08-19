@@ -42,20 +42,49 @@ class LineWebhookController < ApplicationController
       redirect_to reminder_settings_path, alert: '連携用リンクが無効または期限切れです。' and return
     end
 
+    messaging_uid = link_token.messaging_user_id
+
     # 既に同じUIDで連携済みならスキップ
-    if current_user.oauth_accounts.find_by(provider: 'line_messaging', uid: link_token.messaging_user_id).present?
+    if current_user.oauth_accounts.find_by(provider: 'line_messaging', uid: messaging_uid).present?
       link_token.consume!(user: current_user) unless link_token.consumed?
       redirect_to reminder_settings_path, notice: 'すでにLINE通知の連携は完了しています。' and return
+    end
+
+    # 他ユーザーに紐づいているUIDなら所有権移譲
+    foreign_account = OauthAccount.find_by(provider: 'line_messaging', uid: messaging_uid)
+    if foreign_account.present? && foreign_account.user_id != current_user.id
+      ActiveRecord::Base.transaction do
+        old_user = foreign_account.user
+
+        # current_user側にline_messagingがある場合は削除（ユニーク制約回避）
+        mine = current_user.oauth_accounts.find_by(provider: 'line_messaging')
+        mine&.destroy!
+
+        # 所有権をcurrent_userに移譲
+        foreign_account.update!(user: current_user)
+
+        # 通知設定の整合
+        current_user.line_notification_setting.update!(notification_enabled: true)
+        begin
+          old_user.line_notification_setting.update!(notification_enabled: false)
+        rescue StandardError
+          # 旧ユーザーに設定が無い場合などは無視
+        end
+
+        link_token.consume!(user: current_user)
+      end
+
+      redirect_to reminder_settings_path, notice: 'LINE通知の連携を新しいアカウントに移行しました。' and return
     end
 
     # 既存のline_messaging連携があればUIDを更新、なければ新規作成
     existing = current_user.oauth_accounts.find_by(provider: 'line_messaging')
     if existing
-      existing.update!(uid: link_token.messaging_user_id, auth_data: {})
+      existing.update!(uid: messaging_uid, auth_data: {})
     else
       current_user.oauth_accounts.create!(
         provider: 'line_messaging',
-        uid: link_token.messaging_user_id,
+        uid: messaging_uid,
         auth_data: {}
       )
     end
