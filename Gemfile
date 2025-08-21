@@ -94,3 +94,5 @@ gem "line-bot-api"
 gem "omniauth-line"
 
 gem "pagy"
+
+gem "sitemap_generator"
