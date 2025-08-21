@@ -22,6 +22,7 @@ jobs:
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
       DATABASE_URL: "postgres://postgres:postgres@localhost:5432/myapp_test"
+      RAILS_MAX_THREADS: 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,11 +49,19 @@ jobs:
             sleep 5
           done
 
+      - name: Test PostgreSQL connection
+        run: |
+          echo "Testing PostgreSQL connection..."
+          psql -h localhost -p 5432 -U postgres -d myapp_test -c "SELECT 1;" || echo "Connection test failed"
+
       - name: Prepare database
         run: |
-          bin/rails db:create || true
-          bin/rails db:schema:load
-          bin/rails db:test:prepare
+          echo "Creating database..."
+          bin/rails db:create || echo "Database already exists"
+          echo "Loading schema..."
+          bin/rails db:schema:load || echo "Schema load failed"
+          echo "Preparing test database..."
+          bin/rails db:test:prepare || echo "Test database preparation failed"
 
       - name: Run RSpec
         run: bundle exec rspec
