@@ -5,6 +5,17 @@ class ApplicationController < ActionController::Base
   # allow_browser versions: :modern
   add_flash_types :success, :danger
 
+  # Deviseのログイン後のリダイレクト先を設定
+  def after_sign_in_path_for(resource)
+    # LINE連携トークンがある場合のみreminder_settingsにリダイレクト
+    if session[:pending_line_link_token].present?
+      reminder_settings_path
+    else
+      # 通常のログイン後はトップページに遷移
+      super
+    end
+  end
+
   protected
 
   def configure_permitted_parameters

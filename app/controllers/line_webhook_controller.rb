@@ -33,21 +33,27 @@ class LineWebhookController < ApplicationController
   end
 
   # 連携URLを踏んだときの処理（通知連携のみ）
-  before_action :authenticate_user!, only: [ :link, :disconnect ]
+  before_action :authenticate_user!, only: [ :disconnect ]
   def link
     token = params[:token].to_s
     link_token = LineLinkToken.valid_unconsumed.find_by(token: token)
 
     if link_token.nil?
-      redirect_to reminder_settings_path, alert: "❌ 連携用リンクが無効または期限切れです。時間をおいて再度お試しください。" and return
+      redirect_to new_user_session_path, alert: "連携用リンクが無効または期限切れです。時間をおいて再度お試しください。" and return
     end
 
     messaging_uid = link_token.messaging_user_id
 
+    # ログインしていない場合は、ログイン後に連携を完了するようセッションに保存
+    unless user_signed_in?
+      session[:pending_line_link_token] = token
+      redirect_to new_user_session_path, notice: "LINE通知連携の準備が完了しました。ログイン後に連携が完了します。" and return
+    end
+
     # 既に同じUIDで連携済みならスキップ
     if current_user.oauth_accounts.find_by(provider: "line_messaging", uid: messaging_uid).present?
       link_token.consume!(user: current_user) unless link_token.consumed?
-      redirect_to reminder_settings_path, notice: "✅ すでにLINE通知の連携は完了しています。" and return
+      redirect_to reminder_settings_path, notice: "すでにLINE通知の連携は完了しています。" and return
     end
 
     # 他ユーザーに紐づいているUIDなら所有権移譲
@@ -74,7 +80,7 @@ class LineWebhookController < ApplicationController
         link_token.consume!(user: current_user)
       end
 
-      redirect_to reminder_settings_path, notice: "✅ LINE通知の連携を新しいアカウントに移行しました。" and return
+      redirect_to reminder_settings_path, notice: "LINE通知の連携を新しいアカウントに移行しました。" and return
     end
 
     # 既存のline_messaging連携があればUIDを更新、なければ新規作成
@@ -94,10 +100,10 @@ class LineWebhookController < ApplicationController
 
     link_token.consume!(user: current_user)
 
-    redirect_to reminder_settings_path, notice: "✅ LINE通知の連携が完了しました！3日間投稿がない場合に毎朝7時にリマインド通知をお送りします。"
+    redirect_to reminder_settings_path, notice: "LINE通知の連携が完了しました。3日間投稿がない場合に毎朝7時にリマインド通知をお送りします。"
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("[LINE Link] Failed to link: #{e.message}")
-    redirect_to reminder_settings_path, alert: "❌ 連携に失敗しました。時間をおいて再度お試しください。"
+    redirect_to reminder_settings_path, alert: "連携に失敗しました。時間をおいて再度お試しください。"
   end
 
   # LINE通知連携解除
@@ -106,9 +112,9 @@ class LineWebhookController < ApplicationController
 
     if line_messaging_scope.exists?
       line_messaging_scope.destroy_all
-      flash[:success] = "LINE通知連携を解除しました"
+      flash[:success] = "LINE通知連携を解除しました。"
     else
-      flash[:danger] = "LINE通知連携が見つかりません"
+      flash[:danger] = "LINE通知連携が見つかりません。"
     end
 
     redirect_to reminder_settings_path
@@ -148,7 +154,7 @@ class LineWebhookController < ApplicationController
     link_url = build_link_url(token)
 
     # 簡易な案内メッセージ
-    message = "通知連携を完了してください👇「連携」とメッセージを送ると通知用URLを再発行できます。\n#{link_url}"
+    message = "通知連携を完了してください。「連携」とメッセージを送ると連携用リンクを再発行できます。\n#{link_url}"
 
     # Replyで案内（確実に配信）。失敗時はPushにフォールバック
     sent = send_reply_text(reply_token, message)
