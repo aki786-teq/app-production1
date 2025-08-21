@@ -61,7 +61,7 @@ RSpec.describe "LINE通知統合テスト", type: :request do
 
       expect(response).to redirect_to(reminder_settings_path)
       expect(flash[:notice]).to include("すでにLINE通知の連携は完了しています")
-      
+
       # ユーザーにLINE連携が設定されていることを確認
       expect(user.reload.line_connected?).to be true
       expect(user.line_id).to eq('test_line_id')
@@ -85,7 +85,7 @@ RSpec.describe "LINE通知統合テスト", type: :request do
 
       expect(response).to redirect_to(reminder_settings_path)
       expect(flash[:success]).to include("LINE通知連携を解除しました")
-      
+
       # ユーザーからLINE連携が削除されていることを確認
       expect(user.reload.line_connected?).to be false
     end

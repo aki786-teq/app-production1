@@ -9,8 +9,8 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
   before do
     # LINE APIクライアントをモック
     allow(Line::Bot::V2::MessagingApi::ApiClient).to receive(:new).and_return(mock_client)
-    allow(mock_client).to receive(:push_message_with_http_info).and_return([nil, 200, {}])
-    
+    allow(mock_client).to receive(:push_message_with_http_info).and_return([ nil, 200, {} ])
+
     # 環境変数を設定
     allow(ENV).to receive(:fetch).with("LINE_CHANNEL_TOKEN").and_return("test_token")
   end
@@ -27,7 +27,7 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
           hash_including(
             push_message_request: instance_of(Line::Bot::V2::MessagingApi::PushMessageRequest)
           )
-        ).and_return([nil, 200, {}])
+        ).and_return([ nil, 200, {} ])
 
         expect { perform_enqueued_jobs { described_class.perform_later(user.id) } }
           .to change { line_notification.reload.consecutive_inactive_days }.by(1)
@@ -37,7 +37,7 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
     context 'LINE連携されていない場合' do
       it 'エラーログを出力して処理を終了する' do
         expect(Rails.logger).to receive(:error).with("ユーザーID: #{user.id} - LINE連携されていません")
-        
+
         perform_enqueued_jobs { described_class.perform_later(user.id) }
       end
     end
@@ -45,7 +45,7 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
     context 'ユーザーが存在しない場合' do
       it 'RecordNotFoundエラーをキャッチしてログを出力する' do
         expect(Rails.logger).to receive(:error).with("ユーザーID: 999999 が見つかりません")
-        
+
         perform_enqueued_jobs { described_class.perform_later(999999) }
       end
     end
@@ -54,7 +54,7 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
       before do
         oauth_account
         line_notification
-        allow(mock_client).to receive(:push_message_with_http_info).and_return([nil, 400, {}])
+        allow(mock_client).to receive(:push_message_with_http_info).and_return([ nil, 400, {} ])
       end
 
       it 'エラーを発生させる' do
@@ -77,7 +77,7 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
         expect(push_request.to).to eq('test_line_id')
         expect(push_request.messages.first.text).to include(user.name)
         expect(push_request.messages.first.text).to include("最後の投稿から3日以上が経過しています")
-        [nil, 200, {}]
+        [ nil, 200, {} ]
       end
 
       perform_enqueued_jobs { described_class.perform_later(user.id) }

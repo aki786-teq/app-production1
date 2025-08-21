@@ -1,5 +1,5 @@
 class BoardsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [ :index, :show ]
 
   def index
     @pagy, @boards = pagy(Board.includes(:user).order(created_at: :desc))

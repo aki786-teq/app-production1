@@ -19,16 +19,16 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
 
       it 'LineInactiveNotifyJobをキューに追加する' do
         expect(LineInactiveNotifyJob).to receive(:perform_later).with(user.id)
-        
+
         perform_enqueued_jobs { described_class.perform_now }
       end
 
       it '通知可能なユーザーにのみジョブを追加する' do
         # LINE連携を削除して通知不可にする
         oauth_account.destroy
-        
+
         expect(LineInactiveNotifyJob).not_to receive(:perform_later)
-        
+
         perform_enqueued_jobs { described_class.perform_now }
       end
     end
@@ -41,7 +41,7 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
 
       it '重複通知を防ぐ' do
         expect(LineInactiveNotifyJob).not_to receive(:perform_later)
-        
+
         perform_enqueued_jobs { described_class.perform_now }
       end
     end
@@ -53,7 +53,7 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
 
       it '通知ジョブを追加しない' do
         expect(LineInactiveNotifyJob).not_to receive(:perform_later)
-        
+
         perform_enqueued_jobs { described_class.perform_now }
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
 
       it '通知ジョブを追加しない' do
         expect(LineInactiveNotifyJob).not_to receive(:perform_later)
-        
+
         perform_enqueued_jobs { described_class.perform_now }
       end
     end
@@ -79,7 +79,7 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
 
       it '通知ジョブを追加しない' do
         expect(LineInactiveNotifyJob).not_to receive(:perform_later)
-        
+
         perform_enqueued_jobs { described_class.perform_now }
       end
     end
@@ -99,7 +99,7 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
       it '両方のユーザーに通知ジョブを追加する' do
         expect(LineInactiveNotifyJob).to receive(:perform_later).with(user.id)
         expect(LineInactiveNotifyJob).to receive(:perform_later).with(user2.id)
-        
+
         perform_enqueued_jobs { described_class.perform_now }
       end
     end
@@ -113,9 +113,9 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
     it '個別ユーザーのエラーが全体の処理を停止させない' do
       # LineInactiveNotifyJobでエラーを発生させる
       allow(LineInactiveNotifyJob).to receive(:perform_later).and_raise(StandardError.new("テストエラー"))
-      
+
       expect(Rails.logger).to receive(:error).with(/テストエラー/)
-      
+
       # エラーが発生しても処理が継続されることを確認
       perform_enqueued_jobs { described_class.perform_now }
     end
