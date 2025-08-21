@@ -1,8 +1,9 @@
 FactoryBot.define do
   factory :line_link_token do
-    sequence(:token) { |n| "token-#{n}" }
-    messaging_user_id { "Uxxxxxxxx" }
-    expires_at { 1.hour.from_now }
+    token { SecureRandom.urlsafe_base64(24) }
+    messaging_user_id { "U#{SecureRandom.hex(8)}" }
+    expires_at { 30.minutes.from_now }
     consumed_at { nil }
+    user_id { nil }
   end
 end

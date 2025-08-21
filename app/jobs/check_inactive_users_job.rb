@@ -46,7 +46,6 @@ class CheckInactiveUsersJob < ApplicationJob
       .joins(:line_notification)
       .joins(:oauth_accounts)
       .where(is_deleted: false)
-      .where(line_notifications: { notification_enabled: true })
       .where(oauth_accounts: { provider: "line_messaging" })
       .where("NOT EXISTS (
                SELECT 1 FROM boards

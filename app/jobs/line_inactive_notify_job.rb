@@ -12,12 +12,6 @@ class LineInactiveNotifyJob < ApplicationJob
       return
     end
 
-    # LINE通知設定チェック
-    unless user.line_notifiable?
-      Rails.logger.error "ユーザーID: #{user_id} - LINE通知が無効です"
-      return
-    end
-
     Rails.logger.info "ユーザーID: #{user_id} - LINE通知処理開始"
     Rails.logger.info "LINE ID: #{user.line_id}"
 

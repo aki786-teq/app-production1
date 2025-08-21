@@ -314,12 +314,14 @@ Devise.setup do |config|
 
   # 既にログインしている場合の処理をカスタマイズ
   config.warden do |manager|
-    manager.failure_app = ->(env) do
-      if env["warden.options"] && env["warden.options"][:already_authenticated]
-        # 既にログインしている場合は、リマインダー設定ページにリダイレクト
-        [ 302, { "Location" => "/reminder_settings" }, [] ]
-      else
-        Devise::FailureApp.new.call(env)
+    manager.failure_app = Class.new(Devise::FailureApp) do
+      def call(env)
+        if env["warden.options"] && env["warden.options"][:already_authenticated]
+          # 既にログインしている場合は、リマインダー設定ページにリダイレクト
+          [ 302, { "Location" => "/reminder_settings" }, [] ]
+        else
+          super
+        end
       end
     end
   end

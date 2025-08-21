@@ -2,13 +2,9 @@ class LineNotification < ApplicationRecord
   belongs_to :user
 
   validates :user_id, presence: true, uniqueness: true
-  validates :notification_enabled, inclusion: { in: [ true, false ] }
   validates :consecutive_inactive_days, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   after_initialize :set_defaults, if: :new_record?
-
-  # 通知が有効なユーザーのみを取得
-  scope :notification_enabled, -> { where(notification_enabled: true) }
 
   # 通知記録を更新
   def record_notification!
@@ -32,6 +28,6 @@ class LineNotification < ApplicationRecord
   private
 
   def set_defaults
-    self.notification_enabled = true if notification_enabled.nil?
+    self.consecutive_inactive_days = 0 if consecutive_inactive_days.nil?
   end
 end

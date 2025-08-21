@@ -56,10 +56,9 @@ Rails.application.routes.draw do
 
   # リマインダー設定
   get "reminder_settings", to: "reminder_settings#show"
-  patch "reminder_settings", to: "reminder_settings#update"
 
-  # LINE連携解除
-  delete "/auth/line/disconnect", to: "line_auth#disconnect", as: :line_auth_disconnect
+  # LINE通知連携解除
+  delete "/line/notification/disconnect", to: "line_webhook#disconnect", as: :line_notification_disconnect
 
   # LINE Messaging API Webhook / 連携リンク
   post "/line/webhook", to: "line_webhook#callback"

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe LineNotification, type: :model do
   let(:user) { create(:user) }
-  let(:setting) { described_class.create!(user: user, notification_enabled: true, consecutive_inactive_days: 0) }
+  let(:setting) { described_class.create!(user: user, consecutive_inactive_days: 0) }
 
   it 'can_notify_today? は初期状態で true' do
     expect(setting.can_notify_today?).to be true
@@ -21,12 +21,5 @@ RSpec.describe LineNotification, type: :model do
     setting.update!(consecutive_inactive_days: 3)
     setting.reset_inactive_days!
     expect(setting.reload.consecutive_inactive_days).to eq 0
-  end
-
-  it 'notification_enabled スコープでONのみ抽出' do
-    on = described_class.create!(user: create(:user), notification_enabled: true, consecutive_inactive_days: 0)
-    off = described_class.create!(user: create(:user), notification_enabled: false, consecutive_inactive_days: 0)
-    expect(described_class.notification_enabled).to include(on)
-    expect(described_class.notification_enabled).not_to include(off)
   end
 end
