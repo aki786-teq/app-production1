@@ -10,8 +10,9 @@ RSpec.describe "Boards auth flows", type: :request do
     expect(response).to have_http_status(:ok)
   end
 
-  it '未ログインだと /boards/new は利用できない（現状仕様未定のためスキップ）' do
-    skip '未ログイン時の /boards/new はコントローラ側で current_user を参照して例外になるためスキップ'
+  it '未ログインだと /boards/new は利用できない' do
+    get new_board_path
+    expect(response).to redirect_to(new_user_session_path)
   end
 
   it 'POST /boards で作成できる' do

@@ -9,7 +9,7 @@ RSpec.describe User, type: :model do
       expect(user.google_connected?).to be false
       expect(user.omniauth_user?).to be false
 
-      user.oauth_accounts.create!(provider: 'line', uid: 'line-uid')
+      user.oauth_accounts.create!(provider: 'line_messaging', uid: 'line-uid')
       expect(user.reload.line_connected?).to be true
       expect(user.google_connected?).to be false
       expect(user.omniauth_user?).to be true
@@ -19,43 +19,36 @@ RSpec.describe User, type: :model do
     end
 
     it 'connected_to? / oauth_account_for の分岐' do
-      expect(user.connected_to?(:line)).to be false
-      expect(user.oauth_account_for(:line)).to be_nil
+      expect(user.connected_to?(:line_messaging)).to be false
+      expect(user.oauth_account_for(:line_messaging)).to be_nil
 
-      account = user.oauth_accounts.create!(provider: 'line', uid: 'line-uid')
-      expect(user.connected_to?('line')).to be true
-      expect(user.oauth_account_for('line')).to eq account
+      account = user.oauth_accounts.create!(provider: 'line_messaging', uid: 'line-uid')
+      expect(user.connected_to?('line_messaging')).to be true
+      expect(user.oauth_account_for('line_messaging')).to eq account
     end
 
-    it 'line_id は line_messaging を優先し、なければ line を返す' do
+    it 'line_id は line_messaging のUIDを返す' do
       expect(user.line_id).to be_nil
-      user.oauth_accounts.create!(provider: 'line', uid: 'login-uid')
-      expect(user.reload.line_id).to eq 'login-uid'
       user.oauth_accounts.create!(provider: 'line_messaging', uid: 'messaging-uid')
       expect(user.reload.line_id).to eq 'messaging-uid'
     end
   end
 
   describe '通知可否' do
-    it 'line_notifiable? は LINE連携かつ通知ON時のみ true' do
+    it 'line_notifiable? は LINE連携時のみ true' do
       # デフォルトでは連携なし -> false
       expect(user.line_notifiable?).to be false
 
-      # LINE連携あり & 既定で通知ON -> true
-      user.oauth_accounts.create!(provider: 'line', uid: 'line-uid')
-      expect(user.reload.line_notification_setting.notification_enabled?).to be true
-      expect(user.line_notifiable?).to be true
-
-      # 通知設定OFF -> false
-      user.line_notification_setting.update!(notification_enabled: false)
-      expect(user.line_notifiable?).to be false
+      # LINE連携あり -> true
+      user.oauth_accounts.create!(provider: 'line_messaging', uid: 'line-uid')
+      expect(user.reload.line_notifiable?).to be true
     end
   end
 
   describe 'パスワード必須判定（オーバーライド）' do
     it 'SNSログインのみ(暗号化パスワードなし)なら password_required? は false' do
       omniauth_user = create(:user)
-      omniauth_user.oauth_accounts.create!(provider: 'line', uid: 'line-uid')
+      omniauth_user.oauth_accounts.create!(provider: 'line_messaging', uid: 'line-uid')
       # DB制約に触れないよう、分岐条件のみスタブで再現
       allow(omniauth_user).to receive(:omniauth_user?).and_return(true)
       allow(omniauth_user).to receive(:encrypted_password).and_return(nil)

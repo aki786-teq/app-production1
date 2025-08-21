@@ -3,11 +3,6 @@ require 'ostruct'
 
 RSpec.describe User, type: :model do
   describe '.extract_name_from_auth' do
-    it 'provider=line の場合は info.name/display_name を優先' do
-      auth = OpenStruct.new(provider: 'line', info: OpenStruct.new(name: nil, display_name: 'Disp'))
-      expect(described_class.extract_name_from_auth(auth)).to eq 'Disp'
-    end
-
     it 'provider=google_oauth2 の場合は info.name を優先' do
       auth = OpenStruct.new(provider: 'google_oauth2', info: OpenStruct.new(name: 'GUser'))
       expect(described_class.extract_name_from_auth(auth)).to eq 'GUser'

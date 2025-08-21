@@ -1,12 +1,8 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: [ :google_oauth2, :line ]
+  skip_before_action :verify_authenticity_token, only: [ :google_oauth2 ]
 
   def google_oauth2
     callback_for(:google)
-  end
-
-  def line
-    callback_for(:line)
   end
 
   def passthru
@@ -20,41 +16,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-    def handle_line_oauth
-      Rails.logger.info("Adding LINE OAuthAccount to current user")
-
-      # 同じUIDのOAuthAccountが他のユーザーに存在する場合は削除
-      existing_oauth_account = OauthAccount.find_by(provider: "line", uid: request.env["omniauth.auth"].uid)
-      if existing_oauth_account && existing_oauth_account.user != current_user
-        existing_oauth_account.destroy!
-        Rails.logger.info("LINE連携を他のユーザーから移行しました")
-      end
-
-      # 既に同じプロバイダーのOAuthAccountが存在する場合は削除して新しい連携に置き換え
-      existing_oauth = current_user.oauth_accounts.find_by(provider: "line")
-      if existing_oauth
-        existing_oauth.destroy!
-      end
-
-      # 新しいOAuthAccountを作成
-      current_user.oauth_accounts.create!(
-        provider: "line",
-        uid: request.env["omniauth.auth"].uid,
-        auth_data: request.env["omniauth.auth"].to_hash
-      )
-
-      current_user
-    end
-
     def callback_for(provider)
     begin
-      # LINE連携は通知用のみで、ログインには使用しない
-      if provider == :line
-        @user = handle_line_oauth
-      else
-        # Googleログインの場合は通常の処理
-        @user = User.from_omniauth(request.env["omniauth.auth"])
-      end
+      # Googleログインの処理
+      @user = User.from_omniauth(request.env["omniauth.auth"])
 
       if @user.persisted?
         # 既にログインしているユーザーの場合は、自動ログイン処理をスキップ
@@ -65,15 +30,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           sign_in @user
         end
 
-        # LINE認証の場合は、LINE通知設定を有効化
-        if provider == :line
-          @user.line_notification_setting.update!(notification_enabled: true)
-        end
-
         # リダイレクト先を決定
-        if provider == :line
-          redirect_to reminder_settings_path, notice: "LINE連携が完了しました！"
-        elsif provider == :google_oauth2
+        if provider == :google_oauth2
           redirect_to root_path, notice: "Google連携が完了しました！"
         else
           redirect_to root_path

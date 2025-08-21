@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable, :omniauthable, omniauth_providers: [ :google_oauth2, :line ]
+         :confirmable, :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   validates :name, presence: true
   validates :introduce, length: {
@@ -121,8 +121,6 @@ class User < ApplicationRecord
   # 認証情報から名前を抽出
   def self.extract_name_from_auth(auth)
     case auth.provider
-    when "line"
-      auth.info.name || auth.info.display_name || "LINE User"
     when "google_oauth2"
       auth.info.name || "Google User"
     else
@@ -137,7 +135,7 @@ class User < ApplicationRecord
 
   # LINE通知可能かチェック
   def line_notifiable?
-    line_connected? && line_notification_setting.notification_enabled?
+    line_connected?
   end
 
   # LINEアカウントと連携しているかチェック
@@ -165,13 +163,10 @@ class User < ApplicationRecord
     oauth_accounts.find_by(provider: provider_name.to_s)
   end
 
-  # LINE Messaging API の userId を優先して取得（後方互換でLINE LoginのUIDを返す）
+  # LINE Messaging API の userId を取得
   def line_id
     messaging = oauth_account_for("line_messaging")
-    return messaging.uid if messaging
-
-    login = oauth_account_for("line")
-    login&.uid
+    messaging&.uid
   end
 
   protected

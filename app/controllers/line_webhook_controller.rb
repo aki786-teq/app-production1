@@ -32,14 +32,14 @@ class LineWebhookController < ApplicationController
     head :internal_server_error
   end
 
-  # 連携URLを踏んだときの処理（ユーザーにMessaging userIdをひも付け）
-  before_action :authenticate_user!, only: [ :link ]
+  # 連携URLを踏んだときの処理（通知連携のみ）
+  before_action :authenticate_user!, only: [ :link, :disconnect ]
   def link
     token = params[:token].to_s
     link_token = LineLinkToken.valid_unconsumed.find_by(token: token)
 
     if link_token.nil?
-      redirect_to reminder_settings_path, alert: "連携用リンクが無効または期限切れです。" and return
+      redirect_to reminder_settings_path, alert: "❌ 連携用リンクが無効または期限切れです。時間をおいて再度お試しください。" and return
     end
 
     messaging_uid = link_token.messaging_user_id
@@ -47,7 +47,7 @@ class LineWebhookController < ApplicationController
     # 既に同じUIDで連携済みならスキップ
     if current_user.oauth_accounts.find_by(provider: "line_messaging", uid: messaging_uid).present?
       link_token.consume!(user: current_user) unless link_token.consumed?
-      redirect_to reminder_settings_path, notice: "すでにLINE通知の連携は完了しています。" and return
+      redirect_to reminder_settings_path, notice: "✅ すでにLINE通知の連携は完了しています。" and return
     end
 
     # 他ユーザーに紐づいているUIDなら所有権移譲
@@ -63,10 +63,10 @@ class LineWebhookController < ApplicationController
         # 所有権をcurrent_userに移譲
         foreign_account.update!(user: current_user)
 
-        # 通知設定の整合
-        current_user.line_notification_setting.update!(notification_enabled: true)
+        # 通知設定の整合（所有権移譲時は設定を維持）
+        current_user.line_notification_setting
         begin
-          old_user.line_notification_setting.update!(notification_enabled: false)
+          old_user.line_notification_setting&.destroy!
         rescue StandardError
           # 旧ユーザーに設定が無い場合などは無視
         end
@@ -74,7 +74,7 @@ class LineWebhookController < ApplicationController
         link_token.consume!(user: current_user)
       end
 
-      redirect_to reminder_settings_path, notice: "LINE通知の連携を新しいアカウントに移行しました。" and return
+      redirect_to reminder_settings_path, notice: "✅ LINE通知の連携を新しいアカウントに移行しました。" and return
     end
 
     # 既存のline_messaging連携があればUIDを更新、なければ新規作成
@@ -89,15 +89,29 @@ class LineWebhookController < ApplicationController
       )
     end
 
-    # 通知を有効化（任意）
-    current_user.line_notification_setting.update!(notification_enabled: true)
+    # 通知設定を作成（自動的に有効化される）
+    current_user.line_notification_setting
 
     link_token.consume!(user: current_user)
 
-    redirect_to reminder_settings_path, notice: "LINE通知の連携が完了しました！"
+    redirect_to reminder_settings_path, notice: "✅ LINE通知の連携が完了しました！3日間投稿がない場合に毎朝7時にリマインド通知をお送りします。"
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("[LINE Link] Failed to link: #{e.message}")
-    redirect_to reminder_settings_path, alert: "連携に失敗しました。時間をおいて再度お試しください。"
+    redirect_to reminder_settings_path, alert: "❌ 連携に失敗しました。時間をおいて再度お試しください。"
+  end
+
+  # LINE通知連携解除
+  def disconnect
+    line_messaging_scope = current_user.oauth_accounts.where(provider: "line_messaging")
+
+    if line_messaging_scope.exists?
+      line_messaging_scope.destroy_all
+      flash[:success] = "LINE通知連携を解除しました"
+    else
+      flash[:danger] = "LINE通知連携が見つかりません"
+    end
+
+    redirect_to reminder_settings_path
   end
 
   private
@@ -133,9 +147,12 @@ class LineWebhookController < ApplicationController
     # リンクを生成
     link_url = build_link_url(token)
 
+    # 簡易な案内メッセージ
+    message = "通知連携を完了してください👇「連携」とメッセージを送ると通知用URLを再発行できます。\n#{link_url}"
+
     # Replyで案内（確実に配信）。失敗時はPushにフォールバック
-    sent = send_reply_text(reply_token, "通知連携を完了してください\n#{link_url}")
-    send_push_text(messaging_user_id, "通知連携を完了してください\n#{link_url}") unless sent
+    sent = send_reply_text(reply_token, message)
+    send_push_text(messaging_user_id, message) unless sent
   end
 
   def handle_message_event(event)

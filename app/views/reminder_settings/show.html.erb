@@ -6,7 +6,7 @@
     <h2 class="text-lg font-semibold mb-4">LINE通知設定</h2>
 
     <% if current_user.line_connected? %>
-      <!-- LINE連携済みの場合 -->
+      <!-- LINE通知連携済みの場合 -->
       <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
         <div class="flex">
           <div class="flex-shrink-0">
@@ -15,13 +15,22 @@
             </svg>
           </div>
           <div class="ml-3">
-            <p class="text-sm text-green-700">LINE連携が完了しています</p>
+            <p class="text-sm text-green-700">
+              <strong>✅ LINE通知連携が完了しています</strong><br>
+              3日間投稿がない場合に、毎朝7時にリマインド通知をお送りします
+            </p>
           </div>
         </div>
       </div>
 
-      <!-- 友達追加案内 -->
-      <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+      <!-- LINE通知連携解除ボタン -->
+      <div class="mt-4">
+        <%= button_to "LINE通知連携を解除", line_notification_disconnect_path, method: :delete, data: { turbo: false }, class: "text-red-600 hover:text-red-800 bg-transparent underline" %>
+      </div>
+
+    <% else %>
+      <!-- LINE通知未連携の場合 -->
+      <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
         <div class="flex">
           <div class="flex-shrink-0">
             <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
@@ -30,61 +39,32 @@
           </div>
           <div class="ml-3">
             <p class="text-sm text-blue-700">
-              <strong>重要:</strong> 通知を受け取るには、下記より公式LINEアカウントを友達追加して公式からの連携用リンク（30分有効）を開いてください。連携用リンクは、<strong>アプリにログインしているブラウザ</strong>で開いてください。
-            </p>
-            <div class="mt-4">
-              <a href="https://lin.ee/94Pvk7t" target="_blank"><img src="https://scdn.line-apps.com/n/line_add_friends/btn/ja.png" alt="友だち追加" class="w-50"></a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 通知設定フォーム -->
-      <%= form_with model: @line_notification, url: reminder_settings_path, method: :patch, local: true, class: "space-y-4" do |form| %>
-        <div class="flex items-center">
-          <%= form.check_box :notification_enabled %>
-          <%= form.label :notification_enabled, "3日間投稿がない場合にLINE通知を受け取る", class: "ml-2 text-sm" %>
-        </div>
-
-        <div class="flex space-x-4">
-          <%= form.submit "設定を保存", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
-        </div>
-      <% end %>
-
-      <!-- LINE連携解除ボタン -->
-      <div class="mt-4">
-        <%= button_to "LINE連携を解除", line_auth_disconnect_path, method: :delete, data: { turbo: false }, class: "text-red-600 hover:text-red-800 bg-transparent underline" %>
-      </div>
-
-    <% else %>
-      <!-- LINE未連携の場合 -->
-      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-2 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-            </svg>
-          </div>
-          <div class="ml-3">
-            <p class="text-sm text-yellow-700">
-              LINE通知を受け取るには、LINEアカウントとの連携が必要です
+              <strong>LINE通知を有効にするには、下記の手順で友達追加してください</strong>
             </p>
           </div>
         </div>
       </div>
 
-      <div class="text-center">
-        <%= link_to "/users/auth/line", method: :post, class: "my-orange-btn py-4" do %>
-        LINEと連携する
-        <% end %>
+      <!-- 友達追加バナー -->
+      <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6 text-center">
+        <h3 class="text-lg font-semibold mb-4">公式LINEアカウントを友達追加</h3>
+        <p class="text-sm text-gray-600 mb-4">
+          友達追加後、公式から連携用リンク（30分有効）が送信されます。<br>
+          そのリンクを<strong>アプリにログインしているブラウザ</strong>で開いてください
+        </p>
+        <div class="mb-4">
+          <a href="https://lin.ee/94Pvk7t" target="_blank" class="inline-block">
+            <img src="https://scdn.line-apps.com/n/line_add_friends/btn/ja.png" alt="友だち追加" class="w-48">
+          </a>
+        </div>
       </div>
 
-      <div class="mt-8 text-sm">
-        <h3 class="font-medium mb-2">LINE連携について</h3>
+      <div class="text-sm text-gray-600">
+        <h3 class="font-medium mb-2">LINE通知について</h3>
         <ul class="list-disc list-inside space-y-1">
           <li>3日間投稿がない場合に、毎朝7時にリマインド通知をお送りします</li>
-          <li>LINE連携後、公式LINEアカウントを友達追加して送信された連携用リンク（30分有効）を開いてください</li>
-          <li>連携用リンクは、<strong>アプリにログインしているブラウザ</strong>で開いてください。</li>
+          <li>友達追加後、公式から連携用リンク（30分有効）が送信されます</li>
+          <li>連携用リンクは、<strong>アプリにログインしているブラウザ</strong>で開いてください</li>
         </ul>
       </div>
     <% end %>
