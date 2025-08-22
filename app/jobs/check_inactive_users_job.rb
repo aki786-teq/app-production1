@@ -49,7 +49,6 @@ class CheckInactiveUsersJob < ApplicationJob
       .where("NOT EXISTS (
                SELECT 1 FROM boards
                WHERE boards.user_id = users.id
-                 AND boards.is_deleted = false
                  AND boards.created_at >= ?
              )", days.days.ago)
       .distinct
