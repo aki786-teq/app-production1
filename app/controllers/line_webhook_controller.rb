@@ -39,7 +39,7 @@ class LineWebhookController < ApplicationController
     link_token = LineLinkToken.valid_unconsumed.find_by(token: token)
 
     if link_token.nil?
-      redirect_to new_user_session_path, alert: "連携用リンクが無効または期限切れです。時間をおいて再度お試しください。" and return
+      redirect_to reminder_settings_path, alert: "連携用リンクが無効または期限切れです。時間をおいて再度お試しください。" and return
     end
 
     messaging_uid = link_token.messaging_user_id
