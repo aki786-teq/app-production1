@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :stretch_distances, dependent: :destroy
   has_one :line_notification, dependent: :destroy
+  has_many :line_link_tokens, dependent: :destroy
   has_many :oauth_accounts, dependent: :destroy
 
   def bookmark(board)
