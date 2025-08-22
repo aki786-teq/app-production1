@@ -18,6 +18,9 @@ class Users::SessionsController < Devise::SessionsController
 
         # LINE連携処理を実行
         complete_line_link(user, token)
+
+        # 連携完了後はreminder_settingsにリダイレクト
+        redirect_to reminder_settings_path and return
       end
     end
   end
