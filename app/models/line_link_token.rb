@@ -1,6 +1,6 @@
 class LineLinkToken < ApplicationRecord
   belongs_to :user, optional: true
-  
+
   validates :token, presence: true, uniqueness: true
   validates :messaging_user_id, presence: true
 
