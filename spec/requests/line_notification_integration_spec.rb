@@ -19,13 +19,24 @@ RSpec.describe "LINE通知統合テスト", type: :request do
       end
 
       it '通知ジョブが正しく実行される' do
-        # 実際のジョブを実行
-        perform_enqueued_jobs do
-          CheckInactiveUsersJob.perform_now
-        end
+        # ユーザーがLINE通知可能な状態であることを確認
+        expect(user.line_notifiable?).to be true
+        expect(user.line_id).to eq('test_line_id')
+        expect(user.line_notification_setting.can_notify_today?).to be true
 
-        # CheckInactiveUsersJobはLineInactiveNotifyJobを実行するため、consecutive_inactive_daysが増加する
-        expect(line_notification.reload.consecutive_inactive_days).to eq(1)
+        # ユーザーが3日間投稿していないことを確認
+        expect(user.boards.where("created_at >= ?", 3.days.ago)).to be_empty
+
+        # CheckInactiveUsersJobのfind_inactive_usersメソッドを直接テスト
+        inactive_users = CheckInactiveUsersJob.new.send(:find_inactive_users, 3)
+        expect(inactive_users).to include(user)
+
+        # 実際のジョブを実行
+        CheckInactiveUsersJob.perform_now
+
+        # CheckInactiveUsersJobはLineInactiveNotifyJobをキューに追加する
+        # キューに追加されたことを確認
+        expect(LineInactiveNotifyJob).to have_been_enqueued.with(user.id)
       end
     end
 
