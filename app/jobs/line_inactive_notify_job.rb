@@ -63,7 +63,8 @@ class LineInactiveNotifyJob < ApplicationJob
       Rails.logger.info "LINE通知送信成功: ステータス=#{status_code}"
     when 400..499
       Rails.logger.error "LINE通知送信失敗: ステータス=#{status_code} body=#{response_body} headers=#{response_headers.inspect}"
-      raise "LINE通知の送信に失敗しました"
+      # クライアントエラー（400系）は再試行しない
+      return false
     else
       Rails.logger.error "LINE通知送信失敗: ステータス=#{status_code} body=#{response_body} headers=#{response_headers.inspect}"
       raise "LINE通知の送信に失敗しました"

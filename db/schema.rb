@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_21_072423) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_23_000711) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -54,14 +54,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_21_072423) do
     t.text "goal_punishment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "is_deleted", default: false, null: false
     t.string "youtube_link"
     t.string "item_code"
     t.string "item_name"
     t.integer "item_price"
     t.text "item_url"
     t.text "item_image_url"
-    t.datetime "start_time"
     t.index ["goal_id"], name: "index_boards_on_goal_id"
     t.index ["user_id"], name: "index_boards_on_user_id"
   end
@@ -165,7 +163,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_21_072423) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "is_deleted", default: false, null: false
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"

@@ -2,7 +2,7 @@
 :scheduler:
   :schedule:
     check_inactive_users:
-      cron: '0 7 * * *'
+      cron: '35 12 * * *'
       class: CheckInactiveUsersJob
     sitemap_update:
       cron: '0 2 * * *'
