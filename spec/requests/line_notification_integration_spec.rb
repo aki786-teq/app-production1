@@ -19,15 +19,24 @@ RSpec.describe "LINE通知統合テスト", type: :request do
       end
 
       it '通知ジョブが正しく実行される' do
-        # 実際のジョブを実行
-        perform_enqueued_jobs do
-          CheckInactiveUsersJob.perform_now
-        end
+        # ユーザーがLINE通知可能な状態であることを確認
+        expect(user.line_notifiable?).to be true
+        expect(user.line_id).to eq('test_line_id')
+        expect(user.line_notification_setting.can_notify_today?).to be true
 
-        # 通知記録が更新されていることを確認
-        # 実際のジョブが実行されるため、consecutive_inactive_daysが増加する
-        # ただし、実際のLINE API呼び出しはモックされているため、通知記録は更新されない可能性がある
-        expect(line_notification.reload.consecutive_inactive_days).to eq(0)
+        # ユーザーが3日間投稿していないことを確認
+        expect(user.boards.where("created_at >= ?", 3.days.ago)).to be_empty
+
+        # CheckInactiveUsersJobのfind_inactive_usersメソッドを直接テスト
+        inactive_users = CheckInactiveUsersJob.new.send(:find_inactive_users, 3)
+        expect(inactive_users).to include(user)
+
+        # 実際のジョブを実行
+        CheckInactiveUsersJob.perform_now
+
+        # CheckInactiveUsersJobはLineInactiveNotifyJobをキューに追加する
+        # キューに追加されたことを確認
+        expect(LineInactiveNotifyJob).to have_been_enqueued.with(user.id)
       end
     end
 
@@ -38,12 +47,13 @@ RSpec.describe "LINE通知統合テスト", type: :request do
       end
 
       it '新しい投稿で通知カウントがリセットされる' do
-        # 新しい投稿を作成
-        create(:board, user: user)
+        sign_in user
+
+        # コントローラーを経由して投稿を作成（reset_inactive_days!が呼ばれる）
+        post boards_path, params: { board: { did_stretch: true, goal_id: goal.id } }
 
         # 通知カウントがリセットされることを確認
-        # 実際のリセット処理はBoard作成時に実行される必要がある
-        expect(line_notification.reload.consecutive_inactive_days).to eq(3) # リセット処理が実装されていない場合
+        expect(line_notification.reload.consecutive_inactive_days).to eq(0)
       end
     end
   end
