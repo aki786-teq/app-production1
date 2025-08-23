@@ -37,7 +37,7 @@ RSpec.describe "LINE通知統合テスト", type: :request do
 
       it '新しい投稿で通知カウントがリセットされる' do
         sign_in user
-       
+
         # コントローラーを経由して投稿を作成（reset_inactive_days!が呼ばれる）
         post boards_path, params: { board: { did_stretch: true, goal_id: goal.id } }
 
