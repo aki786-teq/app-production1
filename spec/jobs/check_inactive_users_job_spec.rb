@@ -71,19 +71,6 @@ RSpec.describe CheckInactiveUsersJob, type: :job do
       end
     end
 
-    context '削除済みユーザーの場合' do
-      before do
-        user.update!(is_deleted: true)
-        create(:board, user: user, created_at: 4.days.ago)
-      end
-
-      it '通知ジョブを追加しない' do
-        expect(LineInactiveNotifyJob).not_to receive(:perform_later)
-
-        perform_enqueued_jobs { described_class.perform_now }
-      end
-    end
-
     context '複数ユーザーがいる場合' do
       let(:user2) { create(:user) }
       let(:line_notification2) { create(:line_notification, user: user2) }

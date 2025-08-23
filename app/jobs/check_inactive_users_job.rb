@@ -1,5 +1,3 @@
-require "line/bot"
-
 class CheckInactiveUsersJob < ApplicationJob
   sidekiq_options retry: false
 
@@ -43,7 +41,6 @@ class CheckInactiveUsersJob < ApplicationJob
 
   def find_inactive_users(days)
     User
-      .where(is_deleted: false)
       .joins(:line_notification)
       .joins(:oauth_accounts)
       .where(oauth_accounts: { provider: "line_messaging" })

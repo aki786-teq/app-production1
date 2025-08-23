@@ -36,13 +36,6 @@ class LineWebhookController < ApplicationController
   before_action :authenticate_user!, only: [ :disconnect ]
   def link
     token = params[:token].to_s
-    link_token = LineLinkToken.valid_unconsumed.find_by(token: token)
-
-    if link_token.nil?
-      redirect_to reminder_settings_path, alert: "連携用リンクが無効または期限切れです。時間をおいて再度お試しください。" and return
-    end
-
-    messaging_uid = link_token.messaging_user_id
 
     # ログインしていない場合は、ログイン後に連携を完了するようセッションに保存
     unless user_signed_in?
@@ -50,60 +43,14 @@ class LineWebhookController < ApplicationController
       redirect_to new_user_session_path, notice: "LINE通知連携の準備が完了しました。ログイン後に連携が完了します。" and return
     end
 
-    # 既に同じUIDで連携済みならスキップ
-    if current_user.oauth_accounts.find_by(provider: "line_messaging", uid: messaging_uid).present?
-      link_token.consume!(user: current_user) unless link_token.consumed?
-      redirect_to reminder_settings_path, notice: "すでにLINE通知の連携は完了しています。" and return
-    end
+    # 共通サービスを使用してLINE連携を完了
+    result = LineLinkService.complete_link(current_user, token)
 
-    # 他ユーザーに紐づいているUIDなら所有権移譲
-    foreign_account = OauthAccount.find_by(provider: "line_messaging", uid: messaging_uid)
-    if foreign_account.present? && foreign_account.user_id != current_user.id
-      ActiveRecord::Base.transaction do
-        old_user = foreign_account.user
-
-        # current_user側にline_messagingがある場合は削除（ユニーク制約回避）
-        mine = current_user.oauth_accounts.find_by(provider: "line_messaging")
-        mine&.destroy!
-
-        # 所有権をcurrent_userに移譲
-        foreign_account.update!(user: current_user)
-
-        # 通知設定の整合（所有権移譲時は設定を維持）
-        current_user.line_notification_setting
-        begin
-          old_user.line_notification_setting&.destroy!
-        rescue StandardError
-          # 旧ユーザーに設定が無い場合などは無視
-        end
-
-        link_token.consume!(user: current_user)
-      end
-
-      redirect_to reminder_settings_path, notice: "LINE通知の連携を新しいアカウントに移行しました。" and return
-    end
-
-    # 既存のline_messaging連携があればUIDを更新、なければ新規作成
-    existing = current_user.oauth_accounts.find_by(provider: "line_messaging")
-    if existing
-      existing.update!(uid: messaging_uid, auth_data: {})
+    if result[:success]
+      redirect_to reminder_settings_path, notice: result[:message]
     else
-      current_user.oauth_accounts.create!(
-        provider: "line_messaging",
-        uid: messaging_uid,
-        auth_data: {}
-      )
+      redirect_to reminder_settings_path, alert: result[:message]
     end
-
-    # 通知設定を作成（自動的に有効化される）
-    current_user.line_notification_setting
-
-    link_token.consume!(user: current_user)
-
-    redirect_to reminder_settings_path, notice: "LINE通知の連携が完了しました。3日間投稿がない場合に毎朝7時にリマインド通知をお送りします。"
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("[LINE Link] Failed to link: #{e.message}")
-    redirect_to reminder_settings_path, alert: "連携に失敗しました。時間をおいて再度お試しください。"
   end
 
   # LINE通知連携解除
