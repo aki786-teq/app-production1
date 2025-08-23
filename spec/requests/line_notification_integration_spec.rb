@@ -24,10 +24,8 @@ RSpec.describe "LINE通知統合テスト", type: :request do
           CheckInactiveUsersJob.perform_now
         end
 
-        # 通知記録が更新されていることを確認
-        # 実際のジョブが実行されるため、consecutive_inactive_daysが増加する
-        # ただし、実際のLINE API呼び出しはモックされているため、通知記録は更新されない可能性がある
-        expect(line_notification.reload.consecutive_inactive_days).to eq(0)
+        # CheckInactiveUsersJobはLineInactiveNotifyJobを実行するため、consecutive_inactive_daysが増加する
+        expect(line_notification.reload.consecutive_inactive_days).to eq(1)
       end
     end
 
@@ -38,12 +36,13 @@ RSpec.describe "LINE通知統合テスト", type: :request do
       end
 
       it '新しい投稿で通知カウントがリセットされる' do
-        # 新しい投稿を作成
-        create(:board, user: user)
+        sign_in user
+       
+        # コントローラーを経由して投稿を作成（reset_inactive_days!が呼ばれる）
+        post boards_path, params: { board: { did_stretch: true, goal_id: goal.id } }
 
         # 通知カウントがリセットされることを確認
-        # 実際のリセット処理はBoard作成時に実行される必要がある
-        expect(line_notification.reload.consecutive_inactive_days).to eq(3) # リセット処理が実装されていない場合
+        expect(line_notification.reload.consecutive_inactive_days).to eq(0)
       end
     end
   end

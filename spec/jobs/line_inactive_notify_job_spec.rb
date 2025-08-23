@@ -54,13 +54,13 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
       before do
         oauth_account
         line_notification
-        allow(mock_client).to receive(:push_message_with_http_info).and_return([ nil, 400, {} ])
+        allow(mock_client).to receive(:push_message_with_http_info).and_return([ nil, 500, {} ])
       end
 
       it 'エラーを発生させる' do
         expect {
           perform_enqueued_jobs { described_class.perform_later(user.id) }
-        }.to raise_error
+        }.to raise_error(/LINE通知の送信に失敗しました/)
       end
     end
   end
