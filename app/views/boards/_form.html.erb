@@ -42,7 +42,10 @@
     <!-- 本文 -->
     <div>
       <%= f.label :content, "今日の記録", class: "my-label-title" %>
-      <%= f.text_area :content, rows: 4, class: "my-form-text" %>
+      <%= f.text_area :content, 
+          rows: 4, 
+          class: "my-form-text",
+          placeholder: "今日のストレッチの感想や、おすすめのストレッチ動画・商品の補足など自由に書いてください。" %>
       <%= render "shared/error_message", model: @board, attribute: :content %>
     </div>
 
@@ -50,7 +53,10 @@
     <!-- 動画URL -->
     <div>
       <%= f.label :youtube_link, "YouTube動画紹介URL", class: "my-label-title" %>
-      <%= f.url_field :youtube_link, placeholder: "https://www.youtube.com/watch?v=...", class: "my-form-text" %>
+      <%= f.url_field :youtube_link, 
+          placeholder: "https://www.youtube.com/watch?v=...", 
+          class: "my-form-text" %>
+      <p class="text-sm text-gray-600 mt-2">おすすめのストレッチ動画などYouTube動画URLをコピペして紹介できます。</p>
       <%= render "shared/error_message", model: @board, attribute: :youtube_link %>
     </div>
 
@@ -63,7 +69,7 @@
           <input 
             type="text" 
             data-rakuten-search-target="searchInput"
-            placeholder="商品名を入力してください"
+            placeholder="例：ヨガマット、ストレッチボール、筋膜リリース"
             class="flex-1 px-3 py-2 border rounded" />
           <button 
             type="button"
@@ -72,6 +78,7 @@
             検索
           </button>
         </div>
+        <p class="text-sm text-gray-600 mt-2">ストレッチに役立つ商品を楽天から検索して選択することで、おすすめ商品として紹介できます。</p>
       </div>
 
       <!-- 検索結果表示エリア -->
