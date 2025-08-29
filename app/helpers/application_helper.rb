@@ -13,6 +13,8 @@ module ApplicationHelper
 
       # Apple PWA関連のメタタグ
       "apple-mobile-web-app-capable" => "yes",
+      # Chrome系推奨のPWAメタタグ
+      "mobile-web-app-capable" => "yes",
 
       og: {
         site_name: "まいにち前屈",

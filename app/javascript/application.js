@@ -98,23 +98,6 @@ function applySelection(groupSelector, labelClass) {
   const newRadios = document.querySelectorAll(`[data-role='${groupSelector}']`);
   const newLabels = document.querySelectorAll(`.${labelClass}`);
 
-  // ラベルクリックでの選択解除機能を追加
-  newLabels.forEach(label => {
-    label.addEventListener("click", (e) => {
-      const radioId = label.getAttribute("for");
-      const radio = document.getElementById(radioId);
-      if (!radio) return;
-
-      // 既に選択されている場合は選択解除
-      if (radio.checked) {
-        e.preventDefault();
-        radio.checked = false;
-        // changeイベントを手動で発火
-        radio.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    });
-  });
-
   // ラジオボタンのchangeイベントリスナー
   newRadios.forEach(radio => {
     radio.addEventListener("change", updateSelection);
@@ -125,11 +108,6 @@ function applySelection(groupSelector, labelClass) {
 }
 
 function initializeForm() {
-  // 二重初期化を防ぐ
-  if (listenersAttached) {
-    return;
-  }
-
   try {
     applySelection("stretch-option", "stretch-label");
     applySelection("level-option", "level-label");
@@ -173,6 +151,19 @@ document.addEventListener("turbo:render", () => {
 
 // イベント委譲を使用してより確実にイベントを捕捉
 document.addEventListener("click", (e) => {
+  // フォームのラベルクリックを確実に拾う（委譲）
+  const choiceLabel = e.target.closest(".stretch-label, .level-label");
+  if (choiceLabel) {
+    const radioId = choiceLabel.getAttribute("for");
+    const radio = document.getElementById(radioId);
+    if (radio) {
+      e.preventDefault();
+      e.stopPropagation();
+      // 標準clickでcheckedとイベントを確実に反映
+      radio.click();
+    }
+    return;
+  }
   // 応援ボタンのクリックかチェック
   if (e.target.closest("[id^='cheer-button-']")) {
     const cheerBtn = e.target.closest("[id^='cheer-button-']");
@@ -222,7 +213,7 @@ document.addEventListener("click", (e) => {
 
 function setupCheerButtons() {
   // 実処理はイベント委譲に移行済み
-  console.log("Cheer buttons setup completed");
+  // console.debug("Cheer buttons setup completed");
 }
 
 // 応援ボタンのリスナー管理をリセット
