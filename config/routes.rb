@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     collection do
       get :bookmarks
       get :search_items
+      get :youtube_info
     end
   end
   resources :notifications, only: [ :index ] do

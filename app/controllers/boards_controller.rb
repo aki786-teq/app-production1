@@ -116,6 +116,22 @@ class BoardsController < ApplicationController
     end
   end
 
+  def youtube_info
+    begin
+      video_id = params[:video_id]
+      video_info = YoutubeVideoService.fetch_video_info(video_id)
+
+      if video_info
+        render json: video_info
+      else
+        render json: { error: "動画が見つかりません" }, status: :not_found
+      end
+    rescue => e
+      Rails.logger.error "Error in youtube_info: #{e.class} - #{e.message}"
+      render json: { error: "動画情報の取得に失敗しました" }, status: :internal_server_error
+    end
+  end
+
   private
 
   def board_params

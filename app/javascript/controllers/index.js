@@ -12,3 +12,6 @@ application.register("rakuten-search", RakutenSearchController)
 
 import StretchAnalyzerController from "./stretch_analyzer_controller"
 application.register("stretch-analyzer", StretchAnalyzerController)
+
+import YoutubePreviewController from "./youtube_preview_controller"
+application.register("youtube-preview", YoutubePreviewController)
