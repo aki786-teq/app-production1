@@ -12,7 +12,7 @@
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <div class="bg-white rounded-lg p-6 shadow-md">
         <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">1</div>
-        <h3 class="text-lg font-semibold mb-3 text-center">会員登録・ログイン</h3>
+        <h3 class="text-lg font-semibold mb-3 text-center">新規登録・ログイン</h3>
         <p class="text-sm">まずは新規登録、またはログインして始めましょう。</p>
       </div>
 
@@ -47,6 +47,12 @@
       </div>
     </div>
   </section>
+
+  <% unless user_signed_in? %>
+  <div class="text-center my-8">
+    <%= link_to "新規登録はこちら", new_user_registration_path, class: "px-6 py-4 bg-lime-500 text-white transition rounded hover:bg-green-500" %>
+  </div>
+  <% end %>
 
   <section class="w-full">
     <h2 class="text-2xl font-bold border-b border-orange-400 pb-1 w-fit mx-auto mb-8">週間ランキング</h2>
