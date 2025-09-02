@@ -4,6 +4,29 @@ RSpec.describe LineNotification, type: :model do
   let(:user) { create(:user) }
   let(:setting) { described_class.create!(user: user, consecutive_inactive_days: 0) }
 
+  describe 'バリデーション' do
+    it 'user_id の presence/uniqueness' do
+      invalid = described_class.new
+      expect(invalid).to be_invalid
+      expect(invalid.errors[:user]).to be_present
+
+      described_class.create!(user: user, consecutive_inactive_days: 0)
+      dup = described_class.new(user: user, consecutive_inactive_days: 0)
+      expect(dup).to be_invalid
+    end
+
+    it 'consecutive_inactive_days は 0 以上の数値' do
+      invalid = described_class.new(user: user, consecutive_inactive_days: -1)
+      expect(invalid).to be_invalid
+      expect(invalid.errors[:consecutive_inactive_days]).to be_present
+    end
+  end
+
+  it '新規作成時 consecutive_inactive_days は 0 に初期化される' do
+    fresh = described_class.create!(user: create(:user))
+    expect(fresh.consecutive_inactive_days).to eq 0
+  end
+
   it 'can_notify_today? は初期状態で true' do
     expect(setting.can_notify_today?).to be true
   end

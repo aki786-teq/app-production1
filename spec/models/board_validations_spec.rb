@@ -4,6 +4,13 @@ RSpec.describe Board, type: :model do
   let(:user) { create(:user) }
   let!(:goal) { create(:goal, user: user) }
 
+  it 'item_name は255文字以内' do
+    b = build(:board, user: user, goal: goal, item_name: 'a' * 256)
+    expect(b).to be_invalid
+    b.item_name = 'a' * 255
+    expect(b).to be_valid
+  end
+
   it 'item_price は 0 より大きい数値のみ許可' do
     b = build(:board, user: user, goal: goal, item_price: 0)
     expect(b).to be_invalid

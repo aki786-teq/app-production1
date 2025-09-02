@@ -11,4 +11,10 @@ RSpec.describe Cheer, type: :model do
     expect { described_class.create!(user: user, board: board) }
       .to change { Notification.count }.by(1)
   end
+
+  it '同一 user-board の重複を許さない' do
+    described_class.create!(user: user, board: board)
+    dup = described_class.new(user: user, board: board)
+    expect(dup).to be_invalid
+  end
 end
