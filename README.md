@@ -2,6 +2,7 @@
 ![まいにち前屈 OGP](app/assets/images/ogp.png)
 
 サービスURL : https://mainichi-zenkutsu.jp/
+技術記事 : [前屈サポートアプリ「まいにち前屈」をリリース【個人開発】](https://qiita.com/akikero/items/45fc50b87d2f5a46691e#%E3%82%A4%E3%83%B3%E3%83%95%E3%83%A9)
 
 ## ■ 目次
 - [サービス概要](#サービス概要)
@@ -11,6 +12,7 @@
 - [サービスの推しポイント](#サービスの推しポイント)
 - [機能一覧](#機能一覧)
 - [使用技術](#使用技術)
+- [インフラ構成](#インフラ構成)
 - [画面遷移図](#画面遷移図)
 - [ER図](#er図)
 
@@ -48,7 +50,7 @@
 | 投稿作成機能 |
 | :---: | 
 | ![create](app/assets/images/create.png) |
-| <p align="left">ストレッチをやった/やっていないの選択だけで投稿できるため、毎日の手間を減らしました。</p> |
+| <p align="left">ストレッチをやった/やっていないの選択だけで投稿できるため、毎日の手間を減らしています。</p> |
 <br>
 
 | 応援・ブックマーク機能 |
@@ -66,7 +68,7 @@
 | リマインダー機能 |
 | :---: | 
 | ![reminder](app/assets/images/reminder.png) |
-| <p align="left">3日間以上投稿がない場合、LINEでお知らせしてくれます。ストレッチを習慣化させましょう。</p> |
+| <p align="left">3日間以上投稿がない場合、LINEでお知らせしてくれます。ストレッチを習慣化させてくれます。</p> |
 <br>
 
 ## ■ サービスの推しポイント
@@ -107,7 +109,7 @@
   <tbody>
     <tr><td>開発環境</td><td>Docker</td></tr>
     <tr><td>バックエンド</td><td>Ruby 3.3.2 Rails 7.2.2.1</td></tr>
-    <tr><td>フロントエンド</td><td>Hotwire（Turbo / Stimulus）</td></tr>
+    <tr><td>フロントエンド</td><td>Hotwire（Turbo / Stimulus）,JavaScript</td></tr>
     <tr><td>UIフレームワーク</td><td>Tailwind CSS v4</td></tr>
     <tr><td>認証機能</td><td>Devise</td></tr>
     <tr><td>アニメーション</td><td>mo.js</td></tr>
@@ -118,8 +120,12 @@
     <tr><td>コード品質</td><td>RuboCop</td></tr>
     <tr><td>CI</td><td>GitHub Actions</td></tr>
     <tr><td>外部API連携</td><td>LINE Messaging API, Google OAuth2, YouTube API, 楽天API</td></tr>
+    <tr><td>その他</td><td>sitemap_generator（サイトマップ作成）,pagy（ページネーション）,meta-tags（メタタグ管理）,MediaPipe（前屈測定）</td></tr>
   </tbody>
 </table>
+
+## ■ インフラ構成
+![infra](app/assets/images/infra.png)
 
 ## ■ 画面遷移図
 [画面遷移図はこちら](https://www.figma.com/design/Jg9DoTwcuFs81g2lGf5JZG/MainichiZenkutsu?t=XiZe1nUTuCa2LMLC-1)
