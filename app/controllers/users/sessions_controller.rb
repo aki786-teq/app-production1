@@ -41,7 +41,6 @@ class Users::SessionsController < Devise::SessionsController
 
   def complete_line_link(user, token)
     result = LineLinkService.complete_link(user, token)
-
     if result[:success]
       flash[:notice] = result[:message]
     else

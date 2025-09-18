@@ -58,11 +58,11 @@ class BoardsController < ApplicationController
   end
 
   def show
-  @board = Board.find(params[:id])
+    @board = Board.find(params[:id])
   end
 
   def edit
-  @board = current_user.boards.find(params[:id])
+    @board = current_user.boards.find(params[:id])
   end
 
   def update
@@ -76,13 +76,13 @@ class BoardsController < ApplicationController
   end
 
   def destroy
-  board = current_user.boards.find(params[:id])
-  board.destroy!
-  redirect_to boards_path, success: t("boards.flash_message.destroy_success"), status: :see_other
+    board = current_user.boards.find(params[:id])
+    board.destroy!
+    redirect_to boards_path, success: t("boards.flash_message.destroy_success"), status: :see_other
   end
 
   def bookmarks
-  @pagy, @bookmarks = pagy(current_user.bookmarks.includes(:board).order(created_at: :desc))
+    @pagy, @bookmarks = pagy(current_user.bookmarks.includes(:board).order(created_at: :desc))
   end
 
   def search_items

@@ -72,7 +72,6 @@ class LineWebhookController < ApplicationController
   def valid_signature?(body, signature)
     secret = ENV["LINE_CHANNEL_SECRET"]
     return true if secret.blank? # 環境未設定時は検証スキップ（本番では必ず設定）
-
     hash = OpenSSL::HMAC.digest("sha256", secret, body)
     expected_signature = Base64.strict_encode64(hash)
     ActiveSupport::SecurityUtils.secure_compare(expected_signature, signature.to_s)
