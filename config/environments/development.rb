@@ -93,9 +93,12 @@ Rails.application.configure do
   config.hosts << /.*\.ngrok-free\.app/
   config.hosts << /.*\.ngrok\.io/
 
-  #
+  # N+1問題検出のためbulletを有効化
   config.after_initialize do
     Bullet.enable        = true
     Bullet.alert         = true
+    Bullet.bullet_logger = true
+    Bullet.console       = true
+    Bullet.rails_logger  = true
   end
 end
