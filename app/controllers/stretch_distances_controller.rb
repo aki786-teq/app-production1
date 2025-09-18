@@ -9,7 +9,7 @@ class StretchDistancesController < ApplicationController
   end
 
   def analyze
-    stretch_distance_params = params.require(:stretch_distance).permit(:flexibility_level, :comment_template)
+    stretch_distance_params = params.require(:stretch_distance).permit(:flexibility_level)
 
     @stretch_distance = current_user.stretch_distances.build(stretch_distance_params)
 
