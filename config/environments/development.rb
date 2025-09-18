@@ -92,4 +92,10 @@ Rails.application.configure do
   # Allow ngrok domains for webhook callback testing
   config.hosts << /.*\.ngrok-free\.app/
   config.hosts << /.*\.ngrok\.io/
+
+  #
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.alert         = true
+  end
 end
