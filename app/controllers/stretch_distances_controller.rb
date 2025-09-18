@@ -9,25 +9,25 @@ class StretchDistancesController < ApplicationController
   end
 
   def analyze
-  stretch_distance_params = params.require(:stretch_distance).permit(:flexibility_level, :comment_template)
+    stretch_distance_params = params.require(:stretch_distance).permit(:flexibility_level, :comment_template)
 
-  @stretch_distance = current_user.stretch_distances.build(stretch_distance_params)
+    @stretch_distance = current_user.stretch_distances.build(stretch_distance_params)
 
-  if @stretch_distance.save
-    render json: {
-      success: true,
-      stretch_distance_id: @stretch_distance.id,
-      flexibility_level: @stretch_distance.flexibility_level,
-      comment: @stretch_distance.comment_template,
-      result_url: result_stretch_distance_path(@stretch_distance)
-    }
-  else
-    render json: {
-      success: false,
-      errors: @stretch_distance.errors.full_messages
-    }, status: :unprocessable_entity
+    if @stretch_distance.save
+      render json: {
+        success: true,
+        stretch_distance_id: @stretch_distance.id,
+        flexibility_level: @stretch_distance.flexibility_level,
+        comment: @stretch_distance.comment_template,
+        result_url: result_stretch_distance_path(@stretch_distance)
+      }
+    else
+      render json: {
+        success: false,
+        errors: @stretch_distance.errors.full_messages
+      }, status: :unprocessable_entity
+    end
   end
-end
 
   def result
     @consecutive_days = current_user.consecutive_post_days

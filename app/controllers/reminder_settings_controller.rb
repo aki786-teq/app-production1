@@ -4,6 +4,4 @@ class ReminderSettingsController < ApplicationController
   def show
     @line_notification = current_user.line_notification_setting
   end
-
-  private
 end

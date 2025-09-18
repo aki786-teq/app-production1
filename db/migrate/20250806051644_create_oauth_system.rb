@@ -43,7 +43,6 @@ class CreateOauthSystem < ActiveRecord::Migration[7.2]
   def migrate_existing_oauth_data
     User.where.not(provider: [ nil, '' ]).find_each do |user|
       next if user.oauth_accounts.exists?(provider: user.provider)
-
       user.oauth_accounts.create!(
         provider: user.provider,
         uid: user.uid,

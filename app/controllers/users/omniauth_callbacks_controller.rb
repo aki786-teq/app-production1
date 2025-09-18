@@ -16,11 +16,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-    def callback_for(provider)
+  def callback_for(provider)
     begin
       # Googleログインの処理
       @user = User.from_omniauth(request.env["omniauth.auth"])
-
       if @user.persisted?
         # 既にログインしているユーザーの場合は、自動ログイン処理をスキップ
         if user_signed_in? && current_user == @user
@@ -29,7 +28,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           # 未ログインユーザーの場合はログイン処理を実行
           sign_in @user
         end
-
         # リダイレクト先を決定
         if provider == :google_oauth2
           redirect_to root_path, notice: "Google連携が完了しました！"
@@ -41,7 +39,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         session["devise.#{provider}_data"] = request.env["omniauth.auth"].except("extra")
         redirect_to new_user_registration_url, alert: "アカウントの作成に失敗しました。"
       end
-
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error("Omniauth save error: #{e.message}")
       flash[:alert] = "認証中にエラーが発生しました: #{e.record.errors.full_messages.to_sentence}"

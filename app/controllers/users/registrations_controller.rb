@@ -57,8 +57,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def edit
-  self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-  super
+    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    super
   end
 
   # def destroy

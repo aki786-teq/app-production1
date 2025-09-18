@@ -29,7 +29,6 @@ class ApplicationController < ActionController::Base
     if controller_name == "goals" && %w[new create].include?(action_name)
       return
     end
-
     goal = current_user.goal
     # 目標が存在しない、または goal/contentが未入力なら、編集ページ含めすべて制限
     if goal.blank? || goal.goal.blank? || goal.content.blank?

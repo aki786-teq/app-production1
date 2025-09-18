@@ -45,10 +45,10 @@ class CheckInactiveUsersJob < ApplicationJob
       .joins(:oauth_accounts)
       .where(oauth_accounts: { provider: "line_messaging" })
       .where("NOT EXISTS (
-               SELECT 1 FROM boards
-               WHERE boards.user_id = users.id
-                 AND boards.created_at >= ?
-             )", days.days.ago)
+             SELECT 1 FROM boards
+             WHERE boards.user_id = users.id
+               AND boards.created_at >= ?
+           )", days.days.ago)
       .distinct
   end
 end
