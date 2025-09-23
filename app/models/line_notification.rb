@@ -4,9 +4,10 @@ class LineNotification < ApplicationRecord
   validates :user_id, presence: true, uniqueness: true
   validates :consecutive_inactive_days, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
+  # 新規レコード作成時にset_defaultsを呼び出す
   after_initialize :set_defaults, if: :new_record?
 
-  # 通知記録を更新
+  # リマインド通知を送信したとき通知記録を更新
   def record_notification!
     update!(
       last_notified_at: Time.current,

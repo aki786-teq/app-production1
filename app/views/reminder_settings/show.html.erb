@@ -5,7 +5,7 @@
   <div class="bg-white rounded-lg shadow p-6">
     <h2 class="text-lg font-semibold mb-4">LINE通知設定</h2>
 
-    <% if current_user.line_connected? %>
+    <% if current_user.line_notifiable? %>
       <!-- LINE通知連携済みの場合 -->
       <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
         <div class="flex">

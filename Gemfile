@@ -93,8 +93,6 @@ gem "sidekiq"
 gem "sidekiq-scheduler"
 gem "line-bot-api"
 
-gem "omniauth-line"
-
 gem "pagy"
 
 gem "sitemap_generator"

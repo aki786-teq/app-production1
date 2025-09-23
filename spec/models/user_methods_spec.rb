@@ -4,13 +4,13 @@ RSpec.describe User, type: :model do
   let(:user) { create(:user) }
 
   describe 'OAuth 連携系' do
-    it 'line_connected? / google_connected? / omniauth_user? の分岐' do
-      expect(user.line_connected?).to be false
+    it 'line_notifiable? / google_connected? / omniauth_user? の分岐' do
+      expect(user.line_notifiable?).to be false
       expect(user.google_connected?).to be false
       expect(user.omniauth_user?).to be false
 
       user.oauth_accounts.create!(provider: 'line_messaging', uid: 'line-uid')
-      expect(user.reload.line_connected?).to be true
+      expect(user.reload.line_notifiable?).to be true
       expect(user.google_connected?).to be false
       expect(user.omniauth_user?).to be true
 

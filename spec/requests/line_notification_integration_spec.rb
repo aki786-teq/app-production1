@@ -73,7 +73,7 @@ RSpec.describe "LINE通知統合テスト", type: :request do
       expect(flash[:notice]).to include("すでにLINE通知の連携は完了しています")
 
       # ユーザーにLINE連携が設定されていることを確認
-      expect(user.reload.line_connected?).to be true
+      expect(user.reload.line_notifiable?).to be true
       expect(user.line_id).to eq('test_line_id')
     end
 
@@ -91,13 +91,20 @@ RSpec.describe "LINE通知統合テスト", type: :request do
     end
 
     it 'LINE連携解除が正常に動作する' do
+      # 連携解除で削除されるべき関連データを作成
+      user.line_notification_setting # line_notifications を作成
+      user.line_link_tokens.create!(token: 'test-token', messaging_user_id: 'test_line_id', expires_at: 1.hour.from_now)
+
       delete "/line/notification/disconnect"
 
       expect(response).to redirect_to(reminder_settings_path)
       expect(flash[:success]).to include("LINE通知連携を解除しました")
 
       # ユーザーからLINE連携が削除されていることを確認
-      expect(user.reload.line_connected?).to be false
+      user.reload
+      expect(user.line_notifiable?).to be false
+      expect(user.line_notification).to be_nil
+      expect(user.line_link_tokens).to be_empty
     end
   end
 end

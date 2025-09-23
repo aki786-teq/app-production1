@@ -62,7 +62,8 @@ Rails.application.routes.draw do
   # LINE通知連携解除
   delete "/line/notification/disconnect", to: "line_webhook#disconnect", as: :line_notification_disconnect
 
-  # LINE Messaging API Webhook / 連携リンク
+  # LINE Messaging APIからのリクエストを受けとる
   post "/line/webhook", to: "line_webhook#callback"
+  # LINE連携リンクをクリックしたときの処理
   get "/line/link", to: "line_webhook#link"
 end
