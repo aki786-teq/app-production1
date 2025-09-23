@@ -1,6 +1,6 @@
 class LineLinkService
   def self.complete_link(user, token)
-    #渡されたトークンが「有効期限内・未使用か」を確認
+    # 渡されたトークンが「有効期限内・未使用か」を確認
     link_token = LineLinkToken.valid_unconsumed.find_by(token: token)
     return { success: false, message: "連携用リンクが無効または期限切れです。" } unless link_token
 
