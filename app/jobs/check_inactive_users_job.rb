@@ -3,7 +3,7 @@ class CheckInactiveUsersJob < ApplicationJob
 
   def perform
     Rails.logger.info("無投稿ユーザーのチェックを開始します")
-    # 3日間投稿していないユーザーを取得
+    # 3日間投稿していないユーザーを検索
     inactive_users = find_inactive_users(3)
     if inactive_users.empty?
       Rails.logger.info("3日間無投稿のユーザーは存在しません")
@@ -14,7 +14,7 @@ class CheckInactiveUsersJob < ApplicationJob
     inactive_users.each do |user|
       # LINE通知可能かチェック
       unless user.line_notifiable?
-        Rails.logger.info("ユーザーID: #{user.id} - LINE通知設定が無効またはLINE IDが未設定")
+        Rails.logger.info("ユーザーID: #{user.id} - LINE IDが未設定")
         next
       end
 
@@ -39,9 +39,9 @@ class CheckInactiveUsersJob < ApplicationJob
 
   private
 
+  # LINE連携済み&投稿が3日間以上無いユーザーを検索
   def find_inactive_users(days)
     User
-      .joins(:line_notification)
       .joins(:oauth_accounts)
       .where(oauth_accounts: { provider: "line_messaging" })
       .where("NOT EXISTS (

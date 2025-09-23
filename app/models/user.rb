@@ -81,7 +81,7 @@ class User < ApplicationRecord
     user
   end
 
-  # ===== Google OAuth共通処理 =====
+  # ===== Google OAuth共通処理ここから =====
 
   def self.find_user_by_google(auth)
     account = OauthAccount.find_by(provider: "google_oauth2", uid: auth.uid)
@@ -129,19 +129,22 @@ class User < ApplicationRecord
     end
   end
 
-  # LINE通知設定を取得または作成
+  # ===== Google OAuth共通処理ここまで =====
+
+  # line_notificationsテーブルのレコードを取得または作成
   def line_notification_setting
     line_notification || create_line_notification
   end
 
-  # LINE通知可能かチェック
+  # oauth_accountsのprovider: "line_messaging" の uid）が存在するか
   def line_notifiable?
-    line_connected?
+    line_id.present?
   end
 
-  # LINEアカウントと連携しているかチェック
-  def line_connected?
-    line_id.present?
+  # LINE Messaging APIのuserIdを取得
+  def line_id
+    messaging = oauth_account_for("line_messaging")
+    messaging&.uid
   end
 
   # Googleアカウントと連携しているかチェック
@@ -162,12 +165,6 @@ class User < ApplicationRecord
   # 指定したプロバイダーのOAuthAccountを取得
   def oauth_account_for(provider_name)
     oauth_accounts.find_by(provider: provider_name.to_s)
-  end
-
-  # LINE Messaging API の userId を取得
-  def line_id
-    messaging = oauth_account_for("line_messaging")
-    messaging&.uid
   end
 
   protected

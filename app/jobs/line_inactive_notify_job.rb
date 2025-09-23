@@ -7,7 +7,7 @@ class LineInactiveNotifyJob < ApplicationJob
     user = User.find(user_id)
 
     # LINE連携チェック
-    unless user.line_connected?
+    unless user.line_notifiable?
       Rails.logger.error "ユーザーID: #{user_id} - LINE連携されていません"
       return
     end
@@ -29,11 +29,13 @@ class LineInactiveNotifyJob < ApplicationJob
   rescue StandardError => e
     Rails.logger.error "ユーザーID: #{user_id} - LINE通知処理中にエラー: #{e.message}"
     Rails.logger.error e.backtrace.join("\n")
+    # 再度例外を投げて Sidekiq のリトライ処理に回す
     raise e
   end
 
   private
 
+  # LINEクライアント生成
   def client
     @client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
       channel_access_token: ENV.fetch("LINE_CHANNEL_TOKEN")
@@ -44,6 +46,7 @@ class LineInactiveNotifyJob < ApplicationJob
     "#{user.name}さん、お疲れ様です！\n\n最後の投稿から3日以上が経過しています。\n継続は力なり💪今日も一緒に頑張りましょう！"
   end
 
+  # LINEメッセージ送信処理
   def send_line_message(message_text, line_id)
     text_message = Line::Bot::V2::MessagingApi::TextMessage.new(
       text: message_text
@@ -54,7 +57,7 @@ class LineInactiveNotifyJob < ApplicationJob
       messages: [ text_message ]
     )
 
-    # HTTP情報を含むレスポンスを取得
+    # LINE API にリクエスト送信しレスポンス（ボディ・ステータスコード・ヘッダ）を取得
     response_body, status_code, response_headers = client.push_message_with_http_info(push_message_request: push_request)
 
     # エラーハンドリング
@@ -71,6 +74,7 @@ class LineInactiveNotifyJob < ApplicationJob
     end
   end
 
+  # 通知成功記録の更新
   def record_notification_success(user)
     line_setting = user.line_notification_setting
     line_setting.record_notification!

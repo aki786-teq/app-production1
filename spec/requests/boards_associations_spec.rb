@@ -15,6 +15,9 @@ RSpec.describe "Boards associations", type: :request do
   end
 
   it '投稿成功時に line_notification_setting.reset_inactive_days! が呼ばれ 0 にリセットされる' do
+    # LINE連携済みのユーザーにする
+    user.oauth_accounts.create!(provider: 'line_messaging', uid: 'test-uid')
+
     ln = user.line_notification_setting
     ln.update!(consecutive_inactive_days: 3)
 

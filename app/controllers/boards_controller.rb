@@ -45,8 +45,8 @@ class BoardsController < ApplicationController
     end
 
     if @board.save
-      # LINE通知の無投稿日数をリセット
-      if current_user.line_notification_setting.present?
+      # consecutive_inactive_daysをリセット
+      if current_user.line_notifiable?
         current_user.line_notification_setting.reset_inactive_days!
       end
 
