@@ -1,16 +1,24 @@
-<h2>Resend confirmation instructions</h2>
+<% content_for(:title, "本人確認メールの再送") %>
+<div class="my-container">
+  <h1>本人確認メールの再送</h1>
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <div class="max-w-md mx-auto bg-white border border-stone-200 rounded-md shadow-md p-8">
+    <%= form_with(model: resource, as: resource_name, url: confirmation_path(resource_name), method: :post, local: true) do |f| %>
+      <div class="mb-4">
+        <%= f.label :email, class: "inline-block mb-1" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", value: resource.email, class: "my-form-text" %>
+        <% if resource.errors[:email].any? %>
+          <p class="text-red-500 text-sm mt-1"><%= resource.errors.full_messages_for(:email).first %></p>
+        <% end %>
+      </div>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+      <div class="text-center">
+        <%= f.submit "本人確認メールの再送", class: "w-full my-orange-btn" %>
+      </div>
+    <% end %>
+
+    <div class="text-center mt-6 text-sm">
+      <%= link_to "ログイン画面に戻る", new_session_path(resource_name), class: "font-semibold" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
