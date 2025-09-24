@@ -110,4 +110,5 @@ Rails.application.configure do
 
   # URLオプション
   config.action_mailer.default_url_options = { host: "mainichi-zenkutsu.jp", protocol: "https" }
+  config.action_mailer.delivery_method = :brevo
 end
