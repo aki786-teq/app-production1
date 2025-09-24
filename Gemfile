@@ -96,5 +96,3 @@ gem "line-bot-api"
 gem "pagy"
 
 gem "sitemap_generator"
-
-gem "brevo"

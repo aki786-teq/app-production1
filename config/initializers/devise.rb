@@ -28,9 +28,6 @@ Devise.setup do |config|
   # 送信元メールアドレスは環境変数で指定
   config.mailer_sender = ENV["MAILER_SENDER"]
 
-  # Deviseのメール送信クラスを自作Mailerに置き換え
-  config.mailer = "BrevoMailer"
-
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
 
@@ -157,7 +154,9 @@ Devise.setup do |config|
   # their account can't be confirmed with the token any more.
   # Default is nil, meaning there is no restriction on how long a user can take
   # before confirming their account.
-  # config.confirm_within = 3.days
+
+  # メール確認リンクの有効期限を15分に設定
+  config.confirm_within = 15.minutes
 
   # If true, requires any email changes to be confirmed (exactly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
