@@ -28,9 +28,6 @@ Devise.setup do |config|
   # 送信元メールアドレスは環境変数で指定
   config.mailer_sender = ENV["MAILER_SENDER"]
 
-  # Deviseのメール送信クラスを自作Mailerに置き換え
-  config.mailer = "BrevoMailer"
-
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
 
