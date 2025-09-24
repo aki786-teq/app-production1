@@ -19,12 +19,14 @@ ja:
         action: "アカウント確認"
         greeting: "こんにちは、%{recipient}さん!"
         instruction: "以下のリンクをクリックして、メールアドレスの本人確認を完了してください。あなたが希望していない場合、このメールは無視してください。"
+        instruction2: "※リンクの有効期限は15分間です。その間に確認を完了させてください。"
       reset_password_instructions:
         action: "パスワード変更"
         greeting: "こんにちは、%{recipient}さん!"
         instruction: "誰かがパスワードの再設定を希望しました。次のリンクでパスワードの再設定ができます。"
         instruction_2: "あなたが希望していない場合、このメールは無視してください。"
         instruction_3: "上のリンクにアクセスして新しいパスワードを設定するまで、パスワードは変更されません。"
+        instruction_4: "※リンクの有効期限は15分間です。その間に変更を完了させてください。"
       unlock_instructions:
         action: "アカウントのロック解除"
         greeting: "こんにちは、%{recipient}さん!"
