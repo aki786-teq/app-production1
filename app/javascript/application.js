@@ -3,34 +3,10 @@ import "./controllers"
 import "./loading"
 import mojs from "@mojs/core"
 
+import { setupHamburgerMenu } from "./features/hamburger_menu"
+
 // グローバル変数でリスナー管理
 let listenersAttached = false;
-
-// ハンバーガーメニューの制御
-function setupHamburgerMenu() {
-  const hamburger = document.querySelector('.hamburger');
-  const nav = document.querySelector('.nav');
-
-  if (hamburger && nav) {
-    // 既存のリスナーを削除してから新しいリスナーを追加
-    const newHamburger = hamburger.cloneNode(true);
-    hamburger.parentNode.replaceChild(newHamburger, hamburger);
-
-    const finalHamburger = document.querySelector('.hamburger');
-
-    finalHamburger.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      finalHamburger.classList.toggle('active');
-      nav.classList.toggle('active');
-
-      const isOpen = finalHamburger.classList.contains('active');
-      finalHamburger.setAttribute('aria-expanded', isOpen);
-      nav.setAttribute('aria-hidden', !isOpen);
-    });
-  }
-}
 
 function applySelection(groupSelector, labelClass) {
   const radios = document.querySelectorAll(`[data-role='${groupSelector}']`);
