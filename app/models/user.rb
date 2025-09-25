@@ -33,26 +33,9 @@ class User < ApplicationRecord
     bookmarked_boards.include?(board)
   end
 
-  # 昨日から4日間継続投稿しているかの判定
-  def four_days_consecutive_posts?
-    return false if boards.empty?
-
-    start_date = 4.days.ago.to_date
-    end_date = 1.day.ago.to_date
-    required_dates = (start_date..end_date).to_a
-
-    posted_dates = boards
-      .where(created_at: start_date.beginning_of_day..end_date.end_of_day)
-      .pluck(:created_at)
-      .map(&:to_date)
-      .uniq
-
-    required_dates.all? { |date| posted_dates.include?(date) }
-  end
-
   # 前屈測定機能を利用可能かの判定
   def can_use_stretch_measurement?
-    four_days_consecutive_posts?
+    consecutive_post_days >= 4
   end
 
   # 連続投稿日数を返すメソッド
@@ -60,18 +43,10 @@ class User < ApplicationRecord
     return 0 if boards.empty?
 
     today = Time.zone.today
-    days = 0
-
-    (1..4).each do |i|
+    (1..4).take_while do |i|
       day = today - i
-      if boards.where(created_at: day.beginning_of_day..day.end_of_day).exists?
-        days += 1
-      else
-        break
-      end
-    end
-
-    days
+      boards.where(created_at: day.beginning_of_day..day.end_of_day).exists?
+    end.size
   end
 
   # アプリログイン時、既存ユーザーの検索または新規ユーザーの作成を行う（Google専用）

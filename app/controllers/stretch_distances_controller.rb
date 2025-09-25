@@ -30,7 +30,6 @@ class StretchDistancesController < ApplicationController
   end
 
   def result
-    @consecutive_days = current_user.consecutive_post_days
   end
 
   def create_post_with_result

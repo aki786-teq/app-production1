@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe '#four_days_consecutive_posts?' do
+  describe 'can_use_stretch_measurement?' do
     let(:user) { create(:user) }
 
     it '投稿がないと false' do
-      expect(user.four_days_consecutive_posts?).to be false
+      expect(user.can_use_stretch_measurement?).to be false
     end
   end
 

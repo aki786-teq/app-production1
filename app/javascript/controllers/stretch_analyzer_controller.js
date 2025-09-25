@@ -83,7 +83,7 @@ export default class extends Controller {
           const deltaY = avgHeelY - avgPinkyY;
 
           console.log("avgHeelY:", avgHeelY);
-    console.log("avgPinkyY:", avgPinkyY);
+          console.log("avgPinkyY:", avgPinkyY);
 
           let flexibilityLevel;
           if (deltaY < 0.1) {

@@ -2,6 +2,9 @@ class StretchDistance < ApplicationRecord
   belongs_to :user
   belongs_to :board, optional: true
 
+  before_save :set_flexibility_data
+  validates :flexibility_level, presence: true
+
   COMMENT_TEMPLATES = {
     excellent: [
       "素晴らしい柔軟性です！さらに高みを目指していきましょう。",
@@ -31,10 +34,6 @@ class StretchDistance < ApplicationRecord
     "average" => "普通",
     "needs_improvement" => "要改善"
   }.freeze
-
-  validates :flexibility_level, presence: true
-
-  before_save :set_flexibility_data
 
   def localized_flexibility_level
     FLEXIBILITY_LEVEL_JA[flexibility_level] || flexibility_level
