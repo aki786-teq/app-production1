@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe '#four_days_consecutive_posts?' do
+  describe 'can_use_stretch_measurement?' do
     let(:user) { create(:user) }
     let!(:goal) { create(:goal, user: user) }
 
@@ -9,7 +9,7 @@ RSpec.describe User, type: :model do
       (1..4).each do |i|
         create(:board, user: user, goal: goal, created_at: i.days.ago)
       end
-      expect(user.four_days_consecutive_posts?).to be true
+      expect(user.can_use_stretch_measurement?).to be true
     end
   end
 
