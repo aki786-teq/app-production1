@@ -2,9 +2,7 @@ import mojs from "@mojs/core";
 
 // 応援ボタンのクリックアニメーション
 export function setupCheerButtons() {
-  // 実際の処理はクリックイベント委譲で行われるため、
-  // ここではセットアップ完了だけを示すことも可能
-  // console.debug("Cheer buttons setup completed");
+  // 実際の処理はクリックイベント委譲で行われるため、ここではセットアップ完了だけを示すことも可能
 }
 
 // 応援ボタンにburstアニメーションを再生
