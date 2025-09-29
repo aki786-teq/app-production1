@@ -39,23 +39,6 @@ RSpec.describe "LINE通知統合テスト", type: :request do
         expect(LineInactiveNotifyJob).to have_been_enqueued.with(user.id)
       end
     end
-
-    context '投稿後の通知リセット' do
-      before do
-        # 通知済み状態を作成
-        line_notification.update!(consecutive_inactive_days: 3, last_notified_at: 1.day.ago)
-      end
-
-      it '新しい投稿で通知カウントがリセットされる' do
-        sign_in user
-
-        # コントローラーを経由して投稿を作成（reset_inactive_days!が呼ばれる）
-        post boards_path, params: { board: { did_stretch: true, goal_id: goal.id } }
-
-        # 通知カウントがリセットされることを確認
-        expect(line_notification.reload.consecutive_inactive_days).to eq(0)
-      end
-    end
   end
 
   describe 'LINE連携フロー' do

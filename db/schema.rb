@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_28_074141) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_29_015527) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -111,7 +111,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_28_074141) do
   create_table "line_notifications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "last_notified_at"
-    t.integer "consecutive_inactive_days", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["last_notified_at"], name: "index_line_notifications_on_last_notified_at"

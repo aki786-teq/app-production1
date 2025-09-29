@@ -76,7 +76,6 @@ class LineInactiveNotifyJob < ApplicationJob
 
   # 通知成功記録の更新
   def record_notification_success(user)
-    line_setting = user.line_notification_setting
-    line_setting.record_notification!
+    user.line_notification_setting.record_notification!
   end
 end

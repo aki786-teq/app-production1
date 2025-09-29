@@ -45,11 +45,6 @@ class BoardsController < ApplicationController
     end
 
     if @board.save
-      # consecutive_inactive_daysをリセット
-      if current_user.line_notifiable?
-        current_user.line_notification_setting.reset_inactive_days!
-      end
-
       redirect_to boards_path, success: t("boards.flash_message.create_success")
     else
       flash.now[:danger] = t("boards.flash_message.create_failure")

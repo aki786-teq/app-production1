@@ -8,6 +8,7 @@ RSpec.describe "LineWebhook", type: :request do
 
   it 'DELETE /line/notification/disconnect 連携あり → 成功リダイレクト' do
     user.oauth_accounts.create!(provider: 'line_messaging', uid: 'line_msg_uid')
+    user.line_notification_setting
     delete line_notification_disconnect_path
     expect([ 302, 303 ]).to include(response.status)
     expect(response).to redirect_to(reminder_settings_path)
