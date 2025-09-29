@@ -14,8 +14,6 @@ class LineLinkToken < ApplicationRecord
 
   # トークンを「使用済み」として確定
   def consume!(user:)
-    transaction do
-      update!(consumed_at: Time.current, user_id: user.id)
-    end
+    update!(consumed_at: Time.current, user_id: user.id)
   end
 end

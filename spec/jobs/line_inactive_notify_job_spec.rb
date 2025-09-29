@@ -29,8 +29,8 @@ RSpec.describe LineInactiveNotifyJob, type: :job do
           )
         ).and_return([ nil, 200, {} ])
 
-        expect { perform_enqueued_jobs { described_class.perform_later(user.id) } }
-          .to change { line_notification.reload.consecutive_inactive_days }.by(1)
+        expect { perform_enqueued_jobs { described_class.perform_later(user.id) } }.
+          to change { line_notification.reload.last_notified_at }.from(nil)
       end
     end
 

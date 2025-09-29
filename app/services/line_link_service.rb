@@ -52,8 +52,7 @@ class LineLinkService
     end
 
     # 通知設定を作成（自動的に有効化される）
-    setting = user.line_notification_setting
-    setting.reset_inactive_days! # 連携時にカウンターをリセット
+    user.line_notification_setting
 
     link_token.consume!(user: user)
 

@@ -111,46 +111,13 @@ class User < ApplicationRecord
     line_notification || create_line_notification
   end
 
-  # oauth_accountsのprovider: "line_messaging" の uid）が存在するか
+  # oauth_accountsのprovider: "line_messaging"のuidが存在するか
   def line_notifiable?
     line_id.present?
   end
 
   # LINE Messaging APIのuserIdを取得
   def line_id
-    messaging = oauth_account_for("line_messaging")
-    messaging&.uid
-  end
-
-  # Googleアカウントと連携しているかチェック
-  def google_connected?
-    oauth_accounts.exists?(provider: "google_oauth2")
-  end
-
-  # SNSログインユーザーかどうか
-  def omniauth_user?
-    oauth_accounts.exists?
-  end
-
-  # 指定したプロバイダーと連携しているかチェック
-  def connected_to?(provider_name)
-    oauth_accounts.exists?(provider: provider_name.to_s)
-  end
-
-  # 指定したプロバイダーのOAuthAccountを取得
-  def oauth_account_for(provider_name)
-    oauth_accounts.find_by(provider: provider_name.to_s)
-  end
-
-  protected
-
-  # Deviseのバリデーションをオーバーライド（SNSログイン時のパスワード要求を回避）
-  def password_required?
-    return false if omniauth_user? && encrypted_password.blank?
-    super
-  end
-
-  def email_required?
-    true
+    oauth_accounts.where(provider: "line_messaging").pick(:uid)
   end
 end

@@ -19,8 +19,4 @@ RSpec.describe User, type: :model do
     dup = build(:user, email: 'dup@example.com')
     expect(dup).to be_invalid
   end
-
-  it 'email_required? は true を返す' do
-    expect(build(:user).send(:email_required?)).to be true
-  end
 end
