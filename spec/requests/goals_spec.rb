@@ -12,7 +12,7 @@ RSpec.describe "Goals", type: :request do
 
   it 'POST /goal で作成できる' do
     post goal_path, params: { goal: { goal: '床に指', content: '毎日3分' } }
-    expect(response).to redirect_to(edit_goal_path)
+    expect(response).to redirect_to(new_board_path)
   end
 
   it 'GET /goal/edit は 200' do

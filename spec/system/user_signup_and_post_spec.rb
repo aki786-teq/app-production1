@@ -19,7 +19,7 @@ RSpec.describe 'ユーザー登録から投稿まで', type: :system do
     find('input[type="submit"].my-orange-btn').click
 
     # 目標編集ページに遷移（成功フラッシュ）
-    expect(page).to have_current_path(edit_goal_path)
+    expect(page).to have_current_path(new_board_path)
 
     # 投稿作成
     visit new_board_path
