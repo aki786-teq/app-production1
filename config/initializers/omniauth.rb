@@ -3,7 +3,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   # Google OAuth2
   provider :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"]
 
-  # CSRF保護を有効化
+  # gemによるCSRF保護を有効化
   OmniAuth.config.allowed_request_methods = [ :get, :post ]
 end
 
