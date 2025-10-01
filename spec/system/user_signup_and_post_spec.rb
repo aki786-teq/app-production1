@@ -18,11 +18,10 @@ RSpec.describe 'ユーザー登録から投稿まで', type: :system do
     fill_in '内容（必須）', with: '毎日3分ストレッチ'
     find('input[type="submit"].my-orange-btn').click
 
-    # 目標編集ページに遷移（成功フラッシュ）
-    expect(page).to have_current_path(edit_goal_path)
+    # 投稿作成ページに遷移（成功フラッシュ）
+    expect(page).to have_current_path(new_board_path)
 
     # 投稿作成
-    visit new_board_path
     # did_stretch を「やった！」にする（ラベルクリックで対応）
     find('label[for="did_stretch_yes"]').click
     fill_in '今日の記録', with: 'きょうもがんばった'

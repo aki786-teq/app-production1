@@ -13,7 +13,7 @@ class GoalsController < ApplicationController
   def create
     @goal = current_user.build_goal(goal_params)
     if @goal.save
-      redirect_to edit_goal_path, success: t("goals.flash_message.create_success")
+      redirect_to new_board_path, success: t("goals.flash_message.create_success")
     else
       flash.now[:danger] = t("goals.flash_message.create_failure")
       render :new, status: :unprocessable_entity
