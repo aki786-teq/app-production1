@@ -49,24 +49,17 @@ class User < ApplicationRecord
     end.size
   end
 
-  # アプリログイン時、既存ユーザーの検索または新規ユーザーの作成を行う（Google専用）
-  def self.from_omniauth(auth)
-    user = find_user_by_google(auth) || create_user_for_google!(auth)
-    attach_google_oauth!(user, auth)
-    user
-  end
-
-  # ===== Google OAuth共通処理ここから =====
-
   def self.find_user_by_google(auth)
+    # GoogleのIDを使って既に連携済みのユーザーを検索
     account = OauthAccount.find_by(provider: "google_oauth2", uid: auth.uid)
     return account.user if account
-
+    # 見つからなければ、メールアドレスで既存ユーザーを探す
     return find_by(email: auth.info.email) if auth.respond_to?(:info) && auth.info&.email.present?
 
     nil
   end
 
+  # usersテーブルに新規レコードを作成
   def self.create_user_for_google!(auth)
     email = auth.info.email
     name = extract_name_from_auth(auth)
@@ -82,29 +75,25 @@ class User < ApplicationRecord
     user
   end
 
+  # OauthAccountテーブルに新規レコードを作成
   def self.attach_google_oauth!(user, auth)
-    return user if user.oauth_accounts.find_by(provider: "google_oauth2")
+    already_linked = user.oauth_accounts.exists?(provider: "google_oauth2")
 
-    user.oauth_accounts.create!(
-      provider: "google_oauth2",
-      uid: auth.uid,
-      auth_data: auth.to_hash
-    )
-
-    user
-  end
-
-  # 認証情報から名前を抽出
-  def self.extract_name_from_auth(auth)
-    case auth.provider
-    when "google_oauth2"
-      auth.info.name || "Google User"
-    else
-      auth.info.name || "User"
+    unless already_linked
+      user.oauth_accounts.create!(
+        provider: "google_oauth2",
+        uid: auth.uid,
+        auth_data: auth.to_hash
+      )
     end
+
+    !already_linked
   end
 
-  # ===== Google OAuth共通処理ここまで =====
+  # Google認証で名前が取得できない場合はデフォルト値を設定する。
+  def self.extract_name_from_auth(auth)
+    auth.info.name || "Google User"
+  end
 
   # line_notificationsテーブルのレコードを取得または作成
   def line_notification_setting
