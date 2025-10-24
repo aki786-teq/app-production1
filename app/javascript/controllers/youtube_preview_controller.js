@@ -59,7 +59,9 @@ export default class extends Controller {
       if (response.ok && data && data.title && data.thumbnail_url) {
         this.displayPreview(data)
       } else {
-        this.showError("動画情報の形式が正しくありません")
+        // サーバーからのエラーメッセージがあればそれを表示し、なければ汎用メッセージを表示
+        const errorMessage = data && data.error ? data.error : "動画情報の形式が正しくありません"
+        this.showError(errorMessage)
       }
     } catch (error) {
       console.error("Fetch error:", error)

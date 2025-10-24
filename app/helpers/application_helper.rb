@@ -69,20 +69,14 @@ module ApplicationHelper
     video_info = YoutubeVideoService.fetch_video_info(video_id)
 
     if video_info
-      thumbnail_url = video_info[:thumbnail_url]
-      title = video_info[:title]
-      view_count = video_info[:view_count]
-      upload_date = video_info[:upload_date]
-
-      content = content_tag(:div, class: "text-center") do
-        image_tag(thumbnail_url, alt: title, **options) +
+      content_tag(:div, class: "text-center") do
+        image_tag(video_info[:thumbnail_url], alt: video_info[:title], **options) +
         if options[:show_info]
           content_tag(:div, class: "video-info") do
-            content_tag(:p, raw("#{title}<br>#{number_with_delimiter(view_count)} 回視聴 #{upload_date} 公開"))
+            content_tag(:p, raw("#{video_info[:title]}<br>#{number_with_delimiter(video_info[:view_count])} 回視聴 #{video_info[:upload_date]} 公開"))
           end
         end
       end
-      content
     else
       # ビデオが見つからない場合の処理
       content_tag(:div, "動画が見つかりません", class: "text-center")
