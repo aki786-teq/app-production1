@@ -71,7 +71,7 @@
           <% video_id = board.youtube_video_id %>
           <%= link_to board.youtube_link, target: "_blank", rel: "noopener noreferrer", class: "block" do %>
             <div class="rounded-md shadow-md overflow-hidden hover:shadow-lg transition">
-              <%= youtube_thumbnail(video_id, class: 'object-cover') %>
+              <%= youtube_video_info(video_id, class: 'object-cover') %>
             </div>
           <% end %>
         </div>

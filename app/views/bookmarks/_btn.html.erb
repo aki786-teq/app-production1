@@ -7,7 +7,7 @@
           turbo_method: :delete
         }, 
         class: "relative text-xl text-sky-500 hover:text-sky-600 transition" do %>
-      <%= icon_with_text("solid", "bookmark", "#{board.bookmarks.count}") %>
+      <%= icon_with_text("solid", "bookmark", "#{board.bookmarks.length}") %>
     <% end %>
   <% else %>
     <%= link_to board_bookmarks_path(board), 
@@ -16,12 +16,12 @@
           turbo_method: :post
         }, 
         class: "relative text-xl hover:text-sky-600 transition" do %>
-      <%= icon_with_text("regular", "bookmark", "#{board.bookmarks.count}") %>
+      <%= icon_with_text("regular", "bookmark", "#{board.bookmarks.length}") %>
     <% end %>
   <% end %>
 <% else %>
   <!-- ログアウト状態ではブックマークボタンはクリックできない -->
   <span class="relative text-xl text-stone-400">
-    <%= icon_with_text("regular", "bookmark", "#{board.bookmarks.count}") %>
+    <%= icon_with_text("regular", "bookmark", "#{board.bookmarks.length}") %>
   </span>
 <% end %>

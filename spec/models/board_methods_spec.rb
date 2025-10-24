@@ -42,6 +42,12 @@ RSpec.describe Board, type: :model do
       it { expect(board.has_youtube_video?).to be true }
     end
 
+    context 'モバイル用URL (m.youtube.com)' do
+      let(:youtube_link) { 'https://m.youtube.com/watch?v=dQw4w9WgXcQ' }
+      it { expect(board.youtube_video_id).to eq 'dQw4w9WgXcQ' }
+      it { expect(board.has_youtube_video?).to be true }
+    end
+
     context 'クエリ付き URL' do
       let(:youtube_link) { 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=43s' }
       it { expect(board.youtube_video_id).to eq 'dQw4w9WgXcQ' }

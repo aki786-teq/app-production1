@@ -4,12 +4,13 @@ class HomeController < ApplicationController
     end_time = 1.day.ago.end_of_day
 
     @ranking_boards = Board
+      .with_attached_image
       .left_joins(:cheers, :bookmarks)
       .where(created_at: start_time..end_time)
       .group("boards.id")
       .select("boards.*, COUNT(DISTINCT cheers.id) + COUNT(DISTINCT bookmarks.id) AS total_score")
       .order("total_score DESC, boards.created_at DESC")
       .limit(3)
-      .includes(:user)
+      .includes(:user, :cheers, :bookmarks)
   end
 end

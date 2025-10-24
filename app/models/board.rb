@@ -1,4 +1,6 @@
 class Board < ApplicationRecord
+  YOUTUBE_URL_REGEX = /\A(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+
   belongs_to :user
   belongs_to :goal
   has_many :cheers, dependent: :destroy
@@ -50,14 +52,11 @@ class Board < ApplicationRecord
     bookmarks.exists?(user_id: user.id)
   end
 
-  # YouTube リンクのフォーマットをチェック
+  # YouTubeリンクのフォーマットをチェック
   def youtube_link_format
     return if youtube_link.blank?
 
-    # YouTube URLの正規表現パターン
-    youtube_pattern = /\A(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/
-
-    unless youtube_link.match(youtube_pattern)
+    unless youtube_link.match(YOUTUBE_URL_REGEX)
       errors.add(:youtube_link, "は有効なYouTube URLを入力してください")
     end
   end
@@ -65,15 +64,14 @@ class Board < ApplicationRecord
   # YouTube動画IDを取得
   def youtube_video_id
     return nil if youtube_link.blank?
-    # YouTube URLから動画IDを抽出
-    youtube_pattern = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/
-    match = youtube_link.match(youtube_pattern)
+
+    match = youtube_link.match(YOUTUBE_URL_REGEX)
     match ? match[1] : nil
   end
 
   # YouTube動画が添付されているかチェック
   def has_youtube_video?
-    youtube_link.present? && youtube_video_id.present?
+    youtube_video_id.present?
   end
 
   # 前屈測定結果が含まれているか
