@@ -62,30 +62,30 @@ module ApplicationHelper
     tag.span(icon(icon_style, icon_name), class: "mr-2") + tag.span(text)
   end
 
-  # YouTubeの動画リンクからビデオIDを抽出するメソッド
-  def extract_youtube_video_id(link)
-    # もしリンクが提供されていない場合、ビデオIDは存在しないので nil を返す
-    return nil if link.nil? || link.empty?
+  def youtube_video_info(video_id, options = {})
+    options = { show_info: true }.merge(options)
 
-    begin
-      # URLを解析してビデオIDを取得する
-      uri = URI(link) # リンクのURLをURIオブジェクトに変換
+    # 動画情報を取得
+    video_info = YoutubeVideoService.fetch_video_info(video_id)
 
-      # youtu.be形式の場合
-      if uri.host == "youtu.be"
-        return uri.path[1..-1] # 先頭の/を除去
+    if video_info
+      thumbnail_url = video_info[:thumbnail_url]
+      title = video_info[:title]
+      view_count = video_info[:view_count]
+      upload_date = video_info[:upload_date]
+
+      content = content_tag(:div, class: "text-center") do
+        image_tag(thumbnail_url, alt: title, **options) +
+        if options[:show_info]
+          content_tag(:div, class: "video-info") do
+            content_tag(:p, raw("#{title}<br>#{number_with_delimiter(view_count)} 回視聴 #{upload_date} 公開"))
+          end
+        end
       end
-
-      # youtube.com形式の場合
-      if uri.host&.include?("youtube.com") && uri.query
-        query = URI.decode_www_form(uri.query) # URLのクエリパラメータをデコードして取得
-        query_hash = Hash[query] # クエリパラメータをハッシュに変換
-        return query_hash["v"] # ハッシュからキー"v"に対応する値、ビデオIDを返す
-      end
-
-      nil
-    rescue URI::InvalidURIError
-      nil
+      content
+    else
+      # ビデオが見つからない場合の処理
+      content_tag(:div, "動画が見つかりません", class: "text-center")
     end
   end
 

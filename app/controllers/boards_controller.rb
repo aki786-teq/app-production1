@@ -2,7 +2,7 @@ class BoardsController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
 
   def index
-    @pagy, @boards = pagy(Board.includes(:user).order(created_at: :desc))
+    @pagy, @boards = pagy(Board.with_attached_image.includes(:user, :bookmarks, :cheers).order(created_at: :desc))
   end
 
   def new

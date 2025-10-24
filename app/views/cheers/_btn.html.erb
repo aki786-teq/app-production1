@@ -6,7 +6,7 @@
           turbo_method: :delete
         }, 
         class: "relative text-xl text-orange-500 hover:text-orange-600 transition" do %>
-      <%= icon_with_text("solid", "fire", "#{board.cheers.count}") %>
+      <%= icon_with_text("solid", "fire", "#{board.cheers.length}") %>
     <% end %>
   <% else %>
     <%= link_to board_cheer_path(board), 
@@ -15,12 +15,12 @@
           turbo_method: :post
         }, 
         class: "relative text-xl hover:text-orange-600 transition" do %>
-      <%= icon_with_text("solid", "fire", "#{board.cheers.count}") %>
+      <%= icon_with_text("solid", "fire", "#{board.cheers.length}") %>
     <% end %>
   <% end %>
 <% else %>
   <!-- ログアウト状態では応援ボタンはクリックできない） -->
   <span class="relative text-xl text-stone-400">
-    <%= icon_with_text("solid", "fire", "#{board.cheers.count}") %>
+    <%= icon_with_text("solid", "fire", "#{board.cheers.length}") %>
   </span>
 <% end %>

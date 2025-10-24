@@ -2,7 +2,7 @@ require "google/apis/youtube_v3"
 
 class YoutubeVideoService
   def self.fetch_video_info(video_id)
-    Rails.cache.fetch("youtube_thumbnail_#{video_id}", expires_in: 1.day) do
+    Rails.cache.fetch("youtube_video_info_#{video_id}", expires_in: 1.day) do
       service = Google::Apis::YoutubeV3::YouTubeService.new
       service.key = ENV["YOUTUBE_API_KEY"]
 
