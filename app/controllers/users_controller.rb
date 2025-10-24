@@ -5,7 +5,12 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @pagy, @boards = pagy(@user.boards.order(created_at: :desc))
+    @pagy, @boards = pagy(
+      @user.boards
+            .with_attached_image
+            .includes(:cheers, :bookmarks)
+            .order(created_at: :desc)
+    )
     @calendar_posts = @user.boards.order(:created_at)
     @calendar = SimpleCalendar::Calendar.new(params[:month])
     @streak_days = calculate_streak_days(@user)
