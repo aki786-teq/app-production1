@@ -1,10 +1,10 @@
 <% content_for(:title, "") %>
 <div class="my-container">
   <article class="flex flex-col gap-20 justify-center items-center">
-    <section class="">
-      <h1 class="text-center text-3xl font-bold mb-10">ストレッチで柔軟性を高めて前屈できるように</h1>
+    <section>
+      <h1 class="text-center text-3xl font-bold mb-10">ストレッチで柔軟性を高め、前屈できるように</h1>
       <%= image_tag 'stretch_cat.jpg', alt: "ストレッチする猫", class: "block rounded-md w-full max-w-[600px] mb-10" %>
-      <p class="text-center">前屈ができるよう毎日のストレッチ記録をアプリに投稿することで、仲間と楽しく運動を継続できます。<br>運動不足で肩こりや腰痛に悩んでいる方、空いた時間に</p>
+      <p class="text-center max-w-[600px]">前屈ができるよう毎日のストレッチ記録をアプリに投稿することで、仲間と楽しく運動を継続できます。運動不足で肩こりや腰痛に悩んでいる方、空いた時間に手軽にストレッチしたい方など多くの方に役立ちます。</p>
     </section>
 
     <section class="w-full">
@@ -31,7 +31,7 @@
         <div class="bg-white rounded-lg p-6 shadow-md">
           <div class="text-orange-500 font-semibold text-3xl mb-4 text-center">4</div>
           <h3 class="text-lg font-semibold mb-3 text-center">みんなの投稿をチェック</h3>
-          <p class="text-sm">「みんなの投稿」では他の人の頑張りが見られます。応援ボタンで励まし合いましょう。</p>
+          <p class="text-sm">「みんなの投稿」では他の人の頑張りが見られます。応援ボタン<span class="text-orange-600"><%= icon("solid", "fire") %></span>で励まし合いましょう。</p>
         </div>
 
         <div class="bg-white rounded-lg p-6 shadow-md">
@@ -55,7 +55,7 @@
     <% end %>
 
     <section class="w-full">
-      <h2 class="text-2xl font-bold border-b border-orange-400 pb-1 w-fit mx-auto mb-8">週間ランキング</h2>
+      <h2 class="text-2xl font-bold border-b border-orange-400 pb-1 w-fit mx-auto mb-8">週間ランキングTOP3</h2>
       <div class="grid gap-6">
         <% @ranking_boards.each do |board| %>
           <div class="block rounded-md cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
