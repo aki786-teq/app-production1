@@ -181,8 +181,11 @@ export default class extends Controller {
   }
 
   showError(message) {
-    this.resultsTarget.textContent = message
-    this.resultsTarget.classList.remove('hidden')
+    const p = document.createElement('p');
+    p.className = 'text-red-600';
+    p.textContent = message;
+    this.resultsTarget.replaceChildren(p);
+    this.resultsTarget.classList.remove('hidden');
   }
 
   // ページを再読み込みした時の再表示
