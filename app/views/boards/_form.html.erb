@@ -133,7 +133,7 @@
         <% end %>
       </div>
 
-      <!-- 隠しフィールド -->
+      <!-- ページの再読み込み後も選択された商品を表示 -->
       <input data-rakuten-search-target="itemCode" type="hidden" name="board[item_code]" id="board_item_code" value="<%= @board.item_code %>">
       <input data-rakuten-search-target="itemName" type="hidden" name="board[item_name]" id="board_item_name" value="<%= @board.item_name %>">
       <input data-rakuten-search-target="itemPrice" type="hidden" name="board[item_price]" id="board_item_price" value="<%= @board.item_price %>">

@@ -6,7 +6,15 @@ export default class extends Controller {
     "itemCode", "itemName", "itemPrice", "itemUrl", "itemImageUrl"
   ]
 
-  // 検索ボタンがクリックされた時、またはEnterキーが押された時
+  connect() {
+    if (this.selectedItemTarget.innerHTML.trim() === '') {
+      this.renderSelectedItemFromHiddenFields()
+    } else {
+      this.selectedItemTarget.classList.remove('hidden')
+    }
+  }
+
+  // 検索処理
   async search() {
     const query = this.searchInputTarget.value.trim()
 
@@ -16,10 +24,8 @@ export default class extends Controller {
     }
 
     try {
-      // ローディング表示
-      this.showLoading()
+      this.showLoading() // ローディング表示
 
-      // 楽天APIを呼び出し
       const response = await this.fetchProducts(query)
 
       if (response.ok) {
@@ -32,181 +38,221 @@ export default class extends Controller {
     } catch (error) {
       console.error('検索エラー:', error)
       this.showError('検索中にエラーが発生しました')
-    } finally {
-      this.hideLoading()
     }
   }
 
-  // 楽天API呼び出し
   async fetchProducts(query) {
-    // タイムアウト設定
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 10000)
 
     try {
-      const response = await fetch(`/boards/search_items?keyword=${encodeURIComponent(query)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      return await fetch(`/boards/search_items?keyword=${encodeURIComponent(query)}`, {
         signal: controller.signal
       })
-
+    } finally {
       clearTimeout(timeoutId)
-      return response
-
-    } catch (error) {
-      clearTimeout(timeoutId)
-      throw error
     }
   }
 
-  // 検索結果を表示
+  // 検索結果の表示
   displayResults(data) {
     if (!data.items || data.items.length === 0) {
-      this.resultsTarget.innerHTML = '<p>商品が見つかりませんでした</p>'
+      this.resultsTarget.textContent = '商品が見つかりませんでした'
       this.resultsTarget.classList.remove('hidden')
       return
     }
 
-    let html = '<div class="grid gap-4 mb-4">'
+    const container = document.createElement('div')
+    container.className = 'grid gap-4 mb-4'
 
     data.items.forEach(item => {
-      html += `
-        <div class="border p-4 rounded">
-      <img src="${item.medium_image_urls[0]}" alt="${item.item_name}" class="w-20 h-20 object-cover mb-2">
-      <h3 class="font-bold">${item.item_name}</h3>
-      <p class="text-red-600 font-bold">¥${item.item_price.toLocaleString()}</p>
-      <button
-        type="button"
-        data-action="click->rakuten-search#selectItem"
-        data-item-code="${item.item_code}"
-        data-item-name="${item.item_name}"
-        data-item-price="${item.item_price}"
-        data-item-url="${item.item_url}"
-        data-item-image="${item.medium_image_urls[0]}"
-        class="mt-2 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        この商品を選択
-      </button>
-    </div>
-  `
-})
+      const card = document.createElement('div')
+      card.className = 'border p-4 rounded'
 
-    html += '</div>'
-    this.resultsTarget.innerHTML = html
+      const img = document.createElement('img')
+      img.src = item.medium_image_urls[0]
+      img.alt = item.item_name
+      img.className = 'w-20 h-20 object-cover mb-2'
+
+      const name = document.createElement('h3')
+      name.className = 'font-bold'
+      name.textContent = item.item_name
+
+      const price = document.createElement('p')
+      price.className = 'text-red-600 font-bold'
+      price.textContent = `¥${item.item_price.toLocaleString()}`
+
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.dataset.action = 'click->rakuten-search#selectItem'
+      button.dataset.itemCode = item.item_code
+      button.dataset.itemName = item.item_name
+      button.dataset.itemPrice = item.item_price
+      button.dataset.itemUrl = item.item_url
+      button.dataset.itemImage = item.medium_image_urls[0]
+      button.className = 'mt-2 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600'
+      button.textContent = 'この商品を選択'
+
+      card.append(img, name, price, button)
+      container.appendChild(card)
+    })
+
+    this.resultsTarget.innerHTML = ''
+    this.resultsTarget.appendChild(container)
     this.resultsTarget.classList.remove('hidden')
   }
 
-  // 商品を選択
-selectItem(event) {
-  const button = event.currentTarget
-  const itemData = {
-    code: button.dataset.itemCode,
-    name: button.dataset.itemName,
-    price: button.dataset.itemPrice,
-    url: button.dataset.itemUrl,
-    image: button.dataset.itemImage
+  // 商品選択
+  selectItem(event) {
+    const button = event.currentTarget
+    const itemData = {
+      code: button.dataset.itemCode,
+      name: button.dataset.itemName,
+      price: button.dataset.itemPrice,
+      url: button.dataset.itemUrl,
+      image: button.dataset.itemImage
+    }
+
+    // 隠しフィールドに値を保存
+    this.itemCodeTarget.value = itemData.code
+    this.itemNameTarget.value = itemData.name
+    this.itemPriceTarget.value = itemData.price
+    this.itemUrlTarget.value = itemData.url
+    this.itemImageUrlTarget.value = itemData.image
+
+    // 既存の表示をクリア
+    this.selectedItemTarget.innerHTML = ''
+
+    // 外枠
+    const wrapper = document.createElement('div')
+    wrapper.className = 'border p-4 rounded bg-green-50 relative'
+
+    // 見出し
+    const title = document.createElement('h4')
+    title.className = 'font-bold text-green-800'
+    title.textContent = '選択された商品'
+
+    // ×ボタン
+    const clearButton = document.createElement('button')
+    clearButton.type = 'button'
+    clearButton.dataset.action = 'click->rakuten-search#clearSelectedItem'
+    clearButton.className = 'absolute text-2xl top-2 right-2 text-red-600 hover:text-red-800'
+    clearButton.setAttribute('aria-label', '選択解除')
+    clearButton.textContent = '×'
+
+    // 商品情報コンテナ
+    const infoContainer = document.createElement('div')
+    infoContainer.className = 'flex items-center mt-2'
+
+    // 商品画像
+    const img = document.createElement('img')
+    img.src = itemData.image
+    img.alt = itemData.name
+    img.className = 'w-16 h-16 object-cover mr-3'
+
+    // 商品名と価格
+    const textContainer = document.createElement('div')
+
+    const name = document.createElement('p')
+    name.className = 'font-semibold'
+    name.textContent = itemData.name
+
+    const price = document.createElement('p')
+    price.className = 'text-red-600 font-bold'
+    const formattedPrice = Number.parseInt(itemData.price, 10).toLocaleString()
+    price.textContent = `¥${formattedPrice}`
+
+    textContainer.append(name, price)
+    infoContainer.append(img, textContainer)
+    wrapper.append(title, clearButton, infoContainer)
+
+    // 完成したDOMを追加
+    this.selectedItemTarget.appendChild(wrapper)
+
+    // 表示切り替え
+    this.selectedItemTarget.classList.remove('hidden')
+    this.resultsTarget.classList.add('hidden')
   }
 
-  // 隠しフィールドに値を設定
-  this.itemCodeTarget.value = itemData.code
-  this.itemNameTarget.value = itemData.name
-  this.itemPriceTarget.value = itemData.price
-  this.itemUrlTarget.value = itemData.url
-  this.itemImageUrlTarget.value = itemData.image
-
-  // 選択された商品を表示（×ボタン付き）
-  this.selectedItemTarget.innerHTML = `
-    <div class="border p-4 rounded bg-green-50 relative">
-      <h4 class="font-bold text-green-800">選択された商品</h4>
-      <button
-        type="button"
-        data-action="click->rakuten-search#clearSelectedItem"
-        class="absolute text-2xl top-2 right-2 text-red-600 hover:text-red-800"
-        aria-label="選択解除"
-      >
-        &times;
-      </button>
-      <div class="flex items-center mt-2">
-        <img src="${itemData.image}" alt="${itemData.name}" class="w-16 h-16 object-cover mr-3">
-        <div>
-          <p class="font-semibold">${itemData.name}</p>
-          <p class="text-red-600 font-bold">¥${parseInt(itemData.price).toLocaleString()}</p>
-        </div>
-      </div>
-    </div>
-  `
-  this.selectedItemTarget.classList.remove('hidden')
-
-  // 検索結果を非表示
-  this.resultsTarget.classList.add('hidden')
-}
-  // ローディング表示
+  // メッセージの表示
   showLoading() {
-    this.resultsTarget.innerHTML = '<p>検索中...</p>'
+    this.resultsTarget.textContent = '検索中...'
     this.resultsTarget.classList.remove('hidden')
   }
 
-  // ローディング非表示
-  hideLoading() {
-    // displayResultsまたはshowErrorで上書きされる
-  }
-
-  // エラー表示
   showError(message) {
-    this.resultsTarget.innerHTML = `<p class="text-red-600">${message}</p>`
+    this.resultsTarget.textContent = message
     this.resultsTarget.classList.remove('hidden')
   }
 
-connect() {
-  if (this.selectedItemTarget.innerHTML.trim() === '') {
-    this.renderSelectedItemFromHiddenFields()
-  } else {
-    this.selectedItemTarget.classList.remove('hidden')
+  // ページを再読み込みした時の再表示
+  renderSelectedItemFromHiddenFields() {
+    const code = this.itemCodeTarget.value
+    const name = this.itemNameTarget.value
+    const price = this.itemPriceTarget.value
+    const url = this.itemUrlTarget.value
+    const image = this.itemImageUrlTarget.value
+
+    if (code && name && price && url && image) {
+      // 既存の内容をクリア
+      this.selectedItemTarget.innerHTML = ''
+
+      // 外枠
+      const wrapper = document.createElement('div')
+      wrapper.className = 'border p-4 rounded bg-green-50 relative'
+
+      // 見出し
+      const title = document.createElement('h4')
+      title.className = 'font-bold text-green-800'
+      title.textContent = '選択された商品'
+
+      // ×ボタン
+      const clearButton = document.createElement('button')
+      clearButton.type = 'button'
+      clearButton.dataset.action = 'click->rakuten-search#clearSelectedItem'
+      clearButton.className = 'absolute top-2 right-2 text-red-600 hover:text-red-800'
+      clearButton.setAttribute('aria-label', '選択解除')
+      clearButton.textContent = '×'
+
+      // 商品情報コンテナ
+      const infoContainer = document.createElement('div')
+      infoContainer.className = 'flex items-center mt-2'
+
+      // 画像
+      const img = document.createElement('img')
+      img.src = image
+      img.alt = name
+      img.className = 'w-16 h-16 object-cover mr-3'
+
+      // 商品名と価格
+      const textContainer = document.createElement('div')
+
+      const nameEl = document.createElement('p')
+      nameEl.className = 'font-semibold'
+      nameEl.textContent = name
+
+      const priceEl = document.createElement('p')
+      priceEl.className = 'text-red-600 font-bold'
+      priceEl.textContent = `¥${Number.parseInt(price, 10).toLocaleString()}`
+
+      textContainer.append(nameEl, priceEl)
+      infoContainer.append(img, textContainer)
+      wrapper.append(title, clearButton, infoContainer)
+
+      // 完成したDOMを追加
+      this.selectedItemTarget.appendChild(wrapper)
+      this.selectedItemTarget.classList.remove('hidden')
+    }
   }
-}
 
-renderSelectedItemFromHiddenFields() {
-  const code = this.itemCodeTarget.value
-  const name = this.itemNameTarget.value
-  const price = this.itemPriceTarget.value
-  const url = this.itemUrlTarget.value
-  const image = this.itemImageUrlTarget.value
+  clearSelectedItem() {
+    this.itemCodeTarget.value = ''
+    this.itemNameTarget.value = ''
+    this.itemPriceTarget.value = ''
+    this.itemUrlTarget.value = ''
+    this.itemImageUrlTarget.value = ''
 
-  if (code && name && price && url && image) {
-    this.selectedItemTarget.innerHTML = `
-      <div class="border p-4 rounded bg-green-50 relative">
-        <h4 class="font-bold text-green-800">選択された商品</h4>
-        <button
-          type="button"
-          data-action="click->rakuten-search#clearSelectedItem"
-          class="absolute top-2 right-2 text-red-600 hover:text-red-800"
-          aria-label="選択解除"
-        >
-          &times;
-        </button>
-        <div class="flex items-center mt-2">
-          <img src="${image}" alt="${name}" class="w-16 h-16 object-cover mr-3">
-          <div>
-            <p class="font-semibold">${name}</p>
-            <p class="text-red-600 font-bold">¥${parseInt(price).toLocaleString()}</p>
-          </div>
-        </div>
-      </div>
-    `
-    this.selectedItemTarget.classList.remove('hidden')
+    this.selectedItemTarget.innerHTML = ''
+    this.selectedItemTarget.classList.add('hidden')
   }
-}
-clearSelectedItem() {
-  this.itemCodeTarget.value = ''
-  this.itemNameTarget.value = ''
-  this.itemPriceTarget.value = ''
-  this.itemUrlTarget.value = ''
-  this.itemImageUrlTarget.value = ''
-
-  this.selectedItemTarget.innerHTML = ''
-  this.selectedItemTarget.classList.add('hidden')
-}
-
 }
