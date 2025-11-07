@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :require_goal_setup, if: :user_signed_in?
   skip_before_action :require_goal_setup, if: :devise_controller?
-  # allow_browser versions: :modern
+
   add_flash_types :success, :danger
 
   # Deviseのログイン後のリダイレクト先を設定

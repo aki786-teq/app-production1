@@ -1,4 +1,5 @@
 module NotificationsHelper
+  # 通知によってURLを切り替える
   def transition_path(notification)
     case notification.action_type.to_sym
     when :cheer

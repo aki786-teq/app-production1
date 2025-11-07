@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    start_time = 6.days.ago.beginning_of_day
+    start_time = 7.days.ago.beginning_of_day
     end_time = 1.day.ago.end_of_day
 
     @ranking_boards = Board

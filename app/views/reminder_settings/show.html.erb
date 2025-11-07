@@ -25,7 +25,7 @@
 
       <!-- LINE通知連携解除ボタン -->
       <div class="mt-4">
-        <%= button_to "LINE通知連携を解除", line_notification_disconnect_path, method: :delete, data: { turbo: false }, class: "text-red-600 hover:text-red-800 bg-transparent underline" %>
+        <%= button_to "LINE通知連携を解除", line_notification_disconnect_path, method: :delete, class: "text-red-600 hover:text-red-800 bg-transparent underline", data: { turbo: false } %>
       </div>
 
     <% else %>
