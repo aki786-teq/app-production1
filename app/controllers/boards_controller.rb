@@ -2,6 +2,12 @@ class BoardsController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
 
   def index
+    if user_signed_in?
+      @cheered_board_ids = current_user.cheers.pluck(:board_id).to_set
+      bookmarks = current_user.bookmarks
+      @bookmarks_map = bookmarks.index_by(&:board_id)
+      @bookmarked_board_ids = @bookmarks_map.keys.to_set
+    end
     @pagy, @boards = pagy(Board.with_attached_image.includes(:user, :bookmarks, :cheers).order(created_at: :desc))
   end
 
@@ -54,6 +60,12 @@ class BoardsController < ApplicationController
 
   def show
     @board = Board.find(params[:id])
+    if user_signed_in?
+      @cheered_board_ids = current_user.cheers.where(board_id: @board.id).pluck(:board_id).to_set
+      bookmark = current_user.bookmarks.find_by(board_id: @board.id)
+      @bookmarks_map = bookmark ? { @board.id => bookmark } : {}
+      @bookmarked_board_ids = @bookmarks_map.keys.to_set
+    end
   end
 
   def edit
@@ -77,7 +89,13 @@ class BoardsController < ApplicationController
   end
 
   def bookmarks
-    @pagy, @bookmarks = pagy(current_user.bookmarks.includes(:board).order(created_at: :desc))
+    if user_signed_in?
+      @cheered_board_ids = current_user.cheers.pluck(:board_id).to_set
+      bookmarks = current_user.bookmarks
+      @bookmarks_map = bookmarks.index_by(&:board_id)
+      @bookmarked_board_ids = @bookmarks_map.keys.to_set
+    end
+    @pagy, @boards = pagy(current_user.bookmarked_boards.with_attached_image.includes(:user, :cheers, :bookmarks).order("bookmarks.created_at DESC"))
   end
 
   def search_items

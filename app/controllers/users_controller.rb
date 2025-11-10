@@ -5,6 +5,13 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+
+    if user_signed_in?
+      @cheered_board_ids = current_user.cheers.pluck(:board_id).to_set
+      bookmarks = current_user.bookmarks
+      @bookmarks_map = bookmarks.index_by(&:board_id)
+      @bookmarked_board_ids = @bookmarks_map.keys.to_set
+    end
     @pagy, @boards = pagy(
       @user.boards
             .with_attached_image

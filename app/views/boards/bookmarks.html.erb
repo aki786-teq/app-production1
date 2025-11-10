@@ -3,11 +3,11 @@
 <div class="my-container">
   <h1>ブックマーク一覧</h1>
 
-  <% if @bookmarks.any? %>
+  <% if @boards.any? %>
     <div class="grid gap-6">
-      <% @bookmarks.each do |bookmark| %>
-        <div class="block rounded-md cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(bookmark.board) %>">
-          <%= render partial: "boards/board_card", locals: { board: bookmark.board } %>
+      <% @boards.each do |board| %>
+        <div class="block rounded-md cursor-pointer transition hover:shadow-md" data-navigate-to="<%= board_path(board) %>">
+          <%= render partial: "boards/board_card", locals: { board: board } %>
         </div>
       <% end %>
     </div>

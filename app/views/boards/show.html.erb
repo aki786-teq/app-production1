@@ -7,9 +7,9 @@
   <% if current_user == @board.user %>
     <div class="flex justify-end space-x-2 mt-6">
       <%= link_to "編集する", edit_board_path(@board), class: "inline-block transition px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" %>
-      <%= link_to "削除する", board_path(@board),
-          data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか?" },
-          class: "inline-block transition px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" %>
+      <%= link_to "削除する", board_path(@board), class: "inline-block transition px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600", data: {
+        turbo_method: :delete, turbo_confirm: "本当に削除しますか?"
+      } %>
     </div>
   <% end %>
 
