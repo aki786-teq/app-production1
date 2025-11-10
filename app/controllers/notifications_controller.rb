@@ -2,7 +2,7 @@ class NotificationsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    notifications = current_user.notifications.includes(subject: [:user, :board]).order(created_at: :desc)
+    notifications = current_user.notifications.includes(subject: [ :user, :board ]).order(created_at: :desc)
     @pagy, @notifications = pagy(notifications)
 
     # 未読の通知を既読に更新
