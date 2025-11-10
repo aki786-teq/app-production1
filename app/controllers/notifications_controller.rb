@@ -1,11 +1,16 @@
 class NotificationsController < ApplicationController
+  before_action :authenticate_user!
+
   def index
-    @pagy, @notifications = pagy(current_user.notifications.order(created_at: :desc))
+    notifications = current_user.notifications.includes(subject: [:user, :board]).order(created_at: :desc)
+    @pagy, @notifications = pagy(notifications)
+
+    # 未読の通知を既読に更新
     current_user.notifications.where(checked: false).update_all(checked: true)
   end
 
   def destroy_all
     current_user.notifications.destroy_all
-    redirect_to notifications_path, success: "通知を全て削除しました。", status: :see_other
+    redirect_to notifications_path, success: "全ての通知を削除しました。"
   end
 end

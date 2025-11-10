@@ -1,5 +1,5 @@
 <% if user_signed_in? %>
-  <% if board.cheered_by?(current_user) %>
+  <% if @cheered_board_ids&.include?(board.id) %>
     <%= link_to board_cheer_path(board),
         id: "cheer-button-#{board.id}",
         data: {

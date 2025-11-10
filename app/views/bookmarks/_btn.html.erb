@@ -1,6 +1,6 @@
 <% if user_signed_in? %>
-  <% if board.bookmarked_by?(current_user) %>
-    <% bookmark = current_user.bookmarks.find_by(board: board) %>
+  <% if @bookmarked_board_ids&.include?(board.id) %>
+    <% bookmark = @bookmarks_map[board.id] %>
     <%= link_to board_bookmark_path(board, bookmark),
         id: "bookmark-button-#{board.id}",
         data: {
